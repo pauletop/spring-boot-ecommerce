@@ -2697,3 +2697,47 @@ textarea.input {
     row-gap: 3em;
   }
 }
+/*=========================================================
+    18 -> CHECKOUT
+===========================================================*/
+/* ... */
+
+
+/*=========================================================
+    19 -> ERROR
+===========================================================*/
+#error .container .error-i {
+  background-image: url("/images/error.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position-x: 100%;
+  background-position-y: 5px;
+  min-height: 400px;
+}
+@media (max-width: 768px){
+  #error .container .error-i {
+    display: none;
+  }
+}
+#error .status {
+  margin-bottom: 1.25em;
+}
+#error {
+  font-size: 18px;
+  height: 100vh;
+  margin: auto;
+  padding: 7% 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  & a {
+    cursor: pointer;
+  }
+}
+#error [class*="col-"] {
+  padding: 0;
+}
+#error ins {
+  color: #777;
+  text-decoration: none;
+}
