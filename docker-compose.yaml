@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: 'postgres:latest'
+    container_name: SpringCommercePostgres
+    restart: always
+    environment:
+      - 'POSTGRES_DB=springcommerce'
+      - 'POSTGRES_PASSWORD=abc123'
+      - 'POSTGRES_USER=root'
+    ports:
+      - '5432:5432'
+    volumes:
+        - 'postgres:/var/lib/postgresql/data'
+volumes:
+  postgres:
