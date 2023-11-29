@@ -191,6 +191,16 @@ public class AccountController {
         return null;
     }
 
+    private String validateChangePassword(String oldPassword, String newPassword, String confirmPassword) {
+        if (!newPassword.equals(confirmPassword)) {
+            return "Password and confirm password must be the same!";
+        }
+        if (newPassword.length() < 6) {
+            return "Password must be at least 6 characters!";
+        }
+        return null;
+    }
+
 
     /*---------------------------------*\
     |   Đăng nhập bằng tài khoản Google  |

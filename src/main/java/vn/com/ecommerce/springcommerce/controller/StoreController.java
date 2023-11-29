@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import vn.com.ecommerce.springcommerce.domain.Brand;
 import vn.com.ecommerce.springcommerce.domain.Product;
 import vn.com.ecommerce.springcommerce.service.BrandService;
 import vn.com.ecommerce.springcommerce.service.CategoryService;
@@ -94,39 +96,10 @@ public class StoreController {
     }
 
     @GetMapping("/brands")
-    public String brands(Model model, @RequestParam(defaultValue = "1") int page,
-                         @RequestParam(name = "keyword") String keyword,
-                         @RequestParam(name = "category", required = false) Integer categoryId,
-                         @RequestParam(name = "categories", required = false) List<Integer> categoryIds,
-                         @RequestParam(name = "brands", required = false) List<Integer> brandIds,
-                         @RequestParam(name = "min", required = false) Double minPrice,
-                         @RequestParam(name = "max", required = false) Double maxPrice,
-                         @RequestParam(name = "sort", required = false) String sort,
-                         @RequestParam(name = "isAdv", required = false, defaultValue = "false") boolean isAdv,
-                         HttpServletRequest request) {
-        Page<Product> products;
-        if (isAdv) {
-            products = productService.searchByOptions(keyword.toLowerCase(), brandIds, categoryIds, minPrice, maxPrice, page - 1, sort);
-        } else {
-            System.out.println("page: " + page);
-            products = productService.searchByKeyword(keyword.toLowerCase(), categoryId, page - 1, sort);
-        }
-        if (request.getQueryString() != null) {
-            model.addAttribute("queryStr", Base64.getEncoder().encodeToString((request.getQueryString().replace("&page=" + page, "")).getBytes()));
-        } else {
-            model.addAttribute("queryStr", "");
-        }
-        model.addAttribute("tab", "search");
-        model.addAttribute("products", products.getContent());
-        model.addAttribute("totalPages", products.getTotalPages());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalProducts", products.getTotalElements());
-        model.addAttribute("numberPerPage", 12);
-        model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("brands", brandService.getAllBrands());
-        model.addAttribute("topSelling", productService.getTop5BestSellingProducts());
-        model.addAttribute("breadcrumb", new  String[]{"Home", "Store", "Search"});
-        return "store";
+    public String brands(Model model) {
+        Iterable<Brand> brands = brandService.getAllBrands();
+        model.addAttribute("brands", brands);
+        return "brands";
     }
 
 
