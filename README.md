@@ -17,7 +17,7 @@ docker-compose up -d
 So you can see the database like this, when it is initialized:
 [![image](dia.png)](dia.png)
 <br>
-You may not see the Cart and Order Entity, because they are
+You might not see the Cart and Order Entity, because they are
 extended from the Selected List Entity, so you can see the dtype on
 this table.
 
