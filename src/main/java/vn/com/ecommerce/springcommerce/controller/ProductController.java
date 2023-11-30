@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import vn.com.ecommerce.springcommerce.domain.Cart;
 import vn.com.ecommerce.springcommerce.domain.CustomerReview;
 import vn.com.ecommerce.springcommerce.domain.Product;
 import vn.com.ecommerce.springcommerce.service.ProductService;
@@ -57,6 +58,14 @@ public class ProductController {
         int[] numberOfReviewsByEachRating = new int[5];
         for (CustomerReview review : reviews) {
             numberOfReviewsByEachRating[review.getRating() - 1]++;
+        }
+        Cart sCart = (Cart) request.getSession().getAttribute("sCart");
+        Boolean isLogin = (Boolean) request.getSession().getAttribute("isLogin");
+        model.addAttribute("sCart", sCart);
+        if (isLogin == null || !isLogin) {
+            model.addAttribute("isLogin", (boolean ) false);
+        } else {
+            model.addAttribute("isLogin", (boolean) true);
         }
         List<Product> relatedProducts = (List<Product>) productService.getTop4RelatedProducts(product);
         model.addAttribute("relatedProducts", relatedProducts);

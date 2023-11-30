@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-		<title>Electro - HTML Ecommerce Template</title>
+		<title>Electro - Store</title>
 
  		<!-- Google font -->
  		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
@@ -94,7 +94,7 @@
 						<div class="col-md-3 clearfix">
 							<div class="header-ctn">
 								<!-- Wishlist -->
-								<div>
+								<div class="hide">
 									<a href="#">
 										<i class="fa fa-heart-o"></i>
 										<span>Your Wishlist</span>
@@ -102,9 +102,14 @@
 									</a>
 								</div>
 								<!-- /Wishlist -->
-
+								<div>
+									<a href="/cart" class="dropdown-toggle">
+										<i class="fa fa-shopping-cart"></i>
+										<span>Your Cart</span>
+									</a>
+								</div>
 								<!-- Cart -->
-								<div class="dropdown">
+								<div class="dropdown hide">
 									<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
 										<i class="fa fa-shopping-cart"></i>
 										<span>Your Cart</span>
@@ -219,7 +224,7 @@
 				<!-- row -->
 				<div class="row">
 					<!-- ASIDE -->
-					<div id="aside" class="col-md-3">
+					<div id="aside" class="col-md-3 hide">
 						<!-- aside Widget -->
 						<div class="aside">
 							<h3 class="aside-title">Categories</h3>
@@ -296,11 +301,11 @@
 					<!-- /ASIDE -->
 
 					<!-- STORE -->
-					<div id="store" class="col-md-9">
+					<div id="store" class="col-md-10 col-md-offset-1">
 						<!-- store top filter -->
 						<div class="store-filter clearfix">
 							<div class="store-sort">
-								<label>
+								<label style="visibility: hidden;">
 									Sort By:
 									<select class="input-select">
 										<option>Choose an option</option>

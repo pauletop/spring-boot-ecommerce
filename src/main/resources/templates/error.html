@@ -6,7 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-    <title>Error 404 (Not Found)!!</title>
+    <title>Error <th:block th:text="${status}"></th:block>
+        <th:block th:if="${status} == 404">(Not Found)</th:block>
+        <th:block th:if="${status} == 401">(Unauthorized)</th:block>
+        <th:block th:if="${status} == 403">(Forbidden)</th:block>
+        <th:block th:if="${status} == 500">(Internal Server Error)</th:block>!!
+    </title>
 
     <!-- Google font -->
     <link
@@ -50,13 +55,34 @@
         <!-- row -->
         <div class="d-flex">
           <div class="col-xs-12 col-sm-8">
-            <div id="404">
+
+            <div id="400" th:if="${status} == 400">
+                <h1>Oopps!</h1>
+                <p class="status">
+                  <strong>400</strong>
+                  <ins> - That's an error.</ins>
+                </p>
+                <p>
+                    <span th:text="${message}"
+                          hidden="hidden"></span>
+
+                  Sorry but the request sent to the server was incorrect.
+                  <ins> That's all we know.</ins>
+                </p>
+                <a class="goback" href="javascript:;" onclick="goBack()"
+                ><i class="fas fa-chevron-left"></i> &nbsp;&nbsp;Go Back</a
+                >
+            </div>
+            <div id="404" th:if="${status} == 404">
               <h1>Oopps!</h1>
               <p class="status">
-                <strong>404 </strong>
+                <strong>404</strong>
                 <ins> - That's an error.</ins>
               </p>
               <p>
+                <span th:text="${message}"
+                  hidden="hidden"></span>
+
                 Sorry but the requested URL was not found on our server.
                 <ins> That's all we know.</ins>
               </p>
@@ -64,23 +90,45 @@
                 ><i class="fas fa-chevron-left"></i> &nbsp;&nbsp;Go Back</a
               >
             </div>
-            <!-- 
-				<div class="fade" id="401">
-					<h1>Oopps!</h1>
-					<h2>Unauthorized - 401</h2>
-					<p>Sorry but you are not authorized to access this page.</p>
-				</div>
-				<div class="fade" id="403">
-					<h1>Oopps!</h1>
-					<h2>Forbidden - 403</h2>
-					<p>Sorry but you don't have permission to view this page.</p>
-				</div>
-				<div class="fade" id="500">
-					<h1>Oopps!</h1>
-					<h2>Internal Server Error - 500</h2>
-					<p>Sorry but the server encountered an internal error or misconfiguration and was unable to complete your request.</p>
-				</div>
-				 -->
+            <div id="401" th:if="${status} == 401">
+                <h1>Oopps!</h1>
+                <p class="status">
+                  <strong>401</strong>
+                  <ins> - That's an error.</ins>
+                </p>
+                <p>
+                  <span th:text="${message}"
+                        hidden="hidden"></span>
+
+                  Sorry but you are not authorized to access this page.
+                  <ins> That's all we know.</ins>
+                </p>
+                <a class="goback" href="javascript:;" onclick="goBack()"
+                ><i class="fas fa-chevron-left"></i> &nbsp;&nbsp;Go Back</a
+                >
+            </div>
+            <div id="403" th:if="${status} == 403">
+                <h1>Oopps!</h1>
+                <h2>Forbidden - 403</h2>
+                <p>Sorry but you don't have permission to view this page.</p>
+            </div>
+            <div id="500" th:if="${status} == 500">
+                <h1>Oopps!</h1>
+                <p class="status">
+                  <strong>500</strong>
+                  <ins> - That's an error.</ins>
+                </p>
+                <p>
+                    <span th:text="${message}"
+                          hidden="hidden"></span>
+
+                  Sorry but the server encountered an internal error or misconfiguration and was unable to complete your request.
+                  <ins> That's all we know.</ins>
+                </p>
+                <a class="goback" href="javascript:;" onclick="goBack()"
+                ><i class="fas fa-chevron-left"></i> &nbsp;&nbsp;Go Back</a
+                >
+            </div>
           </div>
           <div class="col-sm-4 error-i"></div>
         </div>
@@ -90,4 +138,5 @@
     </div>
     <!-- /SECTION -->
   </body>
+  <script src="/js/main.js"></script>
 </html>

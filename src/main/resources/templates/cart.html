@@ -98,7 +98,7 @@
                 <div class="col-md-3 clearfix col-12">
                     <div class="header-ctn">
                         <!-- Wishlist -->
-                        <div>
+                        <div class="hide">
                             <a href="#">
                                 <i class="far fa-heart"></i>
                                 <span>Your Wishlist</span>
@@ -108,43 +108,39 @@
                         <!-- /Wishlist -->
 
                         <!-- Cart -->
-                        <div class="dropdown">
+                        <div class="dropdown" th:with="sItems=${sCart.getItems()}">
                             <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                                 <i class="fa fa-shopping-cart"></i>
                                 <span>Your Cart</span>
-                                <div class="qty">3</div>
+                                <div class="qty cart-count" th:text="${sItems.size()}">2</div>
                             </a>
                             <div class="cart-dropdown">
                                 <div class="cart-list">
-                                    <div class="product-widget">
+                                    <div class="product-widget" th:each="item : ${sItems}">
                                         <div class="product-img">
-                                            <img src="/img/product01.png" alt="">
+                                            <img th:src="@{${item.product.getThumbnailFormat()}}" alt="">
                                         </div>
                                         <div class="product-body">
-                                            <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                                            <h4 class="product-price"><span class="qty">1x</span>$980.00</h4>
+                                            <h3 class="product-name"><a class="view-product"
+                                                                        th:data-id="${item.product.getIdBase64()}"
+                                                                        th:data-info="${item.product.getLinkBase64()}"
+                                                                        href="javascript:;" th:text="${item.product.name}">
+                                                product name goes here</a>
+                                            </h3>
+                                            <h4 class="product-price"><span class="qty" th:text="${item.getQuantity()}+'x'"></span><span th:text="${item.product.getPriceString()}"></span></h4>
                                         </div>
-                                        <button class="delete"><i class="fas fa-times"></i></button>
+                                        <button class="delete hide" th:data-id="${item.product.getIdBase64()}"><i class="fas fa-times"></i></button>
                                     </div>
-
                                     <div class="product-widget">
-                                        <div class="product-img">
-                                            <img src="/img/product02.png" alt="">
-                                        </div>
-                                        <div class="product-body">
-                                            <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                                            <h4 class="product-price"><span class="qty">3x</span>$980.00</h4>
-                                        </div>
-                                        <button class="delete"><i class="fas fa-times"></i></button>
                                     </div>
                                 </div>
                                 <div class="cart-summary">
-                                    <small>3 Item(s) selected</small>
-                                    <h5>SUBTOTAL: $2940.00</h5>
+                                    <small><span th:text="${sItems.size()}" class="cart-count"></span> Item(s) selected</small>
+                                    <h5>SUBTOTAL: <strong class="tol-price" th:text="${sCart.getToltalPriceString()}"></strong></h5>
                                 </div>
                                 <div class="cart-btns">
                                     <a href="#">View Cart</a>
-                                    <a href="#">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
+                                    <a href="/cart/checkout">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -213,11 +209,10 @@
         <!-- row -->
         <div class="row">
                 <div>
-                    <!-- dialog -->
                     <div class="row d-flex justify-content-center align-items-center h-100">
                         <div class="col-xs-11 col-lg-10 col-xl-8">
                             <div class="card" style="border-radius: 10px;">
-                                <table class="table table-hover">
+                                <table class="table table-hover" th:with="items=${sCart.getItems()}">
                                     <thead>
                                         <tr>
                                             <th scope="col">Product</th>
@@ -228,71 +223,83 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td class="cart-pd view-product">
+                                        <!-- item -->
+                                        <tr th:each="item : ${items}">
+                                            <td class="cart-pd view-product" th:data-id="${item.product.getIdBase64()}" th:data-info="${item.product.getLinkBase64()}">
                                                 <div class="col-xs-4">
-                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/13.webp"
+                                                    <img th:src="@{${item.product.getThumbnailFormat()}}"
                                                          class="img-fluid" alt="Phone">
                                                 </div>
                                                 <div class="col-xs-8 cart-img">
-                                                    <a class="text-muted mb-0 cursor-ptr">Samsung Galaxy</a>
+                                                    <a class="text-muted mb-0 cursor-ptr" th:text="${item.product.name}"></a>
                                                 </div>
                                             </td>
-                                            <td>
-                                                $999.0
-                                            </td>
+                                            <td th:text="${item.product.getPriceString()}"></td>
                                             <td>
                                                 <div class="qty-label">
                                                     <div class="input-number">
-                                                        <input type="number" name="qty" value="1" min="1" max="99">
+                                                        <input type="number" name="qty" min="1" max="99" th:value="${item.quantity}" th:data-qty="${item.quantity}">
                                                         <span class="qty-up">+</span>
                                                         <span class="qty-down">-</span>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>
-                                                $999.0
-                                            </td>
-                                            <td class="close">&times;</td>
+                                            <td><b style="color: #D10024;">$</b><strong th:text="${item.getPriceString()}"></strong></td>
+                                            <td class="close delete-product">&times;</td>
                                         </tr>
-                                        <tr>
-                                            <td class="cart-pd">
-                                                <div class="col-xs-4">
-                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/13.webp"
-                                                         class="img-fluid" alt="Phone">
-                                                </div>
-                                                <div class="col-xs-8 cart-img">
-                                                    <p class="text-muted mb-0">Samsung Galaxy</p>
-                                                </div>
+                                        <!-- /item -->
+                                        <tr th:if="${items.size() == 0}">
+                                            <td colspan="3" class="text-center bg-i">
                                             </td>
-                                            <td>
-                                                $999.0
+                                            <td colspan="2" class="text-left">
+                                                <h3>Empty cart!</h3>
+                                                <a href="/store"><i class="fas fa-cart-plus"></i> &nbsp; Let's go shopping!</a>
                                             </td>
-                                            <td>
-                                                <div class="qty-label">
-                                                    <div class="input-number">
-                                                        <input type="number" name="qty" value="1" min="1" max="99">
-                                                        <span class="qty-up">+</span>
-                                                        <span class="qty-down">-</span>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                $999.0
-                                            </td>
-                                            <td class="close">&times;</td>
                                         </tr>
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="2" style="vertical-align: bottom;">
+                                                <a href="/store"><i class="fas fa-backward"></i> &nbsp; Continue shopping</a>
+                                            </td>
+                                            <td colspan="3" class="text-right cart-summary">
+                                                <div><small><b class="tol-items" th:text="${items.size()}">2</b> Item(s) selected</small></div>
+                                                <small class="hide"><b class="tol-qty">2</b> Total product(s) added</small>
+                                                <h3>Total: <strong class="tol-price" style="color: #D10024;" th:text="${sCart.getToltalPriceString()}">$2.999.00</strong></h3>
+                                                <br>
+                                                <a href="/cart/checkout" class="check-out">Checkout &nbsp; <i class="fa fa-arrow-circle-right"></i></a>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
                     </div>
-                    <!-- /dialog -->
                 </div>
         </div>
         <!-- /row -->
     </div>
     <!-- /container -->
+
+    <!-- dialog -->
+    <div class="modal fade" id="message-dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Announcement</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p></p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn my-primary-btn" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /dialog -->
 </div>
 <!-- /SECTION -->
 
@@ -437,6 +444,7 @@
 <script src="/js/nouislider.min.js"></script>
 <script src="/js/jquery.zoom.min.js"></script>
 <script src="/js/main.js"></script>
+<script src="/js/cart.js"></script>
 
 </body>
 </html>

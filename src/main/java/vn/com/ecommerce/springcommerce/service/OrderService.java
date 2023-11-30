@@ -10,10 +10,20 @@ import vn.com.ecommerce.springcommerce.repository.OrderRepository;
 public class OrderService {
     @Autowired
     OrderRepository orderRepository;
+    @Autowired
+    CartService cartService;
 
-    public void createOrder(Cart cart, String address) {
-        Order newOrder = cart.moveCartToOrder();
-        newOrder.setAddress(address);
-        orderRepository.save(newOrder);
+    public Order createOrder(Order newOrder) {
+//        cartService.deleteById(newOrder.getId());
+        Cart cart = cartService.getCart(newOrder.getId());
+        // move items reference from cart to order
+        newOrder.setItems(cart.getItems());
+        return orderRepository.save(newOrder);
+    }
+    public Order getOrder(Long id) {
+        return orderRepository.findById(id).orElse(null);
+    }
+    public Iterable<Order> getOrderHistory(String email) {
+        return orderRepository.findAllByAccountEmail(email);
     }
 }

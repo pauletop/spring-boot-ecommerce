@@ -15,7 +15,7 @@ public class SelectedList extends AbstractPersistable<Long> {
     @Column(name = "total_price")
     protected Double totalPrice = 0.0;
     @Getter
-    @OneToMany(mappedBy = "list", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "selectedList", cascade = CascadeType.ALL)
     protected List<SelectedItem> items = new ArrayList<>();
     @ManyToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id",
@@ -29,7 +29,8 @@ public class SelectedList extends AbstractPersistable<Long> {
         this.account = account;
     }
 
-    protected SelectedList(SelectedList selectedList){
+    protected SelectedList(SelectedList selectedList) {
+        this.setId(selectedList.getId());
         this.totalPrice = selectedList.getTotalPrice();
         this.items = selectedList.getItems();
         this.account = selectedList.getAccount();
@@ -42,5 +43,8 @@ public class SelectedList extends AbstractPersistable<Long> {
             products.add(item.getProduct());
         }
         return products;
+    }
+    public String getToltalPriceString(){
+        return "$" + String.format("%,.2f", this.totalPrice);
     }
 }

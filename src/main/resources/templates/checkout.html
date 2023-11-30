@@ -12,20 +12,20 @@
  		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
 
  		<!-- Bootstrap -->
- 		<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
+ 		<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"/>
 
  		<!-- Slick -->
- 		<link type="text/css" rel="stylesheet" href="css/slick.css"/>
- 		<link type="text/css" rel="stylesheet" href="css/slick-theme.css"/>
+ 		<link type="text/css" rel="stylesheet" href="/css/slick.css"/>
+ 		<link type="text/css" rel="stylesheet" href="/css/slick-theme.css"/>
 
  		<!-- nouislider -->
- 		<link type="text/css" rel="stylesheet" href="css/nouislider.min.css"/>
+ 		<link type="text/css" rel="stylesheet" href="/css/nouislider.min.css"/>
 
  		<!-- Font Awesome Icon -->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
  		<!-- Custom stlylesheet -->
- 		<link type="text/css" rel="stylesheet" href="css/style.css"/>
+ 		<link type="text/css" rel="stylesheet" href="/css/style.css"/>
 
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -64,7 +64,7 @@
 					<div class="col-md-3">
 						<div class="header-logo">
 							<a href="#" class="logo">
-								<img src="./img/logo.png" alt="">
+								<img src="/img/logo.png" alt="">
 							</a>
 						</div>
 					</div>
@@ -110,7 +110,7 @@
 									<div class="cart-list">
 										<div class="product-widget">
 											<div class="product-img">
-												<img src="./img/product01.png" alt="">
+												<img src="/img/product01.png" alt="">
 											</div>
 											<div class="product-body">
 												<h3 class="product-name"><a href="#">product name goes here</a></h3>
@@ -121,7 +121,7 @@
 
 										<div class="product-widget">
 											<div class="product-img">
-												<img src="./img/product02.png" alt="">
+												<img src="/img/product02.png" alt="">
 											</div>
 											<div class="product-body">
 												<h3 class="product-name"><a href="#">product name goes here</a></h3>
@@ -213,20 +213,17 @@
 				<!-- row -->
 				<div class="row">
 
-					<div class="col-md-7">
+					<form class="col-md-7" id="order-form">
 						<!-- Billing Details -->
-						<div class="billing-details">
+						<div class="billing-details" th:object="${user}">
 							<div class="section-title">
 								<h3 class="title">Billing address</h3>
 							</div>
 							<div class="form-group">
-								<input class="input" type="text" name="first-name" placeholder="First Name">
+								<input class="input" type="text" name="name" placeholder="Full Name" th:value="*{fullname}">
 							</div>
 							<div class="form-group">
-								<input class="input" type="text" name="last-name" placeholder="Last Name">
-							</div>
-							<div class="form-group">
-								<input class="input" type="email" name="email" placeholder="Email">
+								<input class="input" type="email" name="email" placeholder="Email" th:value="*{email}">
 							</div>
 							<div class="form-group">
 								<input class="input" type="text" name="address" placeholder="Address">
@@ -238,12 +235,9 @@
 								<input class="input" type="text" name="country" placeholder="Country">
 							</div>
 							<div class="form-group">
-								<input class="input" type="text" name="zip-code" placeholder="ZIP Code">
+								<input class="input" type="tel" name="phone" placeholder="Telephone" th:value="*{phone}">
 							</div>
-							<div class="form-group">
-								<input class="input" type="tel" name="tel" placeholder="Telephone">
-							</div>
-							<div class="form-group">
+							<div class="form-group" hidden>
 								<div class="input-checkbox">
 									<input type="checkbox" id="create-account">
 									<label for="create-account">
@@ -251,7 +245,7 @@
 										Create Account?
 									</label>
 									<div class="caption">
-										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
+										<p>If you don't have an account please create an account by entering your email address. Otherwise please login to check your order.</p>
 										<input class="input" type="password" name="password" placeholder="Enter Your Password">
 									</div>
 								</div>
@@ -259,8 +253,9 @@
 						</div>
 						<!-- /Billing Details -->
 
+
 						<!-- Shiping Details -->
-						<div class="shiping-details">
+						<div class="shiping-details" hidden>
 							<div class="section-title">
 								<h3 class="title">Shiping address</h3>
 							</div>
@@ -302,10 +297,11 @@
 
 						<!-- Order notes -->
 						<div class="order-notes">
-							<textarea class="input" placeholder="Order Notes"></textarea>
+							<textarea class="input" name="note" placeholder="Order Notes"></textarea>
 						</div>
 						<!-- /Order notes -->
-					</div>
+					</form>
+
 
 					<!-- Order Details -->
 					<div class="col-md-5 order-details">
@@ -318,13 +314,9 @@
 								<div><strong>TOTAL</strong></div>
 							</div>
 							<div class="order-products">
-								<div class="order-col">
-									<div>1x Product Name Goes Here</div>
-									<div>$980.00</div>
-								</div>
-								<div class="order-col">
-									<div>2x Product Name Goes Here</div>
-									<div>$980.00</div>
+								<div class="order-col" th:each="item : ${cart.getItems()}">
+									<div><span th:text="${item.getQuantity()}">1</span>x <span th:text="${item.getProduct().getName()}"></span></div>
+									<div th:text="${item.getTotalPrice()}">$980.00</div>
 								</div>
 							</div>
 							<div class="order-col">
@@ -333,38 +325,31 @@
 							</div>
 							<div class="order-col">
 								<div><strong>TOTAL</strong></div>
-								<div><strong class="order-total">$2940.00</strong></div>
+								<div><strong class="order-total" th:text="${cart.getToltalPriceString()}">$2940.00</strong></div>
 							</div>
 						</div>
 						<div class="payment-method">
 							<div class="input-radio">
-								<input type="radio" name="payment" id="payment-1">
+								<input type="radio" class="paymentM" name="payment" id="payment-1" value="1" checked>
 								<label for="payment-1">
+									<span></span>
+									Cash On Delivery
+								</label>
+								<div class="caption">
+									<p>Cash on delivery (COD) is a type of transaction in which the recipient makes payment for a good at the time of delivery.
+									This payment method is not supported for international shipping.</p>
+
+								</div>
+							</div>
+							<div class="input-radio hide">
+								<input type="radio" class="paymentM" name="payment" id="payment-2" value="2">
+								<label for="payment-2">
 									<span></span>
 									Direct Bank Transfer
 								</label>
 								<div class="caption">
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-								</div>
-							</div>
-							<div class="input-radio">
-								<input type="radio" name="payment" id="payment-2">
-								<label for="payment-2">
-									<span></span>
-									Cheque Payment
-								</label>
-								<div class="caption">
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-								</div>
-							</div>
-							<div class="input-radio">
-								<input type="radio" name="payment" id="payment-3">
-								<label for="payment-3">
-									<span></span>
-									Paypal System
-								</label>
-								<div class="caption">
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+									<p>Make your payment directly into our bank account. Please use your Order ID as the payment reference.
+									Your order will not be shipped until the funds have cleared in our account.</p>
 								</div>
 							</div>
 						</div>
@@ -382,6 +367,27 @@
 				<!-- /row -->
 			</div>
 			<!-- /container -->
+
+
+			<!-- dialog -->
+			<div class="modal fade" id="message-dialog">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title">Announcement</h4>
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+						<div class="modal-body">
+							<p></p>
+						</div>
+
+						<div class="modal-footer">
+							<button type="button" class="btn my-primary-btn" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /dialog -->
 		</div>
 		<!-- /SECTION -->
 
@@ -520,12 +526,13 @@
 	<!-- /FOOTER -->
 
 		<!-- jQuery Plugins -->
-		<script src="js/jquery.min.js"></script>
-		<script src="js/bootstrap.min.js"></script>
-		<script src="js/slick.min.js"></script>
-		<script src="js/nouislider.min.js"></script>
-		<script src="js/jquery.zoom.min.js"></script>
-		<script src="js/main.js"></script>
+		<script src="/js/jquery.min.js"></script>
+		<script src="/js/bootstrap.min.js"></script>
+		<script src="/js/slick.min.js"></script>
+		<script src="/js/nouislider.min.js"></script>
+		<script src="/js/jquery.zoom.min.js"></script>
+		<script src="/js/main.js"></script>
+		<script src="/js/checkout.js"></script>
 
 	</body>
 </html>

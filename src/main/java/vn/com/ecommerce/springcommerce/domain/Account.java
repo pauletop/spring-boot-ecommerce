@@ -1,21 +1,21 @@
 package vn.com.ecommerce.springcommerce.domain;
 
 import jakarta.annotation.Nullable;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.jpa.domain.AbstractPersistable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.management.relation.Role;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.List;
 
 @Data
 @Entity
 @Table(name = "account")
-public class Account extends AbstractPersistable<Long>{
+public class Account extends AbstractPersistable<Long> implements UserDetails {
     @Column(name = "fullname", nullable = false)
     private String fullname;
     @Column(name = "email", nullable = false, unique = true)
@@ -25,8 +25,10 @@ public class Account extends AbstractPersistable<Long>{
     @Column(name = "phone")
     private String phone;
 
-    @Column
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.ROLE_USER;
+    @Column(name = "status")
+    private boolean status = true; // true: active, false: inactive
     @Nullable
     @Column(name = "address")
     private String address;
@@ -43,6 +45,13 @@ public class Account extends AbstractPersistable<Long>{
         return this.carts.get(0);
     }
 
+    public String getPhoneStars() {
+        if (this.phone == null) {
+            return null;
+        }
+        return this.phone.replaceAll("(\\d{2})\\d*(\\d{3})", "$1*****$2");
+    }
+
     public void setCart(Cart cart) {
         this.carts.clear();
         this.carts.add(cart);
@@ -50,5 +59,35 @@ public class Account extends AbstractPersistable<Long>{
 
     public String getIdBase64() {
         return Base64.getEncoder().encodeToString(String.valueOf(this.getId()).getBytes());
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority((getRole().name())));
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return this.status;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
