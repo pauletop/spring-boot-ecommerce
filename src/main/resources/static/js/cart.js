@@ -9,7 +9,6 @@ $(document).ready(function() {
         return parseFloat(result).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
     }
     $(".input-number input").on("change", function(e) {
-        clearTimeout(debounceTimeout);
         let $this = $(this);
         debounceTimeout = setTimeout(function() {
             let quantity = $this.val();
@@ -54,7 +53,7 @@ $(document).ready(function() {
             });
 
             debounceTimeout = null; // reset timeout id
-        }, 800);
+        }, 2000);
     });
 
     $("table tbody .delete-product").on("click", function(e) {
@@ -93,5 +92,13 @@ $(document).ready(function() {
             }
         });
     });
+    // clear beforeunload event
 
+
+    window.addEventListener("beforeunload", (e)=>{
+        if (debounceTimeout) {
+            $("#loading").hide();
+            return e.returnValue = 'Are you sure you want to close?';
+        }
+    });
 });

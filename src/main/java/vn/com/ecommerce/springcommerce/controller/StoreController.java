@@ -33,7 +33,9 @@ public class StoreController {
         this.brandService = brandService;
     }
     @GetMapping({"", "/"})
-    public String store(Model model, @RequestParam(defaultValue = "1") int page, HttpServletRequest request) {
+    public String store(Model model, @RequestParam(defaultValue = "1") int page, HttpServletRequest request,
+                        @Nullable @SessionAttribute(value = "sCart", required = false) Cart cart,
+                        @Nullable @SessionAttribute(value = "isLogin", required = false) Boolean isLogin) {
         Page<Product> products = productService.getAllProducts(page - 1);
         // add query string to model, and remove page parameter if exists
         if (request.getQueryString() != null) {
@@ -41,6 +43,12 @@ public class StoreController {
         } else {
             model.addAttribute("queryStr", "");
         }
+        if (isLogin == null || !isLogin) {
+            model.addAttribute("isLogin", (boolean ) false);
+        } else {
+            model.addAttribute("isLogin", (boolean) true);
+        }
+        model.addAttribute("sCart", cart);
         model.addAttribute("products", products.getContent());
         model.addAttribute("totalPages", products.getTotalPages());
         model.addAttribute("currentPage", page);

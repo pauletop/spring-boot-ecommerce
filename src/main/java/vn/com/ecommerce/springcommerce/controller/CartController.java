@@ -51,12 +51,20 @@ public class CartController {
     }
     @GetMapping("/checkout")
     String checkout(@Nullable @SessionAttribute(value = "accEmail", required = false) String email,
-                    Model model, HttpServletRequest request){
+                    @Nullable @SessionAttribute(value = "sCart", required = false) Cart sCart,
+                    @Nullable @SessionAttribute(value = "isLogin", required = false) Boolean isLogin,
+                    Model model){
         if (email == null) {
             return "redirect:/account/login";
         }
+        if (isLogin == null || !isLogin) {
+            model.addAttribute("isLogin", (boolean ) false);
+        } else {
+            model.addAttribute("isLogin", (boolean) true);
+        }
         Account account = accountService.getAccount(email);
         Cart cart = account.getCart();
+        model.addAttribute("sCart", sCart);
         model.addAttribute("cart", cart);
         model.addAttribute("user", account);
         return "checkout";

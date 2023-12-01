@@ -51,13 +51,14 @@ public class OrderController {
     }
     @PostMapping("/checkout")
     ResponseEntity<ResponseMessage<String>> checkout(@Nullable @SessionAttribute(value = "accEmail", required = false) String email,
-                                                     @RequestBody Map<String, Object> body, Model model,
+                                                     @RequestBody Map<String, Object> body,
+                                                     @Nullable @SessionAttribute(value = "sCart", required = false) Cart sCart,
                                                      HttpServletRequest request){
         if (email == null) {
             return ResponseEntity.ok((new ResponseMessage<>(Response.SC_UNAUTHORIZED, "Please reload and try again")));
         }
         Account account = accountService.getAccount(email);
-        Cart cart = cartService.getCart(email);
+        Cart cart = sCart;
         Order order = cart.moveCartToOrder();
         String name = (String) body.get("name");
         String phone = (String) body.get("phone");
@@ -70,6 +71,7 @@ public class OrderController {
         order.setData(name, phone, address, note, paymentMethod, "pending");
         Order newOrder = orderService.createOrder(order);
         request.getSession().setAttribute("orderId", newOrder.getId());
+        request.getSession().setAttribute("sCart", cartService.getCart(email));
         return ResponseEntity.ok((new ResponseMessage<>(Response.SC_OK, "Checkout successfully")));
     }
 }
