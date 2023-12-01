@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import vn.com.ecommerce.springcommerce.domain.Brand;
 import vn.com.ecommerce.springcommerce.domain.Cart;
+
+import vn.com.ecommerce.springcommerce.domain.Brand;
 import vn.com.ecommerce.springcommerce.domain.Product;
 import vn.com.ecommerce.springcommerce.service.BrandService;
 import vn.com.ecommerce.springcommerce.service.CategoryService;
@@ -117,6 +119,7 @@ public class StoreController {
         model.addAttribute("brands", brands);
         model.addAttribute("sCart", sCart);
         return "brands";
+
     }
 
 
