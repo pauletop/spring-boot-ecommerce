@@ -60,13 +60,15 @@ public class StoreController {
         model.addAttribute("brands", brandService.getAllBrands());
         model.addAttribute("topSelling", productService.getTop5BestSellingProducts());
         model.addAttribute("breadcrumb", new  String[]{"Home", "Store"});
+        model.addAttribute("categoryId", -1);
+        model.addAttribute("categoryIds", null);
         return "store";
     }
 
 
     @GetMapping("/search")
     public String search(Model model, @RequestParam(defaultValue = "1") int page,
-                         @RequestParam(name = "keyword") String keyword,
+                         @RequestParam(name = "keyword", required = false) String keyword,
                          @RequestParam(name = "category", required = false) Integer categoryId,
                          @RequestParam(name = "categories", required = false) List<Integer> categoryIds,
                          @RequestParam(name = "brands", required = false) List<Integer> brandIds,
@@ -74,7 +76,12 @@ public class StoreController {
                          @RequestParam(name = "max", required = false) Double maxPrice,
                          @RequestParam(name = "sort", required = false) String sort,
                          @RequestParam(name = "isAdv", required = false, defaultValue = "false") boolean isAdv,
+                         @Nullable @SessionAttribute(value = "sCart", required = false) Cart cart,
+                         @Nullable @SessionAttribute(value = "isLogin", required = false) Boolean isLogin,
                          HttpServletRequest request) {
+        if (keyword == null) {
+            keyword = "";
+        }
         System.out.println("keyword: " + keyword);
         System.out.println("categoryId: " + categoryId);
         System.out.println("categoryIds: " + categoryIds);
@@ -94,6 +101,12 @@ public class StoreController {
         } else {
             model.addAttribute("queryStr", "");
         }
+        if (isLogin == null || !isLogin) {
+            model.addAttribute("isLogin", (boolean ) false);
+        } else {
+            model.addAttribute("isLogin", (boolean) true);
+        }
+        model.addAttribute("sCart", cart);
         model.addAttribute("tab", "search");
         model.addAttribute("products", products.getContent());
         model.addAttribute("totalPages", products.getTotalPages());
@@ -104,6 +117,9 @@ public class StoreController {
         model.addAttribute("brands", brandService.getAllBrands());
         model.addAttribute("topSelling", productService.getTop5BestSellingProducts());
         model.addAttribute("breadcrumb", new  String[]{"Home", "Store", "Search"});
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("categoryIds", categoryIds);
         return "store";
     }
 
