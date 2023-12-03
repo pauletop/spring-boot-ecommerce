@@ -16,4 +16,13 @@ function filterAction() {
         }
     });
 
+    formData.append("isAdv", true);
+    formData.append("keyword", $("input[name='keyword']").val());
+    let sort = $("select#sortBy").val();
+    if (sort !== "")
+        formData.append("sort", sort);
+
+    // submit the form with get method
+    let url = "/store/search?" + (new URLSearchParams(formData)).toString();
+    location.href = url;
 }

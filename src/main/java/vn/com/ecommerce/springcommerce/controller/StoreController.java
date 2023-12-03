@@ -63,6 +63,7 @@ public class StoreController {
         model.addAttribute("categoryId", -1);
         model.addAttribute("categoryIds", null);
         model.addAttribute("navActive", "store");
+        model.addAttribute("brandIds", List.of());
         return "store";
     }
 
@@ -121,6 +122,8 @@ public class StoreController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("categoryId", categoryId);
         model.addAttribute("categoryIds", categoryIds);
+        model.addAttribute("brandIds", brandIds == null ? List.of() : brandIds);
+        model.addAttribute("sort", sort);
         model.addAttribute("navActive", "store");
         return "store";
     }

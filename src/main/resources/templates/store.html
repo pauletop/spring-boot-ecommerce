@@ -117,7 +117,7 @@
 								<h3 class="aside-title">Brand</h3>
 								<div class="checkbox-filter">
 									<div class="input-checkbox" th:each="brand : ${brands}">
-										<input type="checkbox" th:id="'brand-'+${brand.id}" name="brands" th:value="${brand.id}">
+										<input type="checkbox" th:id="'brand-'+${brand.id}" name="brands" th:value="${brand.id}" th:checked="${brandIds.contains(brand.id)}">
 										<label th:for="'brand-'+${brand.id}">
 											<span></span>
 											[[${brand.name}]]
@@ -166,8 +166,8 @@
 <!--								<label style="visibility: hidden;">-->
 								<label>
 									Sort By:
-									<select class="input-select">
-										<option>Choose an option</option>
+									<select class="input-select" id="sortBy">
+										<option value="">Choose an option</option>
 										<option value="hot">Hot</option>
 										<option value="asc">Price: Low to High</option>
 										<option value="desc">Price: High to Low</option>
