@@ -44,7 +44,7 @@ public class SpringcommerceApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
             Account account = new Account();
             account.setFullname("User");
-            account.setEmail("user@email.com");
+            account.setEmail("a@a.com");
             account.setPhone("0312345689");
             account.setPassword("1");
             accountService.register(account);

@@ -81,7 +81,7 @@
 								<div class="checkbox-filter">
 
 									<div class="input-checkbox" th:each="category : ${categories}">
-										<input type="checkbox" th:id="'category-'+${category.id}" name="categories" th:value="${category.id}" th:checked="${category.id == categoryId || (categoryIds != null && categoryIds.contains(category.id))}">
+										<input type="checkbox" th:id="'category-'+${category.id}" name="category" th:value="${category.id}" th:checked="${category.id == categoryId || (categoryIds != null && categoryIds.contains(category.id))}">
 										<label th:for="'category-'+${category.id}">
 											<span></span>
 											[[${category.name}]]

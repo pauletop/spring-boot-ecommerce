@@ -1,6 +1,7 @@
 package vn.com.ecommerce.springcommerce.controller;
 
 import jakarta.annotation.Nullable;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,5 +48,9 @@ public class HomeController {
         model.addAttribute("sCart", cart);
         model.addAttribute("navActive", "home");
         return "index";
+    }
+    @GetMapping("/wishlist")
+    public String getWishList(Model model, HttpSession session){
+        return "wishlist";
     }
 }
