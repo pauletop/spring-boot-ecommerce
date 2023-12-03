@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+		<title>Electro - Store</title>
+
+ 		<!-- Google font -->
+ 		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
+
+ 		<!-- Bootstrap -->
+ 		<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"/>
+
+ 		<!-- Slick -->
+ 		<link type="text/css" rel="stylesheet" href="/css/slick.css"/>
+ 		<link type="text/css" rel="stylesheet" href="/css/slick-theme.css"/>
+
+ 		<!-- nouislider -->
+ 		<link type="text/css" rel="stylesheet" href="/css/nouislider.min.css"/>
+
+ 		<!-- Font Awesome Icon -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+		<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+ 		<!-- Custom stlylesheet -->
+ 		<link type="text/css" rel="stylesheet" href="/css/style.css"/>
+ 		<link type="text/css" rel="stylesheet" href="/css/store.style.css"/>
+
+
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+    </head>
+	<body>
+		<div id="loading"><div class="loader"></div></div>
+		<!-- HEADER -->
+		<div th:replace="fragments/mutual :: header"></div>
+
+		<!-- BREADCRUMB -->
+		<div id="breadcrumb" class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+					<div class="col-md-12">
+						<ul class="breadcrumb-tree">
+							<li th:each="item, iterStat : ${breadcrumb}" th:class="${iterStat.last} ? 'active' : ''">
+								<a th:href="@{/__${item.toLowerCase()}__}" th:if="${!iterStat.last}">
+									[[${item}]]
+								</a>
+								<span th:if="${iterStat.last}">[[${item}]]</span>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /BREADCRUMB -->
+
+		<!-- SECTION -->
+		<div class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+					<!-- ASIDE -->
+					<div id="aside" class="col-md-3">
+						<div id="filter-form">
+							<!-- category aside Widget -->
+							<div class="aside">
+								<h3 class="aside-title">Categories</h3>
+								<div class="checkbox-filter">
+
+									<div class="input-checkbox" th:each="category : ${categories}">
+										<input type="checkbox" th:id="'category-'+${category.id}" name="category" th:value="${category.id}" th:checked="${category.id == categoryId || (categoryIds != null && categoryIds.contains(category.id))}">
+										<label th:for="'category-'+${category.id}">
+											<span></span>
+											[[${category.name}]]
+											<small>([[${category.products.size()}]])</small>
+										</label>
+									</div>
+								</div>
+							</div>
+							<!-- /aside Widget -->
+
+							<!-- Price aside Widget -->
+							<div class="aside">
+								<h3 class="aside-title">Price</h3>
+								<div class="price-filter">
+									<div id="price-slider"></div>
+									<div class="input-number price-min">
+										<input id="price-min" type="number" name="min">
+										<span class="qty-up">+</span>
+										<span class="qty-down">-</span>
+									</div>
+									<span>-</span>
+									<div class="input-number price-max">
+										<input id="price-max" type="number" name="max">
+										<span class="qty-up">+</span>
+										<span class="qty-down">-</span>
+									</div>
+								</div>
+							</div>
+							<!-- /aside Widget -->
+
+							<!-- Brand aside Widget -->
+							<div class="aside">
+								<h3 class="aside-title">Brand</h3>
+								<div class="checkbox-filter">
+									<div class="input-checkbox" th:each="brand : ${brands}">
+										<input type="checkbox" th:id="'brand-'+${brand.id}" name="brands" th:value="${brand.id}" th:checked="${brandIds.contains(brand.id)}">
+										<label th:for="'brand-'+${brand.id}">
+											<span></span>
+											[[${brand.name}]]
+											<small>([[${brand.products.size()}]])</small>
+										</label>
+									</div>
+								</div>
+							</div>
+							<!-- /aside Widget -->
+
+							<!-- Brand aside Widget -->
+							<div class="aside" style="margin-top: 1em;">
+								<button class="btn btn-basic w-100" id="filter-btn" onclick="filterAction()">Filter</button>
+							</div>
+							<!-- /aside Widget -->
+						</div>
+
+
+						<!-- Top selling aside Widget -->
+						<div class="aside">
+							<h3 class="aside-title">Top selling</h3>
+							<div class="product-widget view-product" th:each="product : ${topSelling}" th:data-id="${product.getIdBase64()}" th:data-info="${product.getLinkBase64()}">
+								<div class="product-img">
+									<img th:src="@{${product.getThumbnailFormat()}}" alt="">
+								</div>
+								<div class="product-body">
+									<p class="product-category" th:text="${product.category.name}"></p>
+									<h3 class="product-name"><a href="#" th:text="${product.name}"></a></h3>
+									<h4 class="product-price"><span th:text="${product.getPriceString()}"></span> <del class="product-old-price">$2,990.00</del></h4>
+								</div>
+								<div class="add-to-cart">
+									<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> <span class="tooltipp">add to cart</span>
+									</button>
+								</div>
+							</div>
+						</div>
+						<!-- /aside Widget -->
+					</div>
+					<!-- /ASIDE -->
+
+					<!-- STORE -->
+					<div id="store" class="col-md-9">
+						<!-- store top filter -->
+						<div class="store-filter clearfix">
+							<div class="store-sort">
+<!--								<label style="visibility: hidden;">-->
+								<label>
+									Sort By:
+									<select class="input-select" id="sortBy">
+										<option value="">Choose an option</option>
+										<option value="hot">Hot</option>
+										<option value="asc">Price: Low to High</option>
+										<option value="desc">Price: High to Low</option>
+										<option value="rating">Avg. Customer Review</option>
+									</select>
+								</label>
+							</div>
+<!--							 TODO here-->
+							<ul class="store-grid">
+								<li class="active"><a data-toggle="tab" href="#layout-1"><i class="fa fa-th"></i></a></li>
+								<li><a data-toggle="tab" href="#layout-2"><i class="fa fa-th-list"></i></a></li>
+							</ul>
+						</div>
+						<!-- /store top filter -->
+
+						<!-- store products -->
+						<div class="row">
+							<!-- products tabs -->
+							<div class="products-tabs">
+								<!-- layout-1 tab -->
+								<div id="layout-1" class="tab-pane d-flex-wrap fade in active">
+									<!-- product -->
+									<div class="col-md-4 col-xs-6" th:each="product : ${products}">
+										<div class="product view-product" th:data-id="${product.getIdBase64()}" th:data-info="${product.getLinkBase64()}">
+											<div class="product-img">
+												<img th:src="@{${product.getThumbnailFormat()}}" alt="">
+												<div class="product-label">
+													<span class="sale">-20%</span>
+													<span class="new">NEW</span>
+												</div>
+											</div>
+											<div class="product-body">
+												<p class="product-category" th:text="${product.category.name}"></p>
+												<h3 class="product-name"><a th:text="${product.name}"></a></h3>
+												<h4 class="product-price"><span th:text="${product.getPriceString()}"></span> <del class="product-old-price">$2,990.00</del></h4>
+												<div class="product-rating" th:utext="${product.getRatingHTML()}">
+												</div>
+												<div class="product-btns">
+													<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
+													<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
+												</div>
+											</div>
+											<div class="add-to-cart">
+												<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+											</div>
+										</div>
+									</div>
+									<!-- /product -->
+								</div>
+								<!-- /layout-1 tab -->
+								<!-- layout-2 tab -->
+								<div id="layout-2" class="tab-pane fade in">
+									<!-- product -->
+									<div class="product-widget col-12" th:each="product : ${products}">
+										<div class="product view-product" th:data-id="${product.getIdBase64()}" th:data-info="${product.getLinkBase64()}">
+											<div class="product-img">
+												<img th:src="@{${product.getThumbnailFormat()}}" alt="">
+												<div class="product-label">
+													<span class="sale">-20%</span>
+													<span class="new">NEW</span>
+												</div>
+											</div>
+											<div class="product-body">
+												<p class="product-category">Category</p>
+												<h3 class="product-name"><a href="#">product name goes here</a></h3>
+												<h4 class="product-price"><span th:text="${product.getPriceString()}"></span> <del class="product-old-price">$2,990.00</del></h4>
+												<div class="d-flex">
+													<div class="product-rating">
+														<i class="fa fa-star"></i>
+														<i class="fa fa-star"></i>
+														<i class="fa fa-star"></i>
+														<i class="fa fa-star"></i>
+														<i class="fa fa-star"></i>
+													</div>
+													<div class="product-btns">
+														<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
+														<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
+													</div>
+												</div>
+											</div>
+											<div class="add-to-cart">
+												<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+											</div>
+										</div>
+									</div>
+									<!-- /product -->
+								</div>
+								<!-- /layout-2 tab -->
+							</div>
+							<!-- /products tabs -->
+						</div>
+						<!-- /store products -->
+
+
+						<!-- store bottom filter -->
+						<div class="store-filter clearfix">
+							<span class="store-qty">Showing <b class="text-muted" th:text="${(currentPage - 1) * numberPerPage + 1} + '-' + ${(currentPage - 1) * numberPerPage + products.size()}"></b> of <b class="text-muted" th:text="${totalProducts}"></b> products</span>
+							<ul class="store-pagination" th:data-page="${queryStr}">
+								<li th:if="${currentPage > 1}"><a class="page-link" th:data-page="${currentPage - 1}"><i class="fa fa-angle-left"></i></a></li>
+								<li th:each="page : ${#numbers.sequence(1, totalPages)}" th:class="${page == currentPage} ? 'active' : ''"><a th:text="${page}" class="page-link" th:data-page="${page}"></a></li>
+								<li th:if="${currentPage < totalPages}"><a class="page-link" th:data-page="${currentPage + 1}"><i class="fa fa-angle-right"></i></a></li>
+							</ul>
+						</div>
+						<!-- /store bottom filter -->
+					</div>
+					<!-- /STORE -->
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+
+
+			<!-- dialog -->
+			<div class="modal fade" id="message-dialog">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title">Announcement</h4>
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+						<div class="modal-body">
+							<p></p>
+						</div>
+
+						<div class="modal-footer">
+							<a id="loginA" href="/account/login" class="btn my-dark-btn" style="display: none;">Login</a>
+							<a id="goCart" href="/cart" class="btn my-dark-btn" style="display: none;">Go to cart</a>
+							<button type="button" class="btn my-primary-btn" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /dialog -->
+		</div>
+		<!-- /SECTION -->
+
+
+		<div th:replace="fragments/mutual :: footer"></div>
+
+
+		<!-- jQuery Plugins -->
+		<script src="/js/jquery.min.js"></script>
+		<script src="/js/bootstrap.min.js"></script>
+		<script src="/js/slick.min.js"></script>
+		<script src="/js/nouislider.min.js"></script>
+		<script src="/js/jquery.zoom.min.js"></script>
+		<script src="/js/main.js"></script>
+		<script src="/js/store.js"></script>
+	</body>
+</html>

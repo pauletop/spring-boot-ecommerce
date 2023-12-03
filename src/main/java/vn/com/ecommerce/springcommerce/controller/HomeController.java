@@ -49,8 +49,4 @@ public class HomeController {
         model.addAttribute("navActive", "home");
         return "index";
     }
-    @GetMapping("/wishlist")
-    public String getWishList(Model model, HttpSession session){
-        return "wishlist";
-    }
 }
