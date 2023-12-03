@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -69,8 +70,6 @@ public class Cart extends SelectedList{
             return null;
         }
         Order order = new Order(this);
-        this.items.forEach(item -> item.setSelectedList(order));
-        this.clearCart();
         return order;
     }
 }

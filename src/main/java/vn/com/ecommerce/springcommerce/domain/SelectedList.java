@@ -30,9 +30,8 @@ public class SelectedList extends AbstractPersistable<Long> {
     }
 
     protected SelectedList(SelectedList selectedList) {
-        this.setId(selectedList.getId());
         this.totalPrice = selectedList.getTotalPrice();
-        this.items = selectedList.getItems();
+//        this.items = selectedList.getItems();
         this.account = selectedList.getAccount();
     }
 

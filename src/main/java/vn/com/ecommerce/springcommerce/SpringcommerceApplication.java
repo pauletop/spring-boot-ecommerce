@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import vn.com.ecommerce.springcommerce.domain.Account;
 import vn.com.ecommerce.springcommerce.domain.Category;
 import vn.com.ecommerce.springcommerce.domain.Product;
+import vn.com.ecommerce.springcommerce.service.AccountService;
 import vn.com.ecommerce.springcommerce.service.CategoryService;
 import vn.com.ecommerce.springcommerce.service.ProductService;
 
@@ -20,7 +22,8 @@ public class SpringcommerceApplication implements CommandLineRunner {
     ProductService productService;
     @Autowired
     CategoryService categoryService;
-
+    @Autowired
+    AccountService accountService;
     public static void main(String[] args) {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 
@@ -39,6 +42,12 @@ public class SpringcommerceApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+            Account account = new Account();
+            account.setFullname("User");
+            account.setEmail("user@email.com");
+            account.setPhone("0312345689");
+            account.setPassword("1");
+            accountService.register(account);
             Category cate_lap = new Category("Laptop");
             Category cate_phone = new Category("Smartphone");
             Category cate_acces = new Category("Accessories");

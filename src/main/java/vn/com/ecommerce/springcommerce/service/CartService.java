@@ -72,6 +72,10 @@ public class CartService {
         return removeProductFromCart(account,productId);
     }
 
+    public Cart saveCart(Cart cart) {
+        return cartRepository.save(cart);
+    }
+
     /**
      * Change quantity of product in cart
      * @param account

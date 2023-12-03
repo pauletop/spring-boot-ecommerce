@@ -16,6 +16,7 @@ import vn.com.ecommerce.springcommerce.service.AccountService;
 import vn.com.ecommerce.springcommerce.service.CartService;
 import vn.com.ecommerce.springcommerce.service.OrderService;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 @Controller
@@ -33,7 +34,7 @@ public class OrderController {
     }
     @GetMapping("/success")
     String success(@Nullable @SessionAttribute(value = "accEmail", required = false) String email,
-
+                   @Nullable @SessionAttribute(value = "sCart", required = false) Cart sCart,
                    Model model, HttpServletRequest request){
         if (email == null) {
             return "redirect:/account/login";
@@ -47,6 +48,7 @@ public class OrderController {
         }
         model.addAttribute("user", account);
         model.addAttribute("order", requestOrder);
+        model.addAttribute("sCart", sCart);
         return "order-detail";
     }
     @PostMapping("/checkout")
@@ -69,9 +71,15 @@ public class OrderController {
         }
         String paymentMethod = paymentMethods[Integer.parseInt(body.get("paymentMethod").toString())-1];
         order.setData(name, phone, address, note, paymentMethod, "pending");
-        Order newOrder = orderService.createOrder(order);
+        Order newOrder = orderService.saveOrder(order);
+        // set with new items list
+        newOrder.setItems(new ArrayList<>(cart.getItems()));
+        cart.getItems().forEach(item -> item.setSelectedList(newOrder));
+        orderService.saveOrder(newOrder);
+        cart.clearCart();
+        cartService.saveCart(cart);
         request.getSession().setAttribute("orderId", newOrder.getId());
-        request.getSession().setAttribute("sCart", cartService.getCart(email));
+        request.getSession().setAttribute("sCart", cart);
         return ResponseEntity.ok((new ResponseMessage<>(Response.SC_OK, "Checkout successfully")));
     }
 }

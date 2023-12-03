@@ -13,11 +13,7 @@ public class OrderService {
     @Autowired
     CartService cartService;
 
-    public Order createOrder(Order newOrder) {
-//        cartService.deleteById(newOrder.getId());
-        Cart cart = cartService.getCart(newOrder.getId());
-        // move items reference from cart to order
-        newOrder.setItems(cart.getItems());
+    public Order saveOrder(Order newOrder) {
         return orderRepository.save(newOrder);
     }
     public Order getOrder(Long id) {
