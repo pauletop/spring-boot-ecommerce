@@ -145,14 +145,14 @@
             <div id="responsive-nav">
                 <!-- NAV -->
                 <ul class="main-nav nav navbar-nav">
-                    <li class="active"><a href="/"><i class="fas fa-home"></i> Home</a></li>
-                    <li><a href="/store"><i class="fas fa-store"></i> Store</a></li>
-                    <li><a href="/store/brands"><i class="fas fa-tags"></i> Brands</a></li>
-                    <li><a href="/store/search?category=1&keyword="
+                    <li th:class="${navActive == 'home'} ? 'active' : ''"><a href="/"><i class="fas fa-home"></i> Home</a></li>
+                    <li th:class="${navActive == 'store'} ? 'active' : ''"><a href="/store"><i class="fas fa-store"></i> Store</a></li>
+                    <li th:class="${navActive == 'brands'} ? 'active' : ''"><a href="/store/brands"><i class="fas fa-tags"></i> Brands</a></li>
+                    <li th:class="${navActive == 'laptop'} ? 'active' : ''"><a href="/store/search?category=1&keyword="
                     ><i class="fas fa-laptop"></i> Laptops</a></li>
-                    <li><a href="/store/search?category=2&keyword="
+                    <li th:class="${navActive == 'phone'} ? 'active' : ''"><a href="/store/search?category=2&keyword="
                     ><i class="fas fa-mobile-alt"></i> Smartphones</a></li>
-                    <li><a href="/store/search?category=3&keyword="
+                    <li th:class="${navActive == 'acces'} ? 'active' : ''"><a href="/store/search?category=3&keyword="
                     ><i class="fas fa-headphones"></i> Accessories</a></li>
                 </ul>
                 <!-- /NAV -->

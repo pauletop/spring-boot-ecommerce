@@ -72,6 +72,7 @@ public class ProductController {
         model.addAttribute("numberOfReviewsByEachRating", numberOfReviewsByEachRating);
         model.addAttribute("product", product);
         model.addAttribute("breadcrumbs", new String[]{category, brand});
+        model.addAttribute("navActive", "product");
         return "product";
     }
 }

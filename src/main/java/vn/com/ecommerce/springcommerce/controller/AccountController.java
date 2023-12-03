@@ -31,20 +31,22 @@ public class AccountController {
             return "redirect:/account/login";
         }
         if (isLogin == null || !isLogin) {
-            model.addAttribute("isLogin", (boolean ) false);
+            model.addAttribute("isLogin", (boolean) false);
         } else {
             model.addAttribute("isLogin", (boolean) true);
         }
         Account account = accountService.getAccount(email);
         model.addAttribute("user", account);
         model.addAttribute("sCart", cart);
+        model.addAttribute("navActive", "account");
         return "account";
     }
 
 
     @GetMapping("/login")
     String login(HttpServletRequest request, HttpServletResponse response, Model model,
-                 @SessionAttribute(value = "isLogin", required = false) Boolean isLogin){
+                 @SessionAttribute(value = "sCart", required = false) Cart cart,
+                 @SessionAttribute(value = "isLogin", required = false) Boolean isLogin) {
         if (isLogin != null && isLogin) {
             return "redirect:/account";
         }
@@ -71,16 +73,21 @@ public class AccountController {
             model.addAttribute("email", "");
             model.addAttribute("password", "");
         }
+        model.addAttribute("isLogin", (boolean) false);
+        model.addAttribute("sCart", cart);
         String error = (String) request.getSession().getAttribute("error");
         if (error != null) {
             request.getSession().removeAttribute("error");
         }
         model.addAttribute("error", error);
+        model.addAttribute("navActive", "login");
         return "login";
     }
 
     @GetMapping("/register")
-    String signup(HttpServletRequest request, Model model, @SessionAttribute(value = "isLogin", required = false) Boolean isLogin){
+    String signup(HttpServletRequest request, Model model,
+                  @SessionAttribute(value = "sCart", required = false) Cart cart,
+                  @SessionAttribute(value = "isLogin", required = false) Boolean isLogin){
         if (isLogin != null && isLogin) {
             return "redirect:/account";
         }
@@ -88,7 +95,10 @@ public class AccountController {
         if (error != null) {
             request.getSession().removeAttribute("error");
         }
+        model.addAttribute("isLogin", (boolean) false);
+        model.addAttribute("sCart", cart);
         model.addAttribute("error", error);
+        model.addAttribute("navActive", "register");
         return "register";
     }
 

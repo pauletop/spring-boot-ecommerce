@@ -48,14 +48,21 @@ public class CartController {
     }
     @GetMapping({"/", ""})
     String index(@Nullable @SessionAttribute(value = "accEmail", required = false) String email,
+                 @SessionAttribute(value = "isLogin", required = false) Boolean isLogin,
                  @Nullable @SessionAttribute(value = "sCart", required = false) Cart sCart,
                  Model model, HttpServletRequest request){
         if (email == null) {
             return "redirect:/account/login";
         }
+        if (isLogin == null || !isLogin) {
+            model.addAttribute("isLogin", (boolean) false);
+        } else {
+            model.addAttribute("isLogin", (boolean) true);
+        }
         sCart = cartService.getCart(email);
         request.getSession().setAttribute("sCart", sCart);
         model.addAttribute("sCart", sCart);
+        model.addAttribute("navActive", "cart");
         return "cart";
     }
     @GetMapping("/checkout")
@@ -76,6 +83,7 @@ public class CartController {
         model.addAttribute("sCart", sCart);
         model.addAttribute("cart", cart);
         model.addAttribute("user", account);
+        model.addAttribute("navActive", "cart");
         return "checkout";
     }
 

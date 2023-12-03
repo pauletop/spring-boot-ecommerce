@@ -34,6 +34,7 @@ public class OrderController {
     }
     @GetMapping("/success")
     String success(@Nullable @SessionAttribute(value = "accEmail", required = false) String email,
+                   @SessionAttribute(value = "isLogin", required = false) Boolean isLogin,
                    @Nullable @SessionAttribute(value = "sCart", required = false) Cart sCart,
                    Model model, HttpServletRequest request){
         if (email == null) {
@@ -46,9 +47,15 @@ public class OrderController {
         } else {
 //            request.getSession().removeAttribute("order");
         }
+        if (isLogin == null || !isLogin) {
+            model.addAttribute("isLogin", (boolean) false);
+        } else {
+            model.addAttribute("isLogin", (boolean) true);
+        }
         model.addAttribute("user", account);
         model.addAttribute("order", requestOrder);
         model.addAttribute("sCart", sCart);
+        model.addAttribute("navActive", "order");
         return "order-detail";
     }
     @PostMapping("/checkout")

@@ -62,6 +62,7 @@ public class StoreController {
         model.addAttribute("breadcrumb", new  String[]{"Home", "Store"});
         model.addAttribute("categoryId", -1);
         model.addAttribute("categoryIds", null);
+        model.addAttribute("navActive", "store");
         return "store";
     }
 
@@ -120,6 +121,7 @@ public class StoreController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("categoryId", categoryId);
         model.addAttribute("categoryIds", categoryIds);
+        model.addAttribute("navActive", "store");
         return "store";
     }
 
@@ -134,6 +136,7 @@ public class StoreController {
         }
         model.addAttribute("brands", brands);
         model.addAttribute("sCart", sCart);
+        model.addAttribute("navActive", "brands");
         return "brands";
 
     }

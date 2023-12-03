@@ -45,6 +45,7 @@ public class HomeController {
         model.addAttribute("topAcces", topAcces);
         model.addAttribute("newAcces", newAcces);
         model.addAttribute("sCart", cart);
+        model.addAttribute("navActive", "home");
         return "index";
     }
 }
