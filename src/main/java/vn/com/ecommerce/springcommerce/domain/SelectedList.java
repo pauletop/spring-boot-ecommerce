@@ -1,15 +1,17 @@
 package vn.com.ecommerce.springcommerce.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "selected_list")
 public class SelectedList extends AbstractPersistable<Long> {
     @Column(name = "total_price")
@@ -21,9 +23,6 @@ public class SelectedList extends AbstractPersistable<Long> {
     @JoinColumn(name = "account_id", referencedColumnName = "id",
             nullable = false, foreignKey = @ForeignKey(name = "fk_selected_list_account"))
     private Account account;
-
-    public SelectedList() {
-    }
 
     public SelectedList(Account account) {
         this.account = account;
@@ -45,5 +44,14 @@ public class SelectedList extends AbstractPersistable<Long> {
     }
     public String getToltalPriceString(){
         return "$" + String.format("%,.2f", this.totalPrice);
+    }
+
+    @Override
+    public String toString() {
+        return "SelectedList{" +
+                "totalPrice=" + totalPrice +
+                ", items=" + items +
+                ", account=" + account +
+                '}';
     }
 }

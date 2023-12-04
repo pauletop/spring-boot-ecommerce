@@ -1,11 +1,14 @@
 package vn.com.ecommerce.springcommerce.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
-@Data
+@Getter
+@Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "selected_item")
 public class SelectedItem extends AbstractPersistable<Long> {
     @ManyToOne
@@ -21,8 +24,6 @@ public class SelectedItem extends AbstractPersistable<Long> {
             nullable = false, foreignKey = @ForeignKey(name = "fk_selected_item_selected_list"))
     private SelectedList selectedList;
 
-    public SelectedItem() {
-    }
 
     public SelectedItem(Product product, Integer quantity, SelectedList list) {
         this.product = product;
@@ -40,5 +41,15 @@ public class SelectedItem extends AbstractPersistable<Long> {
 
     public String getPriceString() {
         return String.format("%,.2f", this.totalPrice);
+    }
+
+    @Override
+    public String toString() {
+        return "SelectedItem{" +
+                "product=" + product +
+                ", quantity=" + quantity +
+                ", totalPrice=" + totalPrice +
+                ", selectedList=" + selectedList +
+                '}';
     }
 }

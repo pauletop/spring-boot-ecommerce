@@ -161,4 +161,16 @@ public class Product extends AbstractPersistable<Long> {
         this.rating = (this.rating * this.ratingCount + rating) / (this.ratingCount + 1);
         this.ratingCount++;
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "name='" + name + '\'' +
+                ", price=" + price +
+                ", brand=" + brand +
+                ", color='" + color + '\'' +
+                ", category=" + category +
+                ", stock=" + stock +
+                '}';
+    }
 }
