@@ -146,7 +146,6 @@ public class AccountController {
             return new RedirectView("/account/login");
         }
         Cart cart = cartService.getCart(email);
-        cart.getItems();
         // add user email to session
         HttpSession session = request.getSession();
         session.setAttribute("isLogin", true);
