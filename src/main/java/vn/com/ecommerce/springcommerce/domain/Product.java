@@ -12,6 +12,7 @@ import java.util.*;
 @Entity
 @Table(name = "product")
 public class Product extends AbstractPersistable<Long> {
+    private Long id;
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -60,6 +61,15 @@ public class Product extends AbstractPersistable<Long> {
         this.color = color;
         this.brand = new Brand(brandName);
         this.imageCount = imgCount;
+        this.description = description;
+        this.category = category;
+    }
+    public Product(Long id,String name, Double price, String color, Brand brand, Category category, String description) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.color = color;
+        this.brand = brand;
         this.description = description;
         this.category = category;
     }
@@ -165,7 +175,8 @@ public class Product extends AbstractPersistable<Long> {
     @Override
     public String toString() {
         return "Product{" +
-                "name='" + name + '\'' +
+                "id= '"+id+'\''+
+                ", name='" + name + '\'' +
                 ", price=" + price +
                 ", brand=" + brand +
                 ", color='" + color + '\'' +
