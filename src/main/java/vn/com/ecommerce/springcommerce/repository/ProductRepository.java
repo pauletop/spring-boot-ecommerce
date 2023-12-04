@@ -56,4 +56,5 @@ public interface ProductRepository extends CrudRepository<Product, Long>, Paging
     Page<Product> findByBrandId(Integer brandId, Pageable pageable);
 
     Iterable<Product> findTop4ByBrandIdAndPriceBetweenOrderBySoldDesc(Integer id, double min, double max);
+    Page<Product> findAllByOrderById(Pageable page);
 }

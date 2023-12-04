@@ -1,4 +1,4 @@
-(function($) {
+$(document).ready(function() {
 	"use strict"
 
 	// Mobile Nav toggle
@@ -276,7 +276,7 @@
 	window.addEventListener("beforeunload", ()=>{
 		$("#loading").show();
 	});
-})(jQuery);
+});
 
 $(window).on("load", function() {
 	$("#loading").hide();
