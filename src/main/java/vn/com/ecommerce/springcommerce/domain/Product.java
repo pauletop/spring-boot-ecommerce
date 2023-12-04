@@ -1,12 +1,14 @@
 package vn.com.ecommerce.springcommerce.domain;
 
-import lombok.Data;
+import lombok.*;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import jakarta.persistence.*;
 
 import java.util.*;
 
-@Data
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "product")
 public class Product extends AbstractPersistable<Long> {
@@ -41,9 +43,6 @@ public class Product extends AbstractPersistable<Long> {
     private Date createdAt = new Date();
     @OneToMany(mappedBy = "product")
     private List<CustomerReview> customerReviews;
-
-    public Product() {
-    }
 
     public Product(String name, Double price) {
         this.name = name;
@@ -161,5 +160,17 @@ public class Product extends AbstractPersistable<Long> {
     public void addRating(int rating) {
         this.rating = (this.rating * this.ratingCount + rating) / (this.ratingCount + 1);
         this.ratingCount++;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "name='" + name + '\'' +
+                ", price=" + price +
+                ", brand=" + brand +
+                ", color='" + color + '\'' +
+                ", category=" + category +
+                ", stock=" + stock +
+                '}';
     }
 }

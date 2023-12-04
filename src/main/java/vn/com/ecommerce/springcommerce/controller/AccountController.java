@@ -3,32 +3,53 @@ package vn.com.ecommerce.springcommerce.controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.com.ecommerce.springcommerce.domain.Account;
+import vn.com.ecommerce.springcommerce.domain.Cart;
 import vn.com.ecommerce.springcommerce.service.AccountService;
+import vn.com.ecommerce.springcommerce.service.CartService;
 
 @Controller
 @RequestMapping("/account")
 public class AccountController {
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private CartService cartService;
 
     @GetMapping({"/", ""})
-    String index(){
-//        return "redirect:/account/login";
+    String index(@SessionAttribute(value = "accEmail", required = false) String email,
+                 @SessionAttribute(value = "isLogin", required = false) Boolean isLogin,
+                 @SessionAttribute(value = "sCart", required = false) Cart cart,
+                 Model model){
+        if (email == null) {
+            return "redirect:/account/login";
+        }
+        if (isLogin == null || !isLogin) {
+            model.addAttribute("isLogin", (boolean) false);
+        } else {
+            model.addAttribute("isLogin", (boolean) true);
+        }
+        Account account = accountService.getAccount(email);
+        model.addAttribute("user", account);
+        model.addAttribute("sCart", cart);
+        model.addAttribute("navActive", "account");
         return "account";
     }
 
 
     @GetMapping("/login")
-    String login(HttpServletRequest request, HttpServletResponse response, Model model){
+    String login(HttpServletRequest request, HttpServletResponse response, Model model,
+                 @SessionAttribute(value = "sCart", required = false) Cart cart,
+                 @SessionAttribute(value = "isLogin", required = false) Boolean isLogin) {
+        if (isLogin != null && isLogin) {
+            return "redirect:/account";
+        }
         Cookie[] cookies = request.getCookies();
         boolean isRemembered = false;
         String email, password;
@@ -46,27 +67,38 @@ public class AccountController {
             }
         }
         if (isRemembered) {
-            model.addAttribute("remember", "checked");
+            model.addAttribute("remember", true);
         } else {
-            model.addAttribute("remember", "");
+            model.addAttribute("remember", false);
             model.addAttribute("email", "");
             model.addAttribute("password", "");
         }
+        model.addAttribute("isLogin", (boolean) false);
+        model.addAttribute("sCart", cart);
         String error = (String) request.getSession().getAttribute("error");
         if (error != null) {
             request.getSession().removeAttribute("error");
         }
         model.addAttribute("error", error);
+        model.addAttribute("navActive", "login");
         return "login";
     }
 
     @GetMapping("/register")
-    String signup(HttpServletRequest request, Model model){
+    String signup(HttpServletRequest request, Model model,
+                  @SessionAttribute(value = "sCart", required = false) Cart cart,
+                  @SessionAttribute(value = "isLogin", required = false) Boolean isLogin){
+        if (isLogin != null && isLogin) {
+            return "redirect:/account";
+        }
         String error = (String) request.getSession().getAttribute("error");
         if (error != null) {
             request.getSession().removeAttribute("error");
         }
+        model.addAttribute("isLogin", (boolean) false);
+        model.addAttribute("sCart", cart);
         model.addAttribute("error", error);
+        model.addAttribute("navActive", "register");
         return "register";
     }
 
@@ -109,8 +141,13 @@ public class AccountController {
             request.getSession().setAttribute("error", error);
             return new RedirectView("/account/login");
         }
+        Cart cart = cartService.getCart(email);
+        // add user email to session
+        HttpSession session = request.getSession();
+        session.setAttribute("isLogin", true);
+        session.setAttribute("accEmail", email);
+        session.setAttribute("sCart", cart);
         Account account = accountService.getAccount(email);
-        request.getSession().setAttribute("accountId", account.getIdBase64());
         if (rememberMe) {
             Cookie emailCookie = new Cookie("email", email);
             Cookie passwordCookie = new Cookie("password", password);
@@ -119,7 +156,33 @@ public class AccountController {
             response.addCookie(emailCookie);
             response.addCookie(passwordCookie);
         }
-        return new RedirectView("/");
+        return new RedirectView("/account");
+    }
+
+    @PostMapping("/logout")
+    RedirectView logout(HttpServletRequest request, HttpServletResponse response){
+        // remove user email from session
+        HttpSession session = request.getSession();
+        session.removeAttribute("accEmail");
+        session.removeAttribute("sCart");
+        session.removeAttribute("isLogin");
+        return new RedirectView("/account/login");
+    }
+
+    @PostMapping("/change-password")
+    RedirectView changePass(@RequestParam("oldPassword") String oldPassword,
+                            @RequestParam("newPassword") String newPassword,
+                            @RequestParam("confPassword") String rePassword,
+                            @SessionAttribute("accEmail") String email,
+                            HttpServletRequest request){
+        String error = validateChangePassword(oldPassword, newPassword, rePassword);
+        if (error != null) {
+            request.getSession().setAttribute("error", error);
+            return new RedirectView("/account");
+        }
+        String accountId = (String) request.getSession().getAttribute("accountId");
+        accountService.changePassword(email, oldPassword, newPassword);
+        return new RedirectView("/account");
     }
     /*---------------------------------*\
     |          UTILITY FUNCTIONS        |

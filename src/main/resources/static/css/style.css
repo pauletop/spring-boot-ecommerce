@@ -142,6 +142,13 @@ animation: rotation 0.5s linear infinite reverse;
   display: -ms-flexbox!important;
   display: flex!important;
 }
+.d-inline-flex {
+  display: -ms-inline-flexbox!important;
+  display: inline-flex!important;
+}
+.d-inline-block {
+  display: inline-block!important;
+}
 .align-items-center {
   -ms-flex-align: center!important;
   align-items: center!important;
@@ -268,12 +275,31 @@ animation: rotation 0.5s linear infinite reverse;
   -webkit-transition: 0.2s all;
   transition: 0.2s all;
 }
-.my-primary-btn:hover, .my-primary-btn:focus {
+.my-primary-btn:hover {
   opacity: 0.9;
   background-color: #fff;
   color: #D10024;
   font-weight: 700;
   border: #D10024 3px solid;
+}
+.my-dark-btn {
+  display: inline-block;
+  background-color: #1E1F29;
+  border: #15161D 3px solid;
+  padding: 0.6em 1.25em;
+  border-radius: 1em;
+  font-weight: 500;
+  color: #FFF;
+  text-align: center;
+  -webkit-transition: 0.2s all;
+  transition: 0.2s all;
+}
+.my-dark-btn:hover, .my-dark-btn:focus {
+  opacity: 0.9;
+  background-color: #fff;
+  color: #1E1F29;
+  font-weight: 700;
+  border: #1E1F29 3px solid;
 }
 .btn-basic {
   /*#15161D ##1E1F29*/
@@ -749,6 +775,10 @@ textarea.input {
   padding: 0px;
   -webkit-box-shadow: none;
   box-shadow: none;
+}
+
+.cart-dropdown .cart-list .product-widget .product-name {
+  padding-left: 1rem;
 }
 
 .cart-dropdown .cart-list .product-widget:last-child {
@@ -2580,6 +2610,9 @@ textarea.input {
   font-style: normal;
   font-weight: 400;
 }
+#message-dialog .modal-dialog .modal-header h4 {
+  display: inline-block;
+}
 .header-banner {
   font-family: Ephesis, sans-serif;
   font-size: 5em;
@@ -2625,12 +2658,20 @@ textarea.input {
   .header-banner p {
     font-size: 0.8em;
   }
+  #cart .input-number input[type="number"] {
+    padding: 0px 25px 0px 10px;
+  }
 }
 @media (max-width: 425px)  {
   #cart .table tbody tr td.cart-pd {
     display: flex;
     flex-direction: column;
   }
+}
+#cart .table .bg-i{
+  background: url("/images/cart.svg") no-repeat center;
+  background-position-y: -150%;
+  height: 250px;
 }
 #cart .table tbody tr td .form-control {
   width: 50px;
@@ -2651,6 +2692,31 @@ textarea.input {
 }
 #cart .cart-img {
   max-width: 150px;
+}
+#cart .table tfoot tr td {
+  border-top: none;
+}
+#cart .table tfoot tr td {
+  padding-left: 3em;
+  padding-right: 3em;
+  border-top: none;
+}
+#cart .table tfoot .check-out{
+  background: #D10024;
+  color: #fff;
+  border-radius: 5px;
+  margin-top: 1.5em;
+  padding: 10px 20px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+#cart .table tfoot .check-out:hover{
+  background: #1E1F29;
+}
+#cart .table tfoot .check-out:active, #cart .table tfoot .check-out:focus{
+  background: #8D99AE6E;
+  color: #1E1F29;
 }
 /*=========================================================
     17 -> BRANDS

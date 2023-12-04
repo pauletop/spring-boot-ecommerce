@@ -55,8 +55,6 @@
         <!-- row -->
         <div class="d-flex">
           <div class="col-xs-12 col-sm-8">
-            //TODO: hide it
-            <div th:text="${message}"></div>
             <div id="400" th:if="${status} == 400">
                 <h1>Oopps!</h1>
                 <p class="status">
@@ -110,8 +108,20 @@
             </div>
             <div id="403" th:if="${status} == 403">
                 <h1>Oopps!</h1>
-                <h2>Forbidden - 403</h2>
-                <p>Sorry but you don't have permission to view this page.</p>
+                <p class="status">
+                    <strong>403</strong>
+                    <ins> - Forbidden.</ins>
+                </p>
+                <p>
+                  <span th:text="${message}"
+                        hidden="hidden"></span>
+
+                    Sorry but you don't have permission to view this page.
+                    <ins> That's all we know.</ins>
+                </p>
+                <a class="goback" href="javascript:;" onclick="goBack()"
+                ><i class="fas fa-chevron-left"></i> &nbsp;&nbsp;Go Back</a
+                >
             </div>
             <div id="500" th:if="${status} == 500">
                 <h1>Oopps!</h1>

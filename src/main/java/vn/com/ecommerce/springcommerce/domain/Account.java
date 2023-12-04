@@ -2,7 +2,7 @@ package vn.com.ecommerce.springcommerce.domain;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,8 +12,11 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "account")
 public class Account extends AbstractPersistable<Long> implements UserDetails {
     @Column(name = "fullname", nullable = false)
@@ -43,6 +46,13 @@ public class Account extends AbstractPersistable<Long> implements UserDetails {
             return null;
         }
         return this.carts.get(0);
+    }
+
+    public String getPhoneStars() {
+        if (this.phone == null) {
+            return null;
+        }
+        return this.phone.replaceAll("(\\d{2})\\d*(\\d{3})", "$1*****$2");
     }
 
     public void setCart(Cart cart) {
@@ -82,5 +92,17 @@ public class Account extends AbstractPersistable<Long> implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "fullname='" + fullname + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", role=" + role +
+                ", status=" + status +
+                ", address='" + address + '\'' +
+                '}';
     }
 }

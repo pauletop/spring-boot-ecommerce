@@ -5,4 +5,5 @@ import org.springframework.stereotype.Repository;
 import vn.com.ecommerce.springcommerce.domain.Order;
 @Repository
 public interface OrderRepository extends CrudRepository<Order, Long> {
+    Iterable<Order> findAllByAccountEmail(String email);
 }

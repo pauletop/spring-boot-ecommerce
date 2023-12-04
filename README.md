@@ -14,3 +14,5 @@ pulled from Docker Hub. The Docker image is defined in
 ```shell
 docker-compose up -d
 ```
+
+## Have a nice day!

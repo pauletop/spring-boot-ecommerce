@@ -74,7 +74,7 @@ public class ProductService {
     }
 
     public Page<Product> searchByKeyword(String keyword, Integer categoryId, int page, String sortOrder) {
-        return productRepository.searchDefault(keyword, categoryId != 0 ? categoryId : null, PageRequest.of(page, 12, getSortOption(sortOrder)));
+        return productRepository.searchDefault(keyword, categoryId == null || categoryId != 0 ? categoryId : null, PageRequest.of(page, 12, getSortOption(sortOrder)));
     }
 
     /**

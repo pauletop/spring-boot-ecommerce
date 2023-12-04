@@ -1,5 +1,10 @@
 <!DOCTYPE html>
+<<<<<<< HEAD
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+=======
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+>>>>>>> 9ba7a2c0bd1b127b815a4041226fb06eaac182ab
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,10 +18,6 @@
 
     <!-- Bootstrap -->
     <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"/>
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
 
     <!-- Slick -->
     <link type="text/css" rel="stylesheet" href="/css/slick.css"/>
@@ -28,10 +29,8 @@
     <!-- Font Awesome Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="/css/font-awesome.min.css">
-
     <!-- Custom stlylesheet -->
     <link type="text/css" rel="stylesheet" href="/css/style.css"/>
-    <link rel="stylesheet" href="/css/form.css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -42,155 +41,7 @@
 
 </head>
 <body>
-<!-- HEADER -->
-<header>
-    <!-- TOP HEADER -->
-    <div id="top-header">
-        <div class="container">
-            <ul class="header-links pull-left">
-                <li><a href="#"><i class="fa fa-phone"></i> +021-95-51-84</a></li>
-                <li><a href="#"><i class="fas fa-envelope"></i> email@email.com</a></li>
-                <li><a href="#"><i class="fas fa-map-marker-alt"></i> 1734 Stonecoal Road</a></li>
-            </ul>
-            <ul class="header-links pull-right">
-                <li><a href="#"><i class="fas fa-dollar-sign"></i> USD</a></li>
-                <li><a href="#"><i class="far fa-user"></i> My Account</a></li>
-            </ul>
-        </div>
-    </div>
-    <!-- /TOP HEADER -->
-
-    <!-- MAIN HEADER -->
-    <div id="header">
-        <!-- container -->
-        <div class="container">
-            <!-- row -->
-            <div class="row">
-                <!-- LOGO -->
-                <div class="col-md-3 col-12">
-                    <div class="header-logo">
-                        <a href="/" class="logo">
-                            <img src="/img/logo.png" alt="">
-                        </a>
-                    </div>
-                </div>
-                <!-- /LOGO -->
-
-                <!-- SEARCH BAR -->
-                <div class="col-md-6 col-12">
-                    <div class="header-search">
-                        <form action="/store/search" method="get">
-                            <select class="input-select" name="category">
-                                <option value="0">All Categories</option>
-                                <option value="1">Laptop</option>
-                                <option value="2">Phone</option>
-                                <option value="3">Accessories</option>
-                            </select>
-                            <input class="input" placeholder="Search here" name="keyword">
-                            <button class="search-btn">Search</button>
-                        </form>
-                    </div>
-                </div>
-                <!-- /SEARCH BAR -->
-
-                <!-- ACCOUNT -->
-                <div class="col-md-3 clearfix col-12">
-                    <div class="header-ctn">
-                        <!-- Wishlist -->
-                        <div>
-                            <a href="#">
-                                <i class="far fa-heart"></i>
-                                <span>Your Wishlist</span>
-                                <div class="qty">2</div>
-                            </a>
-                        </div>
-                        <!-- /Wishlist -->
-
-                        <!-- Cart -->
-                        <div class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                                <i class="fa fa-shopping-cart"></i>
-                                <span>Your Cart</span>
-                                <div class="qty">3</div>
-                            </a>
-                            <div class="cart-dropdown">
-                                <div class="cart-list">
-                                    <div class="product-widget">
-                                        <div class="product-img">
-                                            <img src="/img/product01.png" alt="">
-                                        </div>
-                                        <div class="product-body">
-                                            <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                                            <h4 class="product-price"><span class="qty">1x</span>$980.00</h4>
-                                        </div>
-                                        <button class="delete"><i class="fas fa-times"></i></button>
-                                    </div>
-
-                                    <div class="product-widget">
-                                        <div class="product-img">
-                                            <img src="/img/product02.png" alt="">
-                                        </div>
-                                        <div class="product-body">
-                                            <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                                            <h4 class="product-price"><span class="qty">3x</span>$980.00</h4>
-                                        </div>
-                                        <button class="delete"><i class="fas fa-times"></i></button>
-                                    </div>
-                                </div>
-                                <div class="cart-summary">
-                                    <small>3 Item(s) selected</small>
-                                    <h5>SUBTOTAL: $2940.00</h5>
-                                </div>
-                                <div class="cart-btns">
-                                    <a href="#">View Cart</a>
-                                    <a href="#">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- /Cart -->
-
-                        <!-- Menu Toogle -->
-                        <div class="menu-toggle">
-                            <a href="#">
-                                <i class="fa fa-bars"></i>
-                                <span>Menu</span>
-                            </a>
-                        </div>
-                        <!-- /Menu Toogle -->
-                    </div>
-                </div>
-                <!-- /ACCOUNT -->
-            </div>
-            <!-- row -->
-        </div>
-        <!-- container -->
-    </div>
-    <!-- /MAIN HEADER -->
-</header>
-<!-- /HEADER -->
-
-<!-- NAVIGATION -->
-<nav id="navigation">
-    <!-- container -->
-    <div class="container">
-        <!-- responsive-nav -->
-        <div id="responsive-nav">
-            <!-- NAV -->
-            <ul class="main-nav nav navbar-nav">
-                <li class=""><a href="/"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="/store"><i class="fas fa-store"></i> Store</a></li>
-                <li><a href="/store/brands"><i class="fas fa-tags"></i> Brands</a></li>
-                <li><a href="/store/laptop"><i class="fas fa-laptop"></i> Laptops</a></li>
-                <li><a href="/store/phone"><i class="fas fa-mobile-alt"></i> Smartphones</a></li>
-                <li><a href="/store/accessory"><i class="fas fa-headphones"></i> Accessories</a></li>
-            </ul>
-            <!-- /NAV -->
-        </div>
-        <!-- /responsive-nav -->
-    </div>
-    <!-- /container -->
-</nav>
-<!-- /NAVIGATION -->
+<div th:replace = "fragments/mutual :: header"></div>
 
 <!-- BREADCRUMB -->
 <div id="breadcrumb" class="section">
@@ -199,12 +50,12 @@
         <!-- row -->
         <div class="row">
             <div class="col-md-12">
-            <button class="navbar-toggle edited-bars" data-toggle="collapse" data-target="#toogtar"><i class="fas fa-bars"></i></button>
+            <button class="navbar-toggle edited-bars" data-toggle="collapse" data-target="#togTar"><i class="fas fa-bars"></i></button>
 
                 <!--				<h3 class="breadcrumb-header">Regular Page</h3>-->
                 <ul class="breadcrumb-tree">
                     <li><a href="/">Home</a></li>
-                    <li class="active">Login</li>
+                    <li class="active">Account</li>
                 </ul>
             </div>
         </div>
@@ -220,383 +71,197 @@
     <div class="container">
         <!-- row -->
         <div class="row" id="account">
-                <div class="col-sm-4 col-xs-12 collapse in" id="toogtar">
-                    <div>
-                        <div class="nav-left">
-                            <ul class="nav-left-list">
-                                <li class="active">
-                                    <a data-toggle="tab" href="#info">
-                                        <span>Account Information</span>
-                                    </a>
-                                </li>
-                                <li class="">
-                                    <a data-toggle="tab" href="#history">
-                                        <span>Order History</span>
-                                    </a>
-                                </li>
-                                <li class="">
-                                    <a data-toggle="tab" href="#changePas">
-                                        <span>Change Password</span>
-                                    </a>
-                                </li>
-                            </ul>
+            <div class="col-sm-4 col-xs-12 collapse in" id="togTar">
+                <div>
+                    <div class="nav-left">
+                        <ul class="nav-left-list">
+                            <li class="active">
+                                <a data-toggle="tab" href="#info">
+                                    <span>Account Information</span>
+                                </a>
+                            </li>
+                            <li class="">
+                                <a data-toggle="tab" href="#history">
+                                    <span>Order History</span>
+                                </a>
+                            </li>
+                            <li class="">
+                                <a data-toggle="tab" href="#changePas">
+                                    <span>Change Password</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content col-sm-8 col-xs-12">
+                <!-- Tab panes -->
+                <div id="info" class="boxinfo tab-pane fade in active">
+                    <h3 class="title">Account Information</h3>
+                    <form>
+                        <div class="form-group">
+                            <label for="username" class="col-sm-3 control-label col-xs-5">Full name:</label>
+                            <div class="col-sm-6 col-xs-7">
+                                <p class="notbg " id="username" th:text="${user.fullname}"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="emaillogin" class="col-sm-3 control-label col-xs-5">Email:</label>
+                            <div class="col-sm-6 col-xs-7">
+                                <p class="notbg " id="emaillogin" th:text="${user.email}">Not set</p>
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="useradress" class="col-sm-3 control-label col-xs-5">Address:</label>
+                            <div class="col-sm-6 col-xs-7">
+                                <p class="notbg " id="useradress" th:text="${user.address ne null ? user.address : 'Not set'}">Not set</p>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="userphone" class="col-sm-3 control-label col-xs-5">Phone number:</label>
+                            <div class="col-sm-6 col-xs-7">
+                                <p class="notbg " id="userphone" ><span th:text="${user.getPhoneStars()}"></span>
+                                    <strong class="text-note" style="color:#D10024;">(Unverified)</strong>
+                                </p>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group d-flex justify-content-between align-items-center">
+                            <label class="control-label hide">
+                                <a href="#" onclick="return confirm('Confirm sending request to permanently delete account?')" title="This action is irreversible">
+                                    Request to delete account?</a>
+                            </label>
+                            <label class="control-label">
+                                <a id="logout" class="btn btn-basic">
+                                    Logout? &nbsp;
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </a>
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <!-- /Tab panes -->
+                <!-- Tab panes -->
+                <div id="history" class="boxinfo tab-pane fade">
+                    <h3 class="title">Order History</h3>
+                    <div class="py-5 h-100">
+                        <table class="table table-striped border table-hover" th:if="${user.orders.size() > 0}">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Order ID</th>
+                                <th>Order Date</th>
+                                <th>Amount</th>
+                                <th>Total Paid</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="order, iterStat : ${user.orders}">
+                                <td th:text="${iterStat.count}"></td>
+                                <td class="view-product"><a href="#" th:text="${order.id}"></a></td>
+                                <td th:text="${order.getOrderDate()}"></td>
+                                <td th:text="${order.getItems().size()}"></td>
+                                <td th:text="${order.getToltalPriceString()}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-center" th:if="${user.orders.size() == 0}">
+                            <h4 class="text-note">No order history</h4>
                         </div>
                     </div>
                 </div>
-
-                <div class="tab-content col-sm-8 col-xs-12">
-                    <!-- Tab panes -->
-                    <div id="info" class="boxinfo tab-pane fade in active">
-                        <h3 class="title">Account Information</h3>
-                        <form>
-                            <div class="form-group">
-                                <label for="username" class="col-sm-3 control-label col-xs-5">Full name:</label>
-                                <div class="col-sm-6 col-xs-7">
-                                    <p class="notbg " id="username">Ngo Tran Gia Anh CT</p>
-                                </div>
+                <!-- /Tab panes -->
+                <!-- Tab panes -->
+                <div id="changePas" class="boxinfo tab-pane fade in">
+                    <h3 class="title">Change Password</h3>
+                    <form>
+                        <div class="form-group">
+                            <label for="emailchange" class="col-sm-3 control-label col-xs-5">Email:</label>
+                            <div class="col-sm-6 col-xs-7">
+                                <p class="notbg " id="emailchange" th:text="${user.email}"></p>
+                                </p>
                             </div>
 
-                            <div class="form-group">
-                                <label for="emaillogin" class="col-sm-3 control-label col-xs-5">Email:</label>
-                                <div class="col-sm-6 col-xs-7">
-                                    <p class="notbg " id="emaillogin">**************712@*****.com
-<!--                                        CHANGE-->
-                                        <strong class="text-note" style="color:#D10024;">(Unverified)</strong>
-                                    </p>
-                                </div>
-
-                            </div>
-
-                            <div class="form-group">
-                                <label for="useradress" class="col-sm-3 control-label col-xs-5">Address:</label>
-                                <div class="col-sm-6 col-xs-7">
-                                    <p class="notbg " id="useradress">TT VX, ĐL, BT</p>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="userphone" class="col-sm-3 control-label col-xs-5">Phone number:</label>
-                                <div class="col-sm-6 col-xs-7">
-                                    <p class="notbg " id="userphone">
-                                        ********794                                                                    </p>
-                                </div>
-                            </div>
-
-
-                            <div class="form-group">
-                                <label class="control-label">
-                                    <a href="#" onclick="return confirm('Confirm sending request to permanently delete account?')">
-                                        Request to delete account?</a>
-                                </label>
-                            </div>
-                        </form>
-                    </div>
-                    <!-- /Tab panes -->
-                    <!-- Tab panes -->
-                    <div id="history" class="boxinfo tab-pane fade">
-                        <h3 class="title">Account Information</h3>
-                        <div class="py-5 h-100">
-                            <table class="table table-striped border table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Order ID</th>
-                                        <th>Order Date</th>
-                                        <th>Amount</th>
-                                        <th>Total Paid</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>4</td>
-                                        <td><a href="#">Trần Minh Trí</a></td>
-                                        <td>Nam</td>
-                                        <td>27</td>
-                                        <td>tri@gmail.com</td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td><a href="#">Trần Minh Trí</a></td>
-                                        <td>Nam</td>
-                                        <td>27</td>
-                                        <td>tri@gmail.com</td>
-                                    </tr>
-                                </tbody>
-
-                            </table>
                         </div>
-                        <!-- dialog -->
-                        <div class="row d-flex justify-content-center align-items-center h-100">
-                            <div class="col-lg-10 col-xl-8">
-                                <div class="card" style="border-radius: 10px;">
-                                    <div class="card-header px-4 py-5">
-                                        <h5 class="text-muted mb-0">Thanks for your Order, <span class="primary-color">Anna</span>!</h5>
-                                    </div>
-                                    <div class="card-body p-4">
-                                        <div class="d-flex justify-content-between align-items-center mb-4">
-                                            <p class="lead fw-normal mb-0 primary-color">Receipt</p>
-                                            <p class="small text-muted mb-0">Receipt Voucher : 1KAU9-84UIL</p>
-                                        </div>
-                                        <div class="card shadow-0 border mb-4">
-                                            <div class="card-body">
-                                                <div class="row d-flex align-items-center">
-                                                    <div class="col-md-2">
-                                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/13.webp"
-                                                             class="img-fluid" alt="Phone">
-                                                    </div>
-                                                    <div class="col-md-4 text-center d-flex justify-content-center align-items-center">
-                                                        <p class="text-muted mb-0">Samsung Galaxy</p>
-                                                    </div>
-                                                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                                        <p class="text-muted mb-0 small">White</p>
-                                                    </div>
-                                                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                                        <p class="text-muted mb-0 small">Qty: 1</p>
-                                                    </div>
-                                                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                                        <p class="text-muted mb-0 small">$499</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card shadow-0 border mb-4">
-                                            <div class="card-body">
-                                                <div class="row d-flex align-items-center">
-                                                    <div class="col-md-2">
-                                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/13.webp"
-                                                             class="img-fluid" alt="Phone">
-                                                    </div>
-                                                    <div class="col-md-4 text-center d-flex justify-content-center align-items-center">
-                                                        <p class="text-muted mb-0">Samsung Galaxy</p>
-                                                    </div>
-                                                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                                        <p class="text-muted mb-0 small">White</p>
-                                                    </div>
-                                                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                                        <p class="text-muted mb-0 small">Qty: 1</p>
-                                                    </div>
-                                                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                                        <p class="text-muted mb-0 small">$499</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
 
-                                        <div class="d-flex justify-content-between pt-2">
-                                            <p class="fw-bold mb-0">Order Details</p>
-                                            <p class="text-muted mb-0"><span class="fw-bold me-4">Total</span> $898.00</p>
-                                        </div>
-
-                                        <div class="d-flex justify-content-between pt-2">
-                                            <p class="text-muted mb-0">Invoice Number : 788152</p>
-                                            <p class="text-muted mb-0"><span class="fw-bold me-4">Discount</span> $19.00</p>
-                                        </div>
-
-                                        <div class="d-flex justify-content-between">
-                                            <p class="text-muted mb-0">Invoice Date : 22 Dec,2019</p>
-                                            <p class="text-muted mb-0"><span class="fw-bold me-4">GST 18%</span> 123</p>
-                                        </div>
-
-                                        <div class="d-flex justify-content-between mb-5">
-                                            <p class="text-muted mb-0">Recepits Voucher : 18KU-62IIK</p>
-                                            <p class="text-muted mb-0"><span class="fw-bold me-4">Delivery Charges</span> Free</p>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer border-0 px-4 py-5 primary-gradient"
-                                         style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
-                                        <h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0 text-white" style="gap: 1em;">Total
-                                            paid: <span class="h2 mb-0 ms-2">$1040</span></h5>
-                                    </div>
-                                </div>
+                        <div class="form-group">
+                            <label for="oldpass" class="col-sm-3 control-label col-xs-5">Current password:</label>
+                            <div class="col-sm-6 col-xs-7">
+                                <input type="password" name="oldPassword" id="oldpass" class="form-control input-default" placeholder="Enter current password" required>
                             </div>
                         </div>
-                        <!-- /dialog -->
-                    </div>
-                    <!-- /Tab panes -->
-                    <!-- Tab panes -->
-                    <div id="changePas" class="boxinfo tab-pane fade in">
-                        <h3 class="title">Change Password</h3>
-                        <form>
-                            <div class="form-group">
-                                <label for="emaillogin" class="col-sm-3 control-label col-xs-5">Email:</label>
-                                <div class="col-sm-6 col-xs-7">
-                                    <p class="notbg " id="emaillogin">**************712@*****.com
-                                    </p>
-                                </div>
 
-                            </div>
-
-                            <div class="form-group">
-                                <label for="oldpass" class="col-sm-3 control-label col-xs-5">Current password:</label>
-                                <div class="col-sm-6 col-xs-7">
-                                    <input type="password" name="oldPassword" id="oldpass" class="form-control input-default" placeholder="Enter current password" required>
-                                </div>
-                            </div>
-
+<<<<<<< HEAD
                             <div class="form-group">
                                 <label for="newpass" class="col-sm-3 control-label col-xs-5">New password:</label>
                                 <div class="col-sm-6 col-xs-7">
                                     <input type="password" name="newPassword" id="newpass" class="form-control input-default" placeholder="Enter current password" required minlength="6">
                                 </div>
+=======
+                        <div class="form-group">
+                            <label for="newpass" class="col-sm-3 control-label col-xs-5">New password:</label>
+                            <div class="col-sm-6 col-xs-7">
+                                <input type="password" name="newPassword" id="newpass" class="form-control input-default" placeholder="Enter current password" required minlength="6">
+>>>>>>> 9ba7a2c0bd1b127b815a4041226fb06eaac182ab
                             </div>
-                            <div class="form-group">
-                                <label for="confpass" class="col-sm-3 control-label col-xs-5">Confirm password:</label>
-                                <div class="col-sm-6 col-xs-7">
-                                    <input type="password" name="confPassword" id="confpass" class="form-control input-default" placeholder="Enter current password" required>
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confpass" class="col-sm-3 control-label col-xs-5">Confirm password:</label>
+                            <div class="col-sm-6 col-xs-7">
+                                <input type="password" name="confPassword" id="confpass" class="form-control input-default" placeholder="Enter current password" required>
                             </div>
+                        </div>
 
 
-                            <div class="form-group">
-                                <div class="col-sm-3"></div>
-                                <div class="col-sm-6">
-                                    <button class="btn btn-basic ">Change</button>
-                                </div>
+                        <div class="form-group">
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-6">
+                                <button class="btn btn-basic " onclick="$('#message-dialog').modal('show');">Change</button>
                             </div>
-                        </form>
-                    </div>
-                    <!-- /Tab panes -->
+                        </div>
+                    </form>
                 </div>
+                <!-- /Tab panes -->
+            </div>
         </div>
         <!-- /row -->
     </div>
     <!-- /container -->
+
+    <!-- dialog -->
+    <div class="modal fade" id="message-dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Announcement</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Message gose here</p>
+                </div>
+
+                <div class="modal-footer">
+<!--                    <a id="loginA" href="/account/login" class="btn my-dark-btn" style="display: none;">Login</a>-->
+<!--                    <a id="goCart" href="/cart" class="btn my-dark-btn" style="display: none;">Go to cart</a>-->
+                    <button type="button" class="btn my-primary-btn" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /dialog -->
 </div>
 <!-- /SECTION -->
 
-<!-- NEWSLETTER -->
-<div id="newsletter" class="section">
-    <!-- container -->
-    <div class="container">
-        <!-- row -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="newsletter">
-                    <p>Sign Up for the <strong>NEWSLETTER</strong></p>
-                    <form>
-                        <input class="input" type="email" placeholder="Enter Your Email">
-                        <button class="newsletter-btn"><i class="fa fa-envelope"></i> Subscribe</button>
-                    </form>
-                    <ul class="newsletter-follow">
-                        <li>
-                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fab fa-pinterest"></i></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <!-- /row -->
-    </div>
-    <!-- /container -->
-</div>
-<!-- /NEWSLETTER -->
+<div th:replace="fragments/mutual :: footer"></div>
 
-<!-- FOOTER -->
-<footer id="footer">
-    <!-- top footer -->
-    <div class="section">
-        <!-- container -->
-        <div class="container">
-            <!-- row -->
-            <div class="row">
-                <div class="col-md-3 col-xs-6">
-                    <div class="footer">
-                        <h3 class="footer-title">About Us</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut.</p>
-                        <ul class="footer-links">
-                            <li><a href="#"><i class="fas fa-map-marker-alt"></i>1734 Stonecoal Road</a></li>
-                            <li><a href="#"><i class="fas fa-phone"></i>+021-95-51-84</a></li>
-                            <li><a href="#"><i class="fas fa-envelope"></i>email@email.com</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-xs-6">
-                    <div class="footer">
-                        <h3 class="footer-title">Categories</h3>
-                        <ul class="footer-links">
-                            <li><a href="#">Hot deals</a></li>
-                            <li><a href="#">Laptops</a></li>
-                            <li><a href="#">Smartphones</a></li>
-                            <li><a href="#">Cameras</a></li>
-                            <li><a href="#">Accessories</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="clearfix visible-xs"></div>
-
-                <div class="col-md-3 col-xs-6">
-                    <div class="footer">
-                        <h3 class="footer-title">Information</h3>
-                        <ul class="footer-links">
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Contact Us</a></li>
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Orders and Returns</a></li>
-                            <li><a href="#">Terms & Conditions</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-xs-6">
-                    <div class="footer">
-                        <h3 class="footer-title">Service</h3>
-                        <ul class="footer-links">
-                            <li><a href="#">My Account</a></li>
-                            <li><a href="#">View Cart</a></li>
-                            <li><a href="#">Wishlist</a></li>
-                            <li><a href="#">Track My Order</a></li>
-                            <li><a href="#">Help</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!-- /row -->
-        </div>
-        <!-- /container -->
-    </div>
-    <!-- /top footer -->
-
-    <!-- bottom footer -->
-    <div id="bottom-footer" class="section">
-        <div class="container">
-            <!-- row -->
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <ul class="footer-payments">
-                        <li><a href="#"><i class="fab fa-cc-visa"></i></a></li>
-                        <li><a href="#"><i class="fas fa-credit-card"></i></a></li>
-                        <li><a href="#"><i class="fab fa-cc-paypal"></i></a></li>
-                        <li><a href="#"><i class="fab fa-cc-mastercard"></i></a></li>
-                        <li><a href="#"><i class="fab fa-cc-discover"></i></a></li>
-                        <li><a href="#"><i class="fab fa-cc-amex"></i></a></li>
-                    </ul>
-                    <span class="copyright">
-								<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-								Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="mailto:52100920@student.tdtu.edu.vn" target="_blank">MinhPhu</a>
-                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-							</span>
-
-
-                </div>
-            </div>
-            <!-- /row -->
-        </div>
-        <!-- /container -->
-    </div>
-    <!-- /bottom footer -->
-</footer>
-<!-- /FOOTER -->
 
 <!-- jQuery Plugins -->
 <script src="/js/jquery.min.js"></script>
@@ -605,6 +270,7 @@
 <script src="/js/nouislider.min.js"></script>
 <script src="/js/jquery.zoom.min.js"></script>
 <script src="/js/main.js"></script>
+<script src="/js/account.js"></script>
 
 </body>
 </html>
