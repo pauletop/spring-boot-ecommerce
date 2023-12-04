@@ -11,7 +11,9 @@ import vn.com.ecommerce.springcommerce.domain.Cart;
 import vn.com.ecommerce.springcommerce.domain.Product;
 import vn.com.ecommerce.springcommerce.service.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Controller
 public class AdminController {
@@ -37,13 +39,16 @@ public class AdminController {
         if (email == null) {
             return "redirect:/account/login";
         }
-//        if (isLogin == null || !isLogin) {
-//            model.addAttribute("isLogin", (boolean) false);
-//        } else {
-//            model.addAttribute("isLogin", (boolean) true);
-//        }
-        Page<Product> products = productService.getAllProducts(1);
-        System.out.println(Arrays.toString(products.stream().toArray()));
+//        model.addAttribute("isLogin", (boolean) true);
+
+        if (isLogin == null || !isLogin) {
+            model.addAttribute("isLogin", (boolean) false);
+        } else {
+            model.addAttribute("isLogin", (boolean) true);
+        }
+        Page<Product> productsPage = productService.getAllProducts(1);
+        System.out.println(Arrays.toString(productsPage.stream().toArray()));
+        List<Product> products = new ArrayList<>(productsPage.getContent());
         model.addAttribute("products",products);
         return "admin/adminProducts";
     }

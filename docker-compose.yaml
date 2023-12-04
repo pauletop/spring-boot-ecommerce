@@ -5,8 +5,8 @@ services:
     restart: always
     environment:
       - 'POSTGRES_DB=springcommerce'
-      - 'POSTGRES_PASSWORD=abc123'
       - 'POSTGRES_USER=root'
+      - 'POSTGRES_PASSWORD=abc123'
     ports:
       - '5432:5432'
     volumes:
