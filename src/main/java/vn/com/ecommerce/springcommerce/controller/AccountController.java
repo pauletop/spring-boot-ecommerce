@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,8 @@ import vn.com.ecommerce.springcommerce.domain.Account;
 import vn.com.ecommerce.springcommerce.domain.Cart;
 import vn.com.ecommerce.springcommerce.service.AccountService;
 import vn.com.ecommerce.springcommerce.service.CartService;
+
+import java.util.Map;
 
 @Controller
 @RequestMapping("/account")
@@ -160,29 +164,31 @@ public class AccountController {
     }
 
     @PostMapping("/logout")
-    RedirectView logout(HttpServletRequest request, HttpServletResponse response){
+    ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response){
         // remove user email from session
         HttpSession session = request.getSession();
         session.removeAttribute("accEmail");
         session.removeAttribute("sCart");
         session.removeAttribute("isLogin");
-        return new RedirectView("/account/login");
+        return ResponseEntity.ok("Logout successfully!");
     }
 
     @PostMapping("/change-password")
-    RedirectView changePass(@RequestParam("oldPassword") String oldPassword,
-                            @RequestParam("newPassword") String newPassword,
-                            @RequestParam("confPassword") String rePassword,
+    ResponseEntity<String> changePass(@RequestBody Map<String, Object> body,
                             @SessionAttribute("accEmail") String email,
                             HttpServletRequest request){
-        String error = validateChangePassword(oldPassword, newPassword, rePassword);
-        if (error != null) {
-            request.getSession().setAttribute("error", error);
-            return new RedirectView("/account");
+        String oldPassword = (String) body.get("oldPassword");
+        String newPassword = (String) body.get("newPassword");
+        boolean isSuccess = accountService.changePassword(email, oldPassword, newPassword);
+        if (!isSuccess) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Old password is incorrect!");
         }
-        String accountId = (String) request.getSession().getAttribute("accountId");
-        accountService.changePassword(email, oldPassword, newPassword);
-        return new RedirectView("/account");
+        // remove user email from session
+        HttpSession session = request.getSession();
+        session.removeAttribute("accEmail");
+        session.removeAttribute("sCart");
+        session.removeAttribute("isLogin");
+        return ResponseEntity.ok("Change password successfully!");
     }
     /*---------------------------------*\
     |          UTILITY FUNCTIONS        |
@@ -250,16 +256,6 @@ public class AccountController {
         }
         if (!accountService.login(email, password)) {
             return "Email or password is incorrect!";
-        }
-        return null;
-    }
-
-    private String validateChangePassword(String oldPassword, String newPassword, String confirmPassword) {
-        if (!newPassword.equals(confirmPassword)) {
-            return "Password and confirm password must be the same!";
-        }
-        if (newPassword.length() < 6) {
-            return "Password must be at least 6 characters!";
         }
         return null;
     }

@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
@@ -14,6 +16,7 @@ import vn.com.ecommerce.springcommerce.domain.Brand;
 import vn.com.ecommerce.springcommerce.domain.Cart;
 
 import vn.com.ecommerce.springcommerce.domain.Brand;
+import vn.com.ecommerce.springcommerce.domain.Category;
 import vn.com.ecommerce.springcommerce.domain.Product;
 import vn.com.ecommerce.springcommerce.service.BrandService;
 import vn.com.ecommerce.springcommerce.service.CategoryService;
@@ -45,12 +48,15 @@ public class StoreController {
         } else {
             model.addAttribute("queryStr", "");
         }
+
+
         if (isLogin == null || !isLogin) {
             model.addAttribute("isLogin", (boolean ) false);
         } else {
             model.addAttribute("isLogin", (boolean) true);
         }
         model.addAttribute("sCart", cart);
+
         model.addAttribute("products", products.getContent());
         model.addAttribute("totalPages", products.getTotalPages());
         model.addAttribute("currentPage", page);
@@ -84,6 +90,7 @@ public class StoreController {
         if (keyword == null) {
             keyword = "";
         }
+
         System.out.println("keyword: " + keyword);
         System.out.println("categoryId: " + categoryId);
         System.out.println("categoryIds: " + categoryIds);
@@ -103,12 +110,15 @@ public class StoreController {
         } else {
             model.addAttribute("queryStr", "");
         }
+
+
         if (isLogin == null || !isLogin) {
             model.addAttribute("isLogin", (boolean ) false);
         } else {
             model.addAttribute("isLogin", (boolean) true);
         }
         model.addAttribute("sCart", cart);
+
         model.addAttribute("tab", "search");
         model.addAttribute("products", products.getContent());
         model.addAttribute("totalPages", products.getTotalPages());
@@ -141,12 +151,152 @@ public class StoreController {
         model.addAttribute("sCart", sCart);
         model.addAttribute("navActive", "brands");
         return "brands";
-
     }
 
+    @GetMapping("/phone")
+    public String phones(Model model, @RequestParam(defaultValue = "1") int page, HttpServletRequest request,
+                         @Nullable @SessionAttribute(value = "sCart", required = false) Cart cart,
+                         @Nullable @SessionAttribute(value = "isLogin", required = false) Boolean isLogin) {
+        Category phoneCategory = categoryService.getCategoryByName("Smartphone");
+        Page<Product> products = productService.getProductsByCategory(phoneCategory.getId(), page - 1);
+        // add query string to model, and remove page parameter if exists
+        if (request.getQueryString() != null) {
+            model.addAttribute("queryStr", Base64.getEncoder().encodeToString(request.getQueryString().replace("&page=" + page, "").getBytes()));
+        } else {
+            model.addAttribute("queryStr", "");
+        }
 
+        if (isLogin == null || !isLogin) {
+            model.addAttribute("isLogin", (boolean ) false);
+        } else {
+            model.addAttribute("isLogin", (boolean) true);
+        }
+        model.addAttribute("sCart", cart);
 
+        model.addAttribute("products", products.getContent());
+        model.addAttribute("totalPages", products.getTotalPages());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalProducts", products.getTotalElements());
+        model.addAttribute("numberPerPage", 12);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("brands", brandService.getAllBrands());
+        model.addAttribute("topSelling", productService.getTop5BestSellingProducts());
+        model.addAttribute("breadcrumb", new  String[]{"Home", "Store"});
+        model.addAttribute("categoryId", -1);
+        model.addAttribute("categoryIds", null);
+        model.addAttribute("navActive", "phone");
+        model.addAttribute("brandIds", List.of());
+        return "store";
+    }
 
+    @GetMapping("/laptop")
+    public String laptops(Model model, @RequestParam(defaultValue = "1") int page, HttpServletRequest request,
+                          @Nullable @SessionAttribute(value = "sCart", required = false) Cart cart,
+                          @Nullable @SessionAttribute(value = "isLogin", required = false) Boolean isLogin) {
+        Category category = categoryService.getCategoryByName("Laptop");
+        Page<Product> products = productService.getProductsByCategory(category.getId(), page - 1);
+        // add query string to model, and remove page parameter if exists
+        if (request.getQueryString() != null) {
+            model.addAttribute("queryStr", Base64.getEncoder().encodeToString(request.getQueryString().replace("&page=" + page, "").getBytes()));
+        } else {
+            model.addAttribute("queryStr", "");
+        }
+
+        if (isLogin == null || !isLogin) {
+            model.addAttribute("isLogin", (boolean ) false);
+        } else {
+            model.addAttribute("isLogin", (boolean) true);
+        }
+        model.addAttribute("sCart", cart);
+
+        model.addAttribute("products", products.getContent());
+        model.addAttribute("totalPages", products.getTotalPages());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalProducts", products.getTotalElements());
+        model.addAttribute("numberPerPage", 12);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("brands", brandService.getAllBrands());
+        model.addAttribute("topSelling", productService.getTop5BestSellingProducts());
+        model.addAttribute("breadcrumb", new  String[]{"Home", "Store"});
+        model.addAttribute("categoryId", -1);
+        model.addAttribute("categoryIds", null);
+        model.addAttribute("navActive", "laptop");
+        model.addAttribute("brandIds", List.of());
+        return "store";
+    }
+
+    @GetMapping("/accessory")
+    public String accessories(Model model, @RequestParam(defaultValue = "1") int page, HttpServletRequest request,
+                              @Nullable @SessionAttribute(value = "sCart", required = false) Cart cart,
+                              @Nullable @SessionAttribute(value = "isLogin", required = false) Boolean isLogin) {
+        Category category = categoryService.getCategoryByName("Accessories");
+        Page<Product> products = productService.getProductsByCategory(category.getId(), page - 1);
+        // add query string to model, and remove page parameter if exists
+        if (request.getQueryString() != null) {
+            model.addAttribute("queryStr", Base64.getEncoder().encodeToString(request.getQueryString().replace("&page=" + page, "").getBytes()));
+        } else {
+            model.addAttribute("queryStr", "");
+        }
+
+        if (isLogin == null || !isLogin) {
+            model.addAttribute("isLogin", (boolean ) false);
+        } else {
+            model.addAttribute("isLogin", (boolean) true);
+        }
+        model.addAttribute("sCart", cart);
+
+        model.addAttribute("products", products.getContent());
+        model.addAttribute("totalPages", products.getTotalPages());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalProducts", products.getTotalElements());
+        model.addAttribute("numberPerPage", 12);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("brands", brandService.getAllBrands());
+        model.addAttribute("topSelling", productService.getTop5BestSellingProducts());
+        model.addAttribute("breadcrumb", new  String[]{"Home", "Store"});
+        model.addAttribute("categoryId", -1);
+        model.addAttribute("categoryIds", null);
+        model.addAttribute("navActive", "acces");
+        model.addAttribute("brandIds", List.of());
+        return "store";
+    }
+
+    @GetMapping("/{brand}")
+    public String accessories(@PathVariable String brand, Model model, @RequestParam(defaultValue = "1") int page, HttpServletRequest request,
+                              @Nullable @SessionAttribute(value = "sCart", required = false) Cart cart,
+                              @Nullable @SessionAttribute(value = "isLogin", required = false) Boolean isLogin) {
+        brand = StringUtils.capitalize(brand);
+        System.out.println(brand);
+        Page<Product> products = productService.getProductsByBrandName(brand, page - 1);
+        // add query string to model, and remove page parameter if exists
+        if (request.getQueryString() != null) {
+            model.addAttribute("queryStr", Base64.getEncoder().encodeToString(request.getQueryString().replace("&page=" + page, "").getBytes()));
+        } else {
+            model.addAttribute("queryStr", "");
+        }
+
+        if (isLogin == null || !isLogin) {
+            model.addAttribute("isLogin", (boolean) false);
+        } else {
+            model.addAttribute("isLogin", (boolean) true);
+        }
+        model.addAttribute("sCart", cart);
+
+        model.addAttribute("products", products.getContent());
+        model.addAttribute("totalPages", products.getTotalPages());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalProducts", products.getTotalElements());
+        model.addAttribute("numberPerPage", 12);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("brands", brandService.getAllBrands());
+        model.addAttribute("topSelling", productService.getTop5BestSellingProducts());
+        model.addAttribute("breadcrumb", new  String[]{"Home", "Store"});
+        model.addAttribute("categoryId", -1);
+        model.addAttribute("categoryIds", null);
+        model.addAttribute("navActive", "brands");
+        model.addAttribute("brandIds", List.of());
+        return "store";
+    }
 //    import java.util.Arrays;
 //import java.util.List;
 //import java.util.stream.Collectors;
