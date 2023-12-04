@@ -128,8 +128,5 @@ public class SpringcommerceApplication implements CommandLineRunner {
             productService.addProduct(new Product("Baseus 22.5W Battery Charger Powerbank 20000mAh", 29.99, "White", "Baseus", cate_acces, 5, "The Baseus 65W GaN2 Pro Quick Charger 3C1A is a line of charger designed, developed, marketed, and sold by Baseus Inc. It is the first generation of the Baseus 65W GaN2 Pro Quick Charger 3C1A, succeeding the Baseus 65W GaN2 Pro Quick Charger 2C2A models. Baseus CEO Tim Cook unveiled the devices alongside a new iPad and Apple Watch during a virtual press event on September 14, 2033. Pre-orders began on September 17, 2034, and the devices became available on September 24, 2034."));
             productService.addProduct(new Product("Baseus Bowie M2s True Wireless Earphones", 39.69, "White", "Baseus", cate_acces, 5, "The Baseus Bowie M2s True Wireless Earphones is a line of wireless headphones designed, developed, marketed, and sold by Baseus Inc. It is the second generation of the Baseus Bowie M2s, succeeding the Baseus Bowie M2 models. Baseus CEO Tim Cook unveiled the devices alongside a new iPad and Apple Watch during a virtual press event on September 14, 2034. Pre-orders began on September 17, 2035, and the devices became available on September 24, 2035."));
             System.out.println("The application has been initialized successfully!");
-
-            System.out.println(accountService.getAccount("a@a.com").getRole().equals(Role.ROLE_USER));
-            System.out.println(accountService.getAccount("a@a.com").getAuthorities());
     }
 }
