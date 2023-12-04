@@ -7,24 +7,31 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
           integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="/css/slick.css"/>
+    <link type="text/css" rel="stylesheet" href="/css/slick-theme.css"/>
 
+    <!-- nouislider -->
+    <link type="text/css" rel="stylesheet" href="/css/nouislider.min.css"/>
     <title>Spring Commerce</title>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="/css/font-awesome.min.css">
     <link type="text/css" rel="stylesheet" href="/css/style.css"/>
     <link rel="stylesheet" href="/css/form.css">
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
 
 </head>
 <body>
 
+
 <!-- SECTION -->
 <div class="section" id="cart">
     <!-- cart header -->
     <div class="header-banner">
         <div class="container">
+
             <div class="row w-100">
                 <a href="/" class="col-12">
                     <p class="text-center text-danger" style="text-transform: none !important;">Electro</p>
@@ -32,6 +39,8 @@
             </div>
         </div>
     </div>
+    <hr style="color:black;width:100%">
+
     <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-center">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,6 +66,18 @@
     <!-- /cart header -->
     <!-- container -->
     <div class="container">
+        <div class="row mb-4    " style="height: 3.4em">
+            <div class="col-9 h-100">
+                <div th:if="${success}" th:text="${success}" class="h-100 alert alert-primary" role="alert">
+                </div>
+                <div th:if="${error}" th:text="${error}" class="h-100 alert alert-danger" role="alert"></div>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-info w-100 h-100 " id="add-button" style="margin-left: auto; margin-right: 0; "
+                        data-toggle="modal" data-target="#editModal" >+ Add product</button>
+            </div>
+
+        </div>
         <!-- row -->
         <div class="row">
             <div>
@@ -106,8 +127,9 @@
                                                 data-toggle="modal" data-target="#editModal">Edit
                                         </button>
                                         |
-                                        <button class="btn btn-outline-danger btn-sm px-2 py-2">Delete</button>
-                                    </td>
+                                        <button class="btn btn-outline-danger btn-sm px-2 py-2 delete-button"
+                                                th:data-name="${item.getName()}"
+                                                th:data-id="${item.getId()}">Delete</button>                                    </td>
                                 </tr>
 
                                 <!-- /item -->
@@ -123,9 +145,35 @@
     <!-- /container -->
 
 </div>
-<!-- /SECTION -->
+<div class="container store-filter clearfix">
+    <span class="store-qty">
+        Showing <b class="text-muted" th:text="${currentPage * productsPage.getNumberOfElements() + 1} + '-' + ${(currentPage - 1) * productsPage.getNumberOfElements() + products.size()}"></b>
+        of <b class="text-muted" th:text="${totalProducts}"></b> products
+    </span>
+    <ul class="store-pagination" th:data-page="${currentPage}">
+        <li th:if="${currentPage > 1}">
+            <a class="page-link" th:href="@{'?page=' + ${currentPage - 1}}" th:data-page="${currentPage - 1}">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        </li>
+
+
+        <!-- Generate page numbers -->
+        <th:block th:each="page : ${#numbers.sequence(1, totalPages)}">
+            <li th:if="${page >= currentPage - 1 and page <= currentPage + 1}" th:class="${page == currentPage} ? 'active' : ''">
+                <a th:text="${page}" class="page-link" th:href="@{'?page=' + ${page}}"></a>
+            </li>
+        </th:block>
+
+        <li th:if="${currentPage < totalPages}">
+            <a class="page-link" th:href="@{'?page=' + ${currentPage + 1}}"><i class="fa fa-angle-right"></i></a>
+        </li>
+    </ul>
+</div>
+
+
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Update product</h5>
@@ -137,29 +185,28 @@
                 <form id="updateForm" action="/admin/updateProduct" method="post">
                     <div class="form-group">
                         <label for="product-id" class="col-form-label">Product ID:</label>
-                        <input type="text" class="form-control" name="product-id" id="product-id" readonly>
+                        <input type="text" class="form-control" name="product-id" id="product-id" readonly required>
                     </div>
                     <div class="form-group">
                         <label for="product-name" class="col-form-label">Product Name:</label>
-                        <input type="text" class="form-control" name="product-name" id="product-name">
+                        <input type="text" class="form-control" name="product-name" id="product-name" required>
                     </div>
                     <div class="row">
-
                         <div class="col-4 form-group">
                             <label for="product-price" class="col-form-label">Price:</label>
-                            <input type="text" class="form-control" name="product-price" id="product-price">
+                            <input type="text" class="form-control" name="product-price" id="product-price" required>
                         </div>
                         <div class="form-group col-4">
                             <label for="product-category" class="col-form-label">Category:</label>
-                            <select class="form-control" name="product-category" id="product-category">
+                            <select class="form-control" name="product-category" id="product-category" required>
                                 <option value="Laptop">Laptop</option>
                                 <option value="Smartphone">Smartphone</option>
                                 <option value="Accessories">Accessories</option>
                             </select>
                         </div>
                         <div class="col-4 form-group">
-                            <label for="product-brand"  class="col-form-label">Brand:</label>
-                            <select class="form-control" name="product-brand" id="product-brand" style="width: 100%;">
+                            <label for="product-brand" class="col-form-label">Brand:</label>
+                            <select class="form-control" name="product-brand" id="product-brand" style="width: 100%;" required>
                                 <option value="Apple">Apple</option>
                                 <option value="Asus">Asus</option>
                                 <option value="Dell">Dell</option>
@@ -176,28 +223,27 @@
                     <div class="row">
                         <div class="col-4 form-group">
                             <label for="product-color" class="col-form-label">Color:</label>
-                            <input type="text" name="product-color" class="form-control" id="product-color">
+                            <input type="text" name="product-color" class="form-control" id="product-color" required>
                         </div>
-
                         <div class="form-group col-4">
                             <label for="product-stock" class="col-form-label">Stock:</label>
-                            <input type="text" name="product-stock" class="form-control" id="product-stock">
+                            <input type="text" name="product-stock" class="form-control" id="product-stock" required>
                         </div>
                         <div class="form-group col-4">
                             <label for="product-sold" class="col-form-label">Sold:</label>
-                            <input type="text" name="product-sold" class="form-control" id="product-sold">
+                            <input type="text" name="product-sold" class="form-control" id="product-sold" required>
                         </div>
                     </div>
                     <div class="form-group ">
                         <label for="product-description" class="col-form-label">Description:</label>
-                        <textarea class="form-control" name="product-description" id="product-description"></textarea>
+                        <textarea class="form-control" name="product-description" id="product-description" required></textarea>
                     </div>
                     <!-- Add other form fields for other columns -->
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" id="update" class="btn btn-primary">Update</button>
+                <button type="submit" id="update" class="btn btn-primary">Update</button>
             </div>
         </div>
     </div>
@@ -211,9 +257,22 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
         integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
         crossorigin="anonymous"></script>
+<script src="/js/slick.min.js"></script>
+<script src="/js/nouislider.min.js"></script>
 <!-- jQuery Plugins -->
 <script>
     $(document).ready(function () {
+        $('#updateForm').submit(function(event) {
+            var emptyFields = $(this).find(':input').filter(function() {
+                return $(this).val() === '';
+            });
+
+            if (emptyFields.length > 0) {
+                event.preventDefault();
+                // You can display an error message or perform any other actions here
+                alert('Please fill in all fields');
+            }
+        });
         $('.edit-button').on('click', function () {
             // Get the data from the clicked row
             let row = $(this).closest('tr');
@@ -242,10 +301,37 @@
 
             // Populate other input fields similarly
         });
+
 		$('#update').on('click', function() {
 			console.log("submit")
 			$('#updateForm').submit();
 		});
+
+        $('#add-button').on('click', function () {
+            $('#product-id').val($('#total-item').text());
+        });
+        $('.delete-button').click(function() {
+            var itemName = $(this).data('name');
+            var itemId = $(this).data('id');
+
+            var confirmation = confirm("Are you sure you want to delete " + itemName + "?");
+            if (confirmation) {
+                var form = $('<form>').attr({
+                    method: 'POST',
+                    action: '/admin/deleteProduct' // Replace with your actual delete endpoint
+                });
+
+                var hiddenInput = $('<input>').attr({
+                    type: 'hidden',
+                    name: 'id',
+                    value: itemId
+                });
+
+                form.append(hiddenInput);
+                form.appendTo('body');
+                form.submit();
+            }
+        });
     });
 
 </script>

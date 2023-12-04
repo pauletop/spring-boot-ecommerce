@@ -103,7 +103,9 @@ public class ProductService {
     public Iterable<Product> getProductsByBrand(Integer brandId, String sortOrder, int page) {
         return productRepository.findByBrandId(brandId, PageRequest.of(page, 12, getSortOption(sortOrder)));
     }
-
+    public void deleteById(Long id){
+        productRepository.deleteById(id);
+    }
     public Iterable<Product> getProductsByBrandName(String brandName, String sortOrder, int page) {
         Brand brand = brandService.getBrandByName(brandName);
         if (brand == null) {

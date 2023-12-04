@@ -2,6 +2,7 @@ package vn.com.ecommerce.springcommerce.controller;
 
 import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,7 +34,7 @@ public class AdminController {
     @GetMapping("/products")
     public String getProductAdmin(@SessionAttribute(value = "isLogin", required = false) Boolean isLogin,
                                   @RequestParam(name="page", required = false) Integer page,
-                                  Model model, HttpServletRequest request){
+                                  Model model, HttpSession session){
 //        model.addAttribute("isLogin", (boolean) true);
 
         if (isLogin == null || !isLogin) {
@@ -44,11 +45,17 @@ public class AdminController {
         if (page==null){
             page=1;
         }
-        List<Product> productsPage = productService.getAllProducts(0).getContent();
-        for(Product product:productsPage){
-            System.out.println(product);
-        }
-        model.addAttribute("products",productsPage);
+        Page<Product> productsPage = productService.getAllProducts(page-1);
+        List<Product> products = productsPage.getContent();
+        model.addAttribute("products",products);
+        model.addAttribute("productsPage", productsPage);
+        model.addAttribute("success",session.getAttribute("success"));
+        model.addAttribute("error",session.getAttribute("error"));
+        model.addAttribute("totalPages", productsPage.getTotalPages());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalProducts", productsPage.getTotalElements());
+        session.removeAttribute("success");
+        session.removeAttribute("error");
         return "admin/adminProducts";
     }
     @PostMapping("/updateProduct")
@@ -60,7 +67,8 @@ public class AdminController {
                                 @RequestParam(name = "product-color") String productColor,
                                 @RequestParam(name = "product-stock") Integer productStock,
                                 @RequestParam(name = "product-sold") Integer productSold,
-                                @RequestParam(name = "product-description") String productDescription
+                                @RequestParam(name = "product-description") String productDescription,
+                                HttpSession session
     ){
         Brand brand = brandService.getBrandByName(productBrand);
         Category category = categoryService.getCategoryByName(productCategory);
@@ -75,9 +83,26 @@ public class AdminController {
         product.setDescription(productDescription);
         try{
             productService.saveProduct(product);
+            session.setAttribute("success","Succeed.");
         }
         catch (Exception e){
             System.out.println("Error: "+ e.getMessage());
+            session.setAttribute("error","Failed.");
+
+        }
+
+        return "redirect:/admin/products";
+    }
+    @PostMapping("/deleteProduct")
+    public String deleteProduct(@RequestParam(name="id") Long id, HttpSession session){
+        try{
+            productService.deleteById(id);
+            session.setAttribute("success","Delete successfully");
+        }
+        catch (Exception e){
+            System.out.println("Error: "+ e.getMessage());
+            session.setAttribute("error","Failed to delete.");
+
         }
         return "redirect:/admin/products";
     }
