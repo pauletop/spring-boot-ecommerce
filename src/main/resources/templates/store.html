@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -67,7 +67,7 @@
 						<!-- LOGO -->
 						<div class="col-md-3">
 							<div class="header-logo">
-								<a href="#" class="logo">
+								<a href="/" class="logo">
 									<img src="/img/logo.png" alt="">
 								</a>
 							</div>
@@ -175,11 +175,11 @@
 					<!-- NAV -->
 					<ul class="main-nav nav navbar-nav">
 						<li><a href="/"><i class="fas fa-home"></i> Home</a></li>
-						<li class="active"><a href="/store"><i class="fas fa-store"></i> Store</a></li>
-						<li><a href="/store/brands"><i class="fas fa-tags"></i> Brands</a></li>
-						<li><a href="/store/laptop"><i class="fas fa-laptop"></i> Laptops</a></li>
-						<li><a href="/store/phone"><i class="fas fa-mobile-alt"></i> Smartphones</a></li>
-						<li><a href="/store/accessory"><i class="fas fa-headphones"></i> Accessories</a></li>
+						<li th:classappend="${activeLink == 'store'} ? 'active'"><a href="/store"><i class="fas fa-store"></i> Store</a></li>
+						<li th:classappend="${activeLink == 'brands'} ? 'active'"><a href="/store/brands"><i class="fas fa-tags"></i> Brands</a></li>
+						<li th:classappend="${activeLink == 'laptop'} ? 'active'"><a href="/store/laptop"><i class="fas fa-laptop"></i> Laptops</a></li>
+						<li th:classappend="${activeLink == 'phone'} ? 'active'"><a href="/store/phone"><i class="fas fa-mobile-alt"></i> Smartphones</a></li>
+						<li th:classappend="${activeLink == 'accessory'} ? 'active'"><a href="/store/accessory"><i class="fas fa-headphones"></i> Accessories</a></li>
 					</ul>
 					<!-- /NAV -->
 				</div>
@@ -285,9 +285,13 @@
 									<h3 class="product-name"><a href="#" th:text="${product.name}"></a></h3>
 									<h4 class="product-price"><span th:text="${product.getPriceString()}"></span> <del class="product-old-price">$2,990.00</del></h4>
 								</div>
-								<div class="add-to-cart">
-									<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> <span class="tooltipp">add to cart</span>
-									</button>
+								<div class="add-to-cart" th:if="${#ctx.session.accountId != null}">
+									<form class="form-add-to-cart" th:action="'/cart/add?productId=' + ${product.id}" method="post">
+										<button type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+									</form>
+								</div>
+								<div class="add-to-cart" th:unless="${#ctx.session.accountId != null}">
+										<a href="/account/login" type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</a>
 								</div>
 							</div>
 						</div>
@@ -346,8 +350,13 @@
 													<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
 												</div>
 											</div>
-											<div class="add-to-cart">
-												<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+											<div class="add-to-cart" th:if="${#ctx.session.accountId != null}">
+												<form class="form-add-to-cart" th:action="'/cart/add?productId=' + ${product.id}" method="post">
+													<button type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												</form>
+											</div>
+											<div class="add-to-cart" th:if="${#ctx.session.accountId == null}">
+												<a href="/account/login" type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</a>
 											</div>
 										</div>
 									</div>
@@ -384,8 +393,13 @@
 													</div>
 												</div>
 											</div>
-											<div class="add-to-cart">
-												<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+											<div class="add-to-cart" th:if="${#ctx.session.accountId != null}">
+												<form class="form-add-to-cart" th:action="'/cart/add?productId=' + ${product.id}" method="post">
+													<button type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												</form>
+											</div>
+											<div class="add-to-cart" th:unless="${#ctx.session.accountId != null}">
+												<a href="/account/login" type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</a>
 											</div>
 										</div>
 									</div>

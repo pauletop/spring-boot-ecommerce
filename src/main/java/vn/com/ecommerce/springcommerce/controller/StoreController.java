@@ -5,11 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import vn.com.ecommerce.springcommerce.domain.Brand;
+import vn.com.ecommerce.springcommerce.domain.Category;
 import vn.com.ecommerce.springcommerce.domain.Product;
 import vn.com.ecommerce.springcommerce.service.BrandService;
 import vn.com.ecommerce.springcommerce.service.CategoryService;
@@ -39,6 +42,7 @@ public class StoreController {
         } else {
             model.addAttribute("queryStr", "");
         }
+        model.addAttribute("activeLink", "store");
         model.addAttribute("products", products.getContent());
         model.addAttribute("totalPages", products.getTotalPages());
         model.addAttribute("currentPage", page);
@@ -82,6 +86,7 @@ public class StoreController {
         } else {
             model.addAttribute("queryStr", "");
         }
+        model.addAttribute("activeLink", "store");
         model.addAttribute("tab", "search");
         model.addAttribute("products", products.getContent());
         model.addAttribute("totalPages", products.getTotalPages());
@@ -102,9 +107,101 @@ public class StoreController {
         return "brands";
     }
 
+    @GetMapping("/phone")
+    public String phones(Model model, @RequestParam(defaultValue = "1") int page, HttpServletRequest request) {
+        Category phoneCategory = categoryService.getCategoryByName("Smartphone");
+        Page<Product> products = productService.getProductsByCategory(phoneCategory.getId(), page - 1);
+        // add query string to model, and remove page parameter if exists
+        if (request.getQueryString() != null) {
+            model.addAttribute("queryStr", Base64.getEncoder().encodeToString(request.getQueryString().replace("&page=" + page, "").getBytes()));
+        } else {
+            model.addAttribute("queryStr", "");
+        }
 
+        model.addAttribute("activeLink", "phone");
+        model.addAttribute("products", products.getContent());
+        model.addAttribute("totalPages", products.getTotalPages());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalProducts", products.getTotalElements());
+        model.addAttribute("numberPerPage", 12);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("brands", brandService.getAllBrands());
+        model.addAttribute("topSelling", productService.getTop5BestSellingProducts());
+        model.addAttribute("breadcrumb", new  String[]{"Home", "Store"});
+        return "store";
+    }
 
+    @GetMapping("/laptop")
+    public String laptops(Model model, @RequestParam(defaultValue = "1") int page, HttpServletRequest request) {
+        Category category = categoryService.getCategoryByName("Laptop");
+        Page<Product> products = productService.getProductsByCategory(category.getId(), page - 1);
+        // add query string to model, and remove page parameter if exists
+        if (request.getQueryString() != null) {
+            model.addAttribute("queryStr", Base64.getEncoder().encodeToString(request.getQueryString().replace("&page=" + page, "").getBytes()));
+        } else {
+            model.addAttribute("queryStr", "");
+        }
 
+        model.addAttribute("activeLink", "laptop");
+        model.addAttribute("products", products.getContent());
+        model.addAttribute("totalPages", products.getTotalPages());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalProducts", products.getTotalElements());
+        model.addAttribute("numberPerPage", 12);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("brands", brandService.getAllBrands());
+        model.addAttribute("topSelling", productService.getTop5BestSellingProducts());
+        model.addAttribute("breadcrumb", new  String[]{"Home", "Store"});
+        return "store";
+    }
+
+    @GetMapping("/accessory")
+    public String accessories(Model model, @RequestParam(defaultValue = "1") int page, HttpServletRequest request) {
+        Category category = categoryService.getCategoryByName("Accessories");
+        Page<Product> products = productService.getProductsByCategory(category.getId(), page - 1);
+        // add query string to model, and remove page parameter if exists
+        if (request.getQueryString() != null) {
+            model.addAttribute("queryStr", Base64.getEncoder().encodeToString(request.getQueryString().replace("&page=" + page, "").getBytes()));
+        } else {
+            model.addAttribute("queryStr", "");
+        }
+
+        model.addAttribute("activeLink", "accessory");
+        model.addAttribute("products", products.getContent());
+        model.addAttribute("totalPages", products.getTotalPages());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalProducts", products.getTotalElements());
+        model.addAttribute("numberPerPage", 12);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("brands", brandService.getAllBrands());
+        model.addAttribute("topSelling", productService.getTop5BestSellingProducts());
+        model.addAttribute("breadcrumb", new  String[]{"Home", "Store"});
+        return "store";
+    }
+
+    @GetMapping("/{brand}")
+    public String accessories(@PathVariable String brand, Model model, @RequestParam(defaultValue = "1") int page, HttpServletRequest request) {
+        brand = StringUtils.capitalize(brand);
+        Page<Product> products = productService.getProductsByBrandName(brand, page - 1);
+        // add query string to model, and remove page parameter if exists
+        if (request.getQueryString() != null) {
+            model.addAttribute("queryStr", Base64.getEncoder().encodeToString(request.getQueryString().replace("&page=" + page, "").getBytes()));
+        } else {
+            model.addAttribute("queryStr", "");
+        }
+
+        model.addAttribute("activeLink", "store");
+        model.addAttribute("products", products.getContent());
+        model.addAttribute("totalPages", products.getTotalPages());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalProducts", products.getTotalElements());
+        model.addAttribute("numberPerPage", 12);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("brands", brandService.getAllBrands());
+        model.addAttribute("topSelling", productService.getTop5BestSellingProducts());
+        model.addAttribute("breadcrumb", new  String[]{"Home", "Store"});
+        return "store";
+    }
 //    import java.util.Arrays;
 //import java.util.List;
 //import java.util.stream.Collectors;
