@@ -3,8 +3,8 @@ package vn.com.ecommerce.springcommerce.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import vn.com.ecommerce.springcommerce.domain.Brand;
 import vn.com.ecommerce.springcommerce.domain.Product;
@@ -35,15 +35,15 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    public Product saveProduct(Product product) {
-        return productRepository.save(product);
+    public void saveProduct(Product product) {
+        productRepository.save(product);
     }
 
-    public Iterable<Product> getAllProducts() {
-        return productRepository.findAll();
-    }
     public Page<Product> getAllProducts(int page) {
-        return productRepository.findAll(PageRequest.of(page, 12));
+        return productRepository.findAllByOrderById(PageRequest.of(page, 15));
+    }
+    public Page<Product> getAllProducts(int page, int size) {
+        return productRepository.findAllByOrderById(PageRequest.of(page, size));
     }
 
     public Iterable<Product> getTop5BestSellingProducts() {
@@ -100,6 +100,11 @@ public class ProductService {
     public Iterable<Product> getProductsByCategory(Integer categoryId, String sortOrder, int page) {
         return productRepository.findByCategoryId(categoryId, PageRequest.of(page, 12, getSortOption(sortOrder)));
     }
+
+    public Page<Product> getProductsByCategory(Integer categoryId, int page) {
+        return productRepository.findByCategoryId(categoryId, PageRequest.of(page, 12));
+    }
+
     public Iterable<Product> getProductsByBrand(Integer brandId, String sortOrder, int page) {
         return productRepository.findByBrandId(brandId, PageRequest.of(page, 12, getSortOption(sortOrder)));
     }
@@ -110,6 +115,14 @@ public class ProductService {
             return null;
         }
         return productRepository.findByBrandId(brand.getId(), PageRequest.of(page, 12, getSortOption(sortOrder)));
+    }
+
+    public Page<Product> getProductsByBrandName(String brandName, int page) {
+        Brand brand = brandService.getBrandByName(brandName);
+        if (brand == null) {
+            return null;
+        }
+        return productRepository.findByBrandId(brand.getId(), PageRequest.of(page, 12));
     }
 
     public Iterable<Product> getTop4RelatedProducts(Product product) {

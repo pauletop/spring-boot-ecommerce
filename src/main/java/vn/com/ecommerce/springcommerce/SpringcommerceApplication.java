@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import vn.com.ecommerce.springcommerce.domain.Account;
 import vn.com.ecommerce.springcommerce.domain.Category;
 import vn.com.ecommerce.springcommerce.domain.Product;
+import vn.com.ecommerce.springcommerce.domain.Role;
 import vn.com.ecommerce.springcommerce.service.AccountService;
 import vn.com.ecommerce.springcommerce.service.CategoryService;
 import vn.com.ecommerce.springcommerce.service.ProductService;
