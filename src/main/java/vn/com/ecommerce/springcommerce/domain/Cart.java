@@ -2,6 +2,7 @@ package vn.com.ecommerce.springcommerce.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.util.ArrayList;
@@ -11,6 +12,10 @@ import java.util.List;
 @Entity
 @Table(name = "cart")
 public class Cart extends SelectedList{
+    // it's like overriding the fetch type of items from LAZY to EAGER,
+    // and overriding the items variable in SelectedList
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<SelectedItem> items = new ArrayList<>();
     public Cart() {
     }
 
