@@ -12,12 +12,6 @@ import java.util.List;
 @Entity
 @Table(name = "cart")
 public class Cart extends SelectedList{
-    // it's like overriding the fetch type of items from LAZY to EAGER,
-    // and overriding the items variable in SelectedList
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<SelectedItem> items = new ArrayList<>();
-    public Cart() {
-    }
 
     public void addToCart(Product product, int quantity) {
         // check if product already in cart, increase quantity

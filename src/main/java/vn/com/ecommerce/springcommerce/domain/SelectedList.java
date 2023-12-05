@@ -17,7 +17,7 @@ public class SelectedList extends AbstractPersistable<Long> {
     @Column(name = "total_price")
     protected Double totalPrice = 0.0;
     @Getter
-    @OneToMany(mappedBy = "selectedList", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "selectedList", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     protected List<SelectedItem> items = new ArrayList<>();
     @ManyToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id",

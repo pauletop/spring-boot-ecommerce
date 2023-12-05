@@ -3,7 +3,9 @@ package vn.com.ecommerce.springcommerce.repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import vn.com.ecommerce.springcommerce.domain.Account;
 import vn.com.ecommerce.springcommerce.domain.CustomerReview;
+import vn.com.ecommerce.springcommerce.domain.Product;
 
 import java.util.List;
 
@@ -26,4 +28,6 @@ public interface CustomerReviewRepository extends CrudRepository<CustomerReview,
     List<Integer> getNumberOfReviewsByEachRating(Long productId);
 
     List<CustomerReview> getReviewsByProductId(Long productId);
+
+    boolean existsByAccountAndProductId(Account account, Long productId);
 }

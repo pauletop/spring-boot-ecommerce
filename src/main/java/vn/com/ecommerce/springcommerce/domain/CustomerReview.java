@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 @Data
 @Entity
@@ -60,7 +62,7 @@ public class CustomerReview {
 
     // get date with format: 27 DEC 2018, 8:00 PM
     public String getCreatedAtString() {
-        return createdAt.getDate() + " " + createdAt.getMonth() + " " + createdAt.getYear() + ", " + createdAt.getHours() + ":" + createdAt.getMinutes() + " " + (createdAt.getHours() > 12 ? "PM" : "AM");
+        return (new SimpleDateFormat("dd MMM yyyy, h:mm a", Locale.US)).format(createdAt);
     }
 
 

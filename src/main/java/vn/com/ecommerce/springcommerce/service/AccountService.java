@@ -67,8 +67,9 @@ public class AccountService {
         }
         return false;
     }
-    public void updateAddress(Long id, String address) {
-        Account account = getAccount(id);
+
+    public void updateAddress(String email, String address) {
+        Account account = getAccount(email);
         if (account != null) {
             account.setAddress(address);
             accountRepository.save(account);

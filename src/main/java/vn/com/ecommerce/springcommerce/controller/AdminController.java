@@ -2,15 +2,18 @@ package vn.com.ecommerce.springcommerce.controller;
 
 import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.apache.catalina.User;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import vn.com.ecommerce.springcommerce.domain.*;
 import vn.com.ecommerce.springcommerce.service.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,14 +37,20 @@ public class AdminController {
 
     @GetMapping("/products")
     public String getProductAdmin(@SessionAttribute(value = "isLogin", required = false) Boolean isLogin,
-                                  @RequestParam(name = "page", required = false) Integer page,
-                                  Model model, HttpSession session) {
+                                  @SessionAttribute(value = "accEmail", required = false) String accEmail,
+                                  @RequestParam(name="page", required = false) Integer page,
+                                  Model model, HttpSession session, HttpServletResponse response) throws IOException {
 //        model.addAttribute("isLogin", (boolean) true);
-
         if (isLogin == null || !isLogin) {
             model.addAttribute("isLogin", (boolean) false);
         } else {
             model.addAttribute("isLogin", (boolean) true);
+            Account account = accountService.getAccount(accEmail);
+            if (account.getAuthorities().contains(new SimpleGrantedAuthority(Role.ROLE_ADMIN.name()))) {
+                System.out.println(true);
+            } else {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            }
         }
         if (page == null) {
             page = 1;
