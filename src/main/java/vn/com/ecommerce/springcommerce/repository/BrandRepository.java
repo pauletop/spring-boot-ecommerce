@@ -13,4 +13,5 @@ public interface BrandRepository extends CrudRepository<Brand, Integer> {
     Optional<Brand> findByName(String name);
     Page<Brand> findAllByOrderById(Pageable pageable);
     long count();
+    Page<Brand> findAllByNameContainingIgnoreCase(String name, Pageable pageable);
 }

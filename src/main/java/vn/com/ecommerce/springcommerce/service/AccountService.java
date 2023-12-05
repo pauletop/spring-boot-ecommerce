@@ -52,6 +52,9 @@ public class AccountService {
         }
         return false;
     }
+    public Page<Account> searchAdmin(String name, int page){
+        return accountRepository.findAllByEmailContainingIgnoreCase(name,PageRequest.of(page, 15));
+    }
     public void delete(Long id){
         accountRepository.deleteById(id);
     }

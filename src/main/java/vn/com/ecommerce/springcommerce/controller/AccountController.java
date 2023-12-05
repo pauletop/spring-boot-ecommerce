@@ -40,7 +40,6 @@ public class AccountController {
             model.addAttribute("isLogin", (boolean) true);
         }
         Account account = accountService.getAccount(email);
-
         model.addAttribute("user", account);
         model.addAttribute("sCart", cart);
         model.addAttribute("navActive", "account");

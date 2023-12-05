@@ -126,7 +126,7 @@ public class ProductService {
         if (brand == null) {
             return null;
         }
-        return productRepository.findByBrandId(brand.getId(), PageRequest.of(page, 12));
+        return productRepository.findByBrandId(brand.getId(), PageRequest.of(page, 15));
     }
 
     public Iterable<Product> getTop4RelatedProducts(Product product) {
@@ -136,7 +136,9 @@ public class ProductService {
     public Product getProductById(Long id) {
         return productRepository.findById(id).orElse(null);
     }
-
+    public Page<Product> searchAdmin(String name, int page){
+        return productRepository.findAllByNameContainingIgnoreCase(name, PageRequest.of(page, 15));
+    }
 
     /*---------------------------------*\
                 UTILITY METHODS

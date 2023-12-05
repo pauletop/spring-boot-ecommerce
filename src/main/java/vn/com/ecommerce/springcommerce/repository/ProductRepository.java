@@ -57,7 +57,7 @@ public interface ProductRepository extends CrudRepository<Product, Long>, Paging
 
     Iterable<Product> findTop4ByBrandIdAndPriceBetweenOrderBySoldDesc(Integer id, double min, double max);
     Page<Product> findAllByOrderById(Pageable page);
-    void deleteById(Long id);
-    long count();
 
+    void deleteById(Long id);
+    Page<Product> findAllByNameContainingIgnoreCase(String name, Pageable pageable);
 }

@@ -49,7 +49,33 @@ public class AdminController {
         if (page == null) {
             page = 1;
         }
+
         Page<Product> productsPage = productService.getAllProducts(page - 1);
+        model.addAttribute("noname","true");
+        return getString(page, model, session, productsPage);
+    }
+    @GetMapping("/products/search")
+    public String getProductAdminSearch(@SessionAttribute(value = "isLogin", required = false) Boolean isLogin,
+                                  @SessionAttribute(value = "accEmail", required = false) String accEmail,
+                                  @RequestParam(name="page", required = false) Integer page,
+                                  @RequestParam(name="name",required=false) String name,
+                                  Model model, HttpSession session, HttpServletResponse response) throws IOException {
+//        model.addAttribute("isLogin", (boolean) true);
+        if (isLogin == null || !isLogin) {
+            model.addAttribute("isLogin", (boolean) false);
+        } else {
+            model.addAttribute("isLogin", (boolean) true);
+        }
+        if (page == null) {
+            page = 1;
+        }
+
+        Page<Product> productsPage = productService.searchAdmin(name, page - 1);
+        model.addAttribute("name",name);
+        return getString(page, model, session, productsPage);
+    }
+
+    private String getString(@RequestParam(name = "page", required = false) Integer page, Model model, HttpSession session, Page<Product> productsPage) {
         List<Product> products = productsPage.getContent();
         model.addAttribute("products", products);
         model.addAttribute("productsPage", productsPage);
@@ -120,6 +146,7 @@ public class AdminController {
     @GetMapping("/users")
     public String getUserAdmin(@SessionAttribute(value = "isLogin", required = false) Boolean isLogin,
                                @RequestParam(name = "page", required = false) Integer page,
+                               @RequestParam(name="name",required =false) String name,
                                Model model, HttpSession session) {
 //        model.addAttribute("isLogin", (boolean) true);
 
@@ -131,7 +158,13 @@ public class AdminController {
         if (page == null) {
             page = 1;
         }
-        Page<Account> accountPage = accountService.getAllOrderById(page - 1);
+        Page<Account> accountPage = null;
+        if(name!=null){
+            accountPage=accountService.searchAdmin(name,page-1);
+            model.addAttribute("email",name);
+        }else{
+            accountPage = accountService.getAllOrderById(page - 1);
+        }
         model.addAttribute("accountPage", accountPage);
         model.addAttribute("success", session.getAttribute("success"));
         model.addAttribute("error", session.getAttribute("error"));
@@ -196,6 +229,7 @@ public class AdminController {
     @GetMapping("/brands")
     public String getBrandAdmin(@SessionAttribute(value = "isLogin", required = false) Boolean isLogin,
                                 @RequestParam(name = "page", required = false) Integer page,
+                                @RequestParam(name = "name", required = false) String name,
                                 Model model, HttpSession session) {
 //        model.addAttribute("isLogin", (boolean) true);
 
@@ -204,12 +238,16 @@ public class AdminController {
         } else {
             model.addAttribute("isLogin", (boolean) true);
         }
+        Page<Brand> brandPage = null;
         if (page == null) {
             page = 1;
         }
-        Page<Brand> brandPage = brandService.getAllByPage(page - 1);
-        for (Brand brand : brandPage.getContent()) {
-            System.out.println(brand);
+        if (name!=null){
+            brandPage=brandService.searchAdmin(name,page-1);
+            model.addAttribute("name",name);
+
+        }else{
+            brandPage = brandService.getAllByPage(page - 1);
         }
         model.addAttribute("brandPage", brandPage);
         model.addAttribute("success", session.getAttribute("success"));
@@ -258,6 +296,7 @@ public class AdminController {
     @GetMapping("/categories")
     public String getCategoryAdmin(@SessionAttribute(value = "isLogin", required = false) Boolean isLogin,
                                    @RequestParam(name = "page", required = false) Integer page,
+                                   @RequestParam(name = "name", required = false) String name,
                                    Model model, HttpSession session) {
 //        model.addAttribute("isLogin", (boolean) true);
 
@@ -269,7 +308,15 @@ public class AdminController {
         if (page == null) {
             page = 1;
         }
-        Page<Category> brandPage = categoryService.getAllByPage(page - 1);
+        Page<Category> brandPage = null;
+        if (name!=null){
+            brandPage = categoryService.searchAdmin(name,page-1);
+            model.addAttribute("name",name);
+
+        }
+        else{
+            brandPage = categoryService.getAllByPage(page-1);
+        }
         model.addAttribute("brandPage", brandPage);
         model.addAttribute("success", session.getAttribute("success"));
         model.addAttribute("error", session.getAttribute("error"));
@@ -314,4 +361,5 @@ public class AdminController {
 
         return "redirect:/admin/categories";
     }
+
 }

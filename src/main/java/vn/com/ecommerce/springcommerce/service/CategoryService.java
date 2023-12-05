@@ -17,7 +17,9 @@ public class CategoryService {
     public void addCategory(Category category) {
         categoryRepository.save(category);
     }
-
+    public Page<Category> searchAdmin(String name, int page){
+        return categoryRepository.findAllByNameContainingIgnoreCase(name,PageRequest.of(page, 15));
+    }
     public Iterable<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
