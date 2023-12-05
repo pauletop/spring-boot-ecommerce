@@ -18,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -52,28 +53,39 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(userDetailsService());
-        return provider;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
-    }
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, HttpSession session) throws Exception {
         http
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-//                                .requestMatchers("/account", "/order/**", "/cart/**").authenticated()
-//                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/account", "/order/**", "/cart/**").authenticated()
+                                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().permitAll()
                 )
-                .authenticationProvider(authenticationProvider())
+                .formLogin(customizer -> customizer
+                        .loginPage("/account/login").permitAll()
+                        .usernameParameter("email")
+                        .passwordParameter("pass")
+                        .successHandler(((request, response, authentication) -> {
+                            Account account = (Account) authentication.getPrincipal();
+                            Cart cart = account.getCart();
+                            if (cart == null) {
+                                cart = new Cart();
+                                cart.setAccount(account);
+                                account.setCart(cart);
+                            }
+                            session.setAttribute("isLogin", true);
+                            session.setAttribute("accEmail", account.getEmail());
+                            session.setAttribute("sCart", cart);
+                            response.sendRedirect("/");
+                        })))
+                .logout(customizer -> customizer
+                        .logoutUrl("/account/logout").permitAll()
+                        .logoutSuccessHandler(((request, response, authentication) -> {
+                            session.removeAttribute("accEmail");
+                            session.removeAttribute("sCart");
+                            session.removeAttribute("isLogin");
+                            response.sendRedirect("/");
+                        })))
                 .httpBasic(HttpBasicConfigurer::disable);
         return http.build();
     }
