@@ -12,6 +12,5 @@ import java.util.Optional;
 public interface BrandRepository extends CrudRepository<Brand, Integer> {
     Optional<Brand> findByName(String name);
     Page<Brand> findAllByOrderById(Pageable pageable);
-    void deleteById(Long id);
     long count();
 }

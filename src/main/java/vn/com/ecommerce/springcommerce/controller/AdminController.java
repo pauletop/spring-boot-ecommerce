@@ -227,7 +227,7 @@ public class AdminController {
         return "admin/adminBrands";
     }
     @PostMapping("/deleteBrand")
-    public String deleteBrand(@RequestParam(name = "id") Long id, HttpSession session) {
+    public String deleteBrand(@RequestParam(name = "id") Integer id, HttpSession session) {
         try {
             brandService.delete(id);
             session.setAttribute("success", "Delete successfully");
@@ -286,7 +286,7 @@ public class AdminController {
         return "admin/adminCategories";
     }
     @PostMapping("/deleteCategory")
-    public String deleteCategory(@RequestParam(name = "id") Long id, HttpSession session) {
+    public String deleteCategory(@RequestParam(name = "id") Integer id, HttpSession session) {
         try {
             categoryService.delete(id);
             session.setAttribute("success", "Delete successfully");

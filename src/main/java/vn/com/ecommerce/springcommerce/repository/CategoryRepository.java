@@ -12,5 +12,4 @@ import java.util.Optional;
 public interface CategoryRepository extends CrudRepository<Category, Integer> {
     Optional<Category> findByName(String name);
     Page<Category> findAllByOrderById(Pageable pageable);
-    void deleteById(Long id);
 }

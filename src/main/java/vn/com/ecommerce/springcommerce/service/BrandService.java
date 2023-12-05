@@ -16,7 +16,7 @@ public class BrandService {
     public Brand getBrandByName(String name) {
         return brandRepository.findByName(name).orElse(null);
     }
-    public void delete(Long id){
+    public void delete(Integer id){
         brandRepository.deleteById(id);
     }
     public Brand getById(Integer id){

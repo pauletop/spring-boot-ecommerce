@@ -39,7 +39,7 @@ public class CategoryService {
         Pageable pageable = PageRequest.of(page, 15);
         return categoryRepository.findAllByOrderById(pageable);
     }
-    public void delete(Long id){
+    public void delete(Integer id){
         categoryRepository.deleteById(id);
     }
 
