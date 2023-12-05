@@ -76,7 +76,11 @@ public class SecurityConfiguration {
                             session.setAttribute("isLogin", true);
                             session.setAttribute("accEmail", account.getEmail());
                             session.setAttribute("sCart", cart);
-                            response.sendRedirect("/");
+                            if (account.getAuthorities().contains(new SimpleGrantedAuthority(Role.ROLE_ADMIN.name()))) {
+                                response.sendRedirect("/admin/products");
+                            } else {
+                                response.sendRedirect("/");
+                            }
                         })))
                 .logout(customizer -> customizer
                         .logoutUrl("/account/logout").permitAll()
