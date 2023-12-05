@@ -64,7 +64,7 @@
 
                             <!-- Cart -->
                             <th:block th:if="${isLogin}">
-                                <div class="dropdown" th:with="sItems=${sCart.getItems()}">
+                                <div class="dropdown" th:if="${sCart != null}" th:with="sItems=${sCart.getItems()}">
                                     <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                                         <i class="fa fa-shopping-cart"></i>
                                         <span>Your Cart</span>
@@ -108,6 +108,28 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="dropdown" th:if="${sCart == null}">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                        <i class="fa fa-shopping-cart"></i>
+                                        <span>Your Cart</span>
+                                        <div class="qty cart-count">0</div>
+                                    </a>
+                                    <div class="cart-dropdown">
+                                        <div class="cart-list">
+                                            <p>You don't have any item yet</p>
+                                        </div>
+                                        <div class="cart-summary">
+
+                                        </div>
+                                        <div class="cart-btns">
+                                            <a href="/cart">View Cart</a>
+                                            <a href="/cart/checkout">Checkout <i
+                                                    class="fa fa-arrow-circle-right"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </th:block>
                             <th:block th:if="${!isLogin}">
                                 <div>

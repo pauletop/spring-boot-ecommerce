@@ -57,6 +57,7 @@ public class CartService {
         return addProductToCart(account,product,qty);
     }
 
+
     public Cart removeProductFromCart(Account account, Long productId) {
         Cart cart = account.getCart();
         if (cart == null) {

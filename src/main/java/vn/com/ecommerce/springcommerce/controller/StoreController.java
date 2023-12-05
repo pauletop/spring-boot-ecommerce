@@ -157,8 +157,7 @@ public class StoreController {
     public String phones(Model model, @RequestParam(defaultValue = "1") int page, HttpServletRequest request,
                          @Nullable @SessionAttribute(value = "sCart", required = false) Cart cart,
                          @Nullable @SessionAttribute(value = "isLogin", required = false) Boolean isLogin) {
-        Category phoneCategory = categoryService.getCategoryByName("Smartphone");
-        Page<Product> products = productService.getProductsByCategory(phoneCategory.getId(), page - 1);
+        Page<Product> products = productService.getProductsByCategory(2, page - 1);
         // add query string to model, and remove page parameter if exists
         if (request.getQueryString() != null) {
             model.addAttribute("queryStr", Base64.getEncoder().encodeToString(request.getQueryString().replace("&page=" + page, "").getBytes()));
@@ -193,8 +192,7 @@ public class StoreController {
     public String laptops(Model model, @RequestParam(defaultValue = "1") int page, HttpServletRequest request,
                           @Nullable @SessionAttribute(value = "sCart", required = false) Cart cart,
                           @Nullable @SessionAttribute(value = "isLogin", required = false) Boolean isLogin) {
-        Category category = categoryService.getCategoryByName("Laptop");
-        Page<Product> products = productService.getProductsByCategory(category.getId(), page - 1);
+        Page<Product> products = productService.getProductsByCategory(1, page - 1);
         // add query string to model, and remove page parameter if exists
         if (request.getQueryString() != null) {
             model.addAttribute("queryStr", Base64.getEncoder().encodeToString(request.getQueryString().replace("&page=" + page, "").getBytes()));
@@ -229,8 +227,7 @@ public class StoreController {
     public String accessories(Model model, @RequestParam(defaultValue = "1") int page, HttpServletRequest request,
                               @Nullable @SessionAttribute(value = "sCart", required = false) Cart cart,
                               @Nullable @SessionAttribute(value = "isLogin", required = false) Boolean isLogin) {
-        Category category = categoryService.getCategoryByName("Accessories");
-        Page<Product> products = productService.getProductsByCategory(category.getId(), page - 1);
+        Page<Product> products = productService.getProductsByCategory(3, page - 1);
         // add query string to model, and remove page parameter if exists
         if (request.getQueryString() != null) {
             model.addAttribute("queryStr", Base64.getEncoder().encodeToString(request.getQueryString().replace("&page=" + page, "").getBytes()));

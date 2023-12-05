@@ -109,7 +109,7 @@
 
 									<!-- Cart -->
 									<th:block th:if="${isLogin}">
-										<div class="dropdown" th:with="sItems=${sCart.getItems()}">
+										<div class="dropdown" th:if="${sCart != null}" th:with="sItems=${sCart.getItems()}">
 											<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
 												<i class="fa fa-shopping-cart"></i>
 												<span>Your Cart</span>
@@ -153,6 +153,28 @@
 												</div>
 											</div>
 										</div>
+
+										<div class="dropdown" th:if="${sCart == null}">
+											<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+												<i class="fa fa-shopping-cart"></i>
+												<span>Your Cart</span>
+												<div class="qty cart-count">0</div>
+											</a>
+											<div class="cart-dropdown">
+												<div class="cart-list">
+													<p>You don't have any item yet</p>
+												</div>
+												<div class="cart-summary">
+
+												</div>
+												<div class="cart-btns">
+													<a href="/cart">View Cart</a>
+													<a href="/cart/checkout">Checkout <i
+															class="fa fa-arrow-circle-right"></i></a>
+												</div>
+											</div>
+										</div>
+
 									</th:block>
 									<th:block th:if="${!isLogin}">
 										<div>
@@ -316,13 +338,8 @@
 									<h3 class="product-name"><a href="#" th:text="${product.name}"></a></h3>
 									<h4 class="product-price"><span th:text="${product.getPriceString()}"></span> <del class="product-old-price">$2,990.00</del></h4>
 								</div>
-								<div class="add-to-cart" th:if="${#ctx.session.accountId != null}">
-									<form class="form-add-to-cart" th:action="'/cart/add?productId=' + ${product.id}" method="post">
-										<button type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-									</form>
-								</div>
-								<div class="add-to-cart" th:unless="${#ctx.session.accountId != null}">
-										<a href="/account/login" type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</a>
+								<div class="add-to-cart">
+										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
 								</div>
 							</div>
 						</div>
@@ -382,13 +399,8 @@
 													<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
 												</div>
 											</div>
-											<div class="add-to-cart" th:if="${#ctx.session.accountId != null}">
-												<form class="form-add-to-cart" th:action="'/cart/add?productId=' + ${product.id}" method="post">
-													<button type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-												</form>
-											</div>
-											<div class="add-to-cart" th:if="${#ctx.session.accountId == null}">
-												<a href="/account/login" type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</a>
+											<div class="add-to-cart">
+												<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
 											</div>
 										</div>
 									</div>
@@ -425,13 +437,8 @@
 													</div>
 												</div>
 											</div>
-											<div class="add-to-cart" th:if="${#ctx.session.accountId != null}">
-												<form class="form-add-to-cart" th:action="'/cart/add?productId=' + ${product.id}" method="post">
-													<button type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-												</form>
-											</div>
-											<div class="add-to-cart" th:unless="${#ctx.session.accountId != null}">
-												<a href="/account/login" type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</a>
+											<div class="add-to-cart">
+												<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
 											</div>
 										</div>
 									</div>
