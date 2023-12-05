@@ -76,6 +76,7 @@ public class OrderController {
         if (name == null || phone == null || address.length() < 10) {
             return ResponseEntity.ok((new ResponseMessage<>(Response.SC_BAD_REQUEST, "Please fill in all required fields")));
         }
+        accountService.updateAddress(email, address);
         String paymentMethod = paymentMethods[Integer.parseInt(body.get("paymentMethod").toString())-1];
         order.setData(name, phone, address, note, paymentMethod, "pending");
         Order newOrder = orderService.saveOrder(order);
