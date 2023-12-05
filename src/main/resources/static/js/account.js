@@ -52,7 +52,9 @@ function changePassword(e) {
             $dia.find(".modal-body").text(response.responseText);
             $dia.modal("show");
             if (response.status === 200) {
-                location.reload();
+                setTimeout(()=>{
+                    location.reload();
+                }, 1000);
             }
         }
     });

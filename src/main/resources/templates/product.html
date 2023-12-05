@@ -149,7 +149,7 @@
 							<ul class="tab-nav">
 								<li class="active"><a data-toggle="tab" href="#tab1">Description</a></li>
 								<li><a data-toggle="tab" href="#tab2">Details</a></li>
-								<li><a data-toggle="tab" href="#tab3">Reviews
+								<li><a data-toggle="tab" id="reviewTab" href="#tab3">Reviews
 									<span th:text="${product.getCustomerReviews().size()}"></span>
 								</a></li>
 							</ul>
@@ -198,7 +198,7 @@
 															<i class="fa fa-star"></i>
 														</div>
 														<div class="rating-progress">
-															<div th:style="'width: ' + ${product.getCustomerReviews().size() > 0 ? numberOfReviewsByEachRating[4]/product.getCustomerReviews().size() : 0} + '%'"></div>
+															<div th:style="'width: ' + ${product.getCustomerReviews().size() > 0 ? (numberOfReviewsByEachRating[4]/product.getCustomerReviews().size() * 100) : 0} + '%'"></div>
 														</div>
 														<span class="sum" th:text="${numberOfReviewsByEachRating[4]}"></span>
 													</li>
@@ -211,7 +211,7 @@
 															<i class="fa fa-star-o"></i>
 														</div>
 														<div class="rating-progress">
-															<div th:style="'width: ' + ${product.getCustomerReviews().size() > 0 ? numberOfReviewsByEachRating[3]/product.getCustomerReviews().size() : 0} + '%'"></div>
+															<div th:style="'width: ' + ${product.getCustomerReviews().size() > 0 ? (numberOfReviewsByEachRating[3]/product.getCustomerReviews().size() * 100) : 0} + '%'"></div>
 														</div>
 														<span class="sum" th:text="${numberOfReviewsByEachRating[3]}"></span>
 													</li>
@@ -224,7 +224,7 @@
 															<i class="fa fa-star-o"></i>
 														</div>
 														<div class="rating-progress">
-															<div th:style="'width: ' + ${product.getCustomerReviews().size() > 0 ? numberOfReviewsByEachRating[2]/product.getCustomerReviews().size() : 0} + '%'"></div>
+															<div th:style="'width: ' + ${product.getCustomerReviews().size() > 0 ? (numberOfReviewsByEachRating[2]/product.getCustomerReviews().size() * 100) : 0} + '%'"></div>
 														</div>
 														<span class="sum" th:text="${numberOfReviewsByEachRating[2]}"></span>
 													</li>
@@ -237,7 +237,7 @@
 															<i class="fa fa-star-o"></i>
 														</div>
 														<div class="rating-progress">
-															<div th:style="'width: ' + ${product.getCustomerReviews().size() > 0 ? numberOfReviewsByEachRating[1]/product.getCustomerReviews().size() : 0} + '%'"></div>
+															<div th:style="'width: ' + ${product.getCustomerReviews().size() > 0 ? (numberOfReviewsByEachRating[1]/product.getCustomerReviews().size() * 100) : 0} + '%'"></div>
 														</div>
 														<span class="sum" th:text="${numberOfReviewsByEachRating[1]}"></span>
 													</li>
@@ -250,7 +250,7 @@
 															<i class="fa fa-star-o"></i>
 														</div>
 														<div class="rating-progress">
-															<div th:style="'width: ' + ${product.getCustomerReviews().size() > 0 ? numberOfReviewsByEachRating[0]/product.getCustomerReviews().size() : 0} + '%'"></div>
+															<div th:style="'width: ' + ${product.getCustomerReviews().size() > 0 ? (numberOfReviewsByEachRating[0]/product.getCustomerReviews().size() * 100) : 0} + '%'"></div>
 														</div>
 														<span class="sum" th:text="${numberOfReviewsByEachRating[0]}"></span>
 													</li>
@@ -294,9 +294,9 @@
 										<div class="col-md-3">
 											<div id="review-form">
 												<form class="review-form">
-													<input class="input" type="text" placeholder="Your Name">
-													<input class="input" type="email" placeholder="Your Email">
-													<textarea class="input" placeholder="Your Review"></textarea>
+													<input class="input" type="text" name="dName" placeholder="Your Name">
+													<input class="input" type="hidden" name="pId" th:value="${product.getIdBase64()}">
+													<textarea class="input" name="comment" placeholder="Your Review"></textarea>
 													<div class="input-rating">
 														<span>Your Rating: </span>
 														<div class="stars">
@@ -434,7 +434,7 @@
 		</div>
 		<!-- /NEWSLETTER -->
 
-		<div th:replace = "fragments/mutual :: header" ></div>
+		<div th:replace = "fragments/mutual :: footer" ></div>
 
 
 		<!-- jQuery Plugins -->
@@ -444,56 +444,6 @@
 		<script src="/js/nouislider.min.js"></script>
 		<script src="/js/jquery.zoom.min.js"></script>
 		<script src="/js/main.js"></script>
-		<script>
-			$(document).ready(()=>{
-				$(".add-to-cart .add-to-cart-btn").click((e)=>{
-					let $qty = $("#qty"), id = $(e.target).data("id");
-					if ($qty.val() < 1) {
-						$qty.val(1);
-					} else if ($qty.val() > 99) {
-						$qty.val(99);
-					}
-					let qty = $qty.val();
-					if (id) {
-						$.ajax({
-							url: "/cart/add",
-							type: "POST",
-							contentType: "application/json",
-							dataType: "json",
-							data: JSON.stringify({
-								pdId: id,
-								qty: qty
-							}),
-							success: (res)=>{
-								let dia = $('#message-dialog');
-								dia.find("#goCart").hide();
-								if (res.status === 200) {
-									let cartNum = $("#cart-count");
-									cartNum.text(parseInt(cartNum.text()) + 1);
-									cartNum.show();
-									dia.find(".modal-body").text(res.message);
-									dia.find("#goCart").show();
-									dia.modal('show');
-								}
-								else if (res.status === 401) {
-									dia.find(".modal-body").text(res.message);
-									dia.modal('show');
-									// wating for close modal and redirect to login page
-									$("#loginA").show();
-									dia.on('hidden.bs.modal',  (e) => {
-										$("#loginA").hide();
-									});
-								}
-								else {
-									dia.find(".modal-body").text(res.message);
-									dia.modal('show');
-								}
-
-							}
-						});
-					}
-				});
-			})
-		</script>
+		<script src="/js/productDetail.js"></script>
 	</body>
 </html>

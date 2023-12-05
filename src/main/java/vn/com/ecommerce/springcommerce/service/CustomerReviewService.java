@@ -34,6 +34,14 @@ public class CustomerReviewService {
         return customerReviewRepository.save(customerReview);
     }
 
+    public boolean isReviewed(String accountEmail, Long productId) {
+        Account account = accountService.getAccount(accountEmail);
+        if (account == null) {
+            return false;
+        }
+        return customerReviewRepository.existsByAccountAndProductId(account, productId);
+    }
+
     /**
      * Get all reviews of a product
      * and devide them by rating <br>
