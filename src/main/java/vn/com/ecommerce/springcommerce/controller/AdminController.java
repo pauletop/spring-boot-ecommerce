@@ -45,12 +45,6 @@ public class AdminController {
             model.addAttribute("isLogin", (boolean) false);
         } else {
             model.addAttribute("isLogin", (boolean) true);
-            Account account = accountService.getAccount(accEmail);
-            if (account.getAuthorities().contains(new SimpleGrantedAuthority(Role.ROLE_ADMIN.name()))) {
-                System.out.println(true);
-            } else {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN);
-            }
         }
         if (page == null) {
             page = 1;
