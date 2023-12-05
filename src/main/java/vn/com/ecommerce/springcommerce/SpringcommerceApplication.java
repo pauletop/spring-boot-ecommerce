@@ -49,6 +49,13 @@ public class SpringcommerceApplication implements CommandLineRunner {
             account.setPhone("0312345689");
             account.setPassword("1");
             accountService.register(account);
+            Account admin = new Account();
+            admin.setFullname("User");
+            admin.setEmail("admin@gmail.com");
+            admin.setPhone("0312345689");
+            admin.setPassword("admin");
+            admin.setRole(Role.ROLE_ADMIN);
+            accountService.register(admin);
             Category cate_lap = new Category("Laptop");
             Category cate_phone = new Category("Smartphone");
             Category cate_acces = new Category("Accessories");
