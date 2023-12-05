@@ -54,8 +54,8 @@ public class SecurityConfiguration {
         http
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                                .requestMatchers("/account", "/order/**", "/cart/**").authenticated()
-                                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+//                                .requestMatchers("/account", "/order/**", "/cart/**").authenticated()
+//                                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().permitAll()
                 )
                 .formLogin(customizer -> customizer
@@ -86,8 +86,7 @@ public class SecurityConfiguration {
                         .tokenValiditySeconds(60 * 60 * 24 * 30))
                 .logout(customizer -> customizer
                         .logoutUrl("/account/logout")
-                        .deleteCookies("JSESSIONID")
-                )
+                        .deleteCookies("JSESSIONID"))
                 .httpBasic(HttpBasicConfigurer::disable);
         return http.build();
     }
