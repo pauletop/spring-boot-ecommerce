@@ -54,8 +54,8 @@ public class SecurityConfiguration {
         http
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-//                                .requestMatchers("/account", "/order/**", "/cart/**").authenticated()
-//                                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/account", "/order/**", "/cart/**").authenticated()
+                                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().permitAll()
                 )
                 .formLogin(customizer -> customizer
