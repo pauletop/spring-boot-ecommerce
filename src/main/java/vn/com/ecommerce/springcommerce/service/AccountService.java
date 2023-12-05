@@ -1,6 +1,7 @@
 package vn.com.ecommerce.springcommerce.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vn.com.ecommerce.springcommerce.domain.Account;
@@ -10,6 +11,7 @@ import vn.com.ecommerce.springcommerce.repository.AccountRepository;
 public class AccountService {
     private AccountRepository accountRepository;
     private PasswordEncoder passwordEncoder;
+
     @Autowired
     public AccountService(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
         this.accountRepository = accountRepository;
