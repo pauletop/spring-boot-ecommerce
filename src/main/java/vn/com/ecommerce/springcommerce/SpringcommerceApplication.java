@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 import vn.com.ecommerce.springcommerce.domain.Account;
 import vn.com.ecommerce.springcommerce.domain.Category;
 import vn.com.ecommerce.springcommerce.domain.Product;
@@ -18,6 +19,7 @@ import java.awt.*;
 import java.lang.management.ManagementFactory;
 
 @SpringBootApplication
+@EnableAsync
 public class SpringcommerceApplication implements CommandLineRunner {
     @Autowired
     ProductService productService;
@@ -49,6 +51,13 @@ public class SpringcommerceApplication implements CommandLineRunner {
             account.setPhone("0312345689");
             account.setPassword("1");
             accountService.register(account);
+            Account admin = new Account();
+            admin.setFullname("User");
+            admin.setEmail("admin@gmail.com");
+            admin.setPhone("0312345689");
+            admin.setPassword("admin");
+            admin.setRole(Role.ROLE_ADMIN);
+            accountService.register(admin);
             Category cate_lap = new Category("Laptop");
             Category cate_phone = new Category("Smartphone");
             Category cate_acces = new Category("Accessories");
