@@ -15,10 +15,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
-import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
+import org.springframework.security.config.annotation.web.configurers.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -82,6 +79,11 @@ public class SecurityConfiguration {
                                 response.sendRedirect("/");
                             }
                         })))
+                .rememberMe(rememberMeConfigurer -> rememberMeConfigurer
+                        .rememberMeParameter("remember-me")
+                        .key("remember-me")
+                        .userDetailsService(userDetailsService())
+                        .tokenValiditySeconds(60 * 60 * 24 * 30))
                 .logout(customizer -> customizer
                         .logoutUrl("/account/logout")
                         .deleteCookies("JSESSIONID")
