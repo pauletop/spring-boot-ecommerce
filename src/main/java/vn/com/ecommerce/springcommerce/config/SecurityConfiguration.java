@@ -83,13 +83,9 @@ public class SecurityConfiguration {
                             }
                         })))
                 .logout(customizer -> customizer
-                        .logoutUrl("/account/logout").permitAll()
-                        .logoutSuccessHandler(((request, response, authentication) -> {
-                            session.removeAttribute("accEmail");
-                            session.removeAttribute("sCart");
-                            session.removeAttribute("isLogin");
-                            response.sendRedirect("/");
-                        })))
+                        .logoutUrl("/account/logout")
+                        .deleteCookies("JSESSIONID")
+                )
                 .httpBasic(HttpBasicConfigurer::disable);
         return http.build();
     }
