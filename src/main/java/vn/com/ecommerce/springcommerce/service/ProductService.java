@@ -118,7 +118,9 @@ public class ProductService {
         }
         return productRepository.findByBrandId(brand.getId(), PageRequest.of(page, 12, getSortOption(sortOrder)));
     }
-
+    public long count(){
+        return productRepository.count();
+    }
     public Page<Product> getProductsByBrandName(String brandName, int page) {
         Brand brand = brandService.getBrandByName(brandName);
         if (brand == null) {

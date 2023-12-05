@@ -3,6 +3,7 @@ package vn.com.ecommerce.springcommerce.controller;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.catalina.User;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,8 +34,8 @@ public class AdminController {
 
     @GetMapping("/products")
     public String getProductAdmin(@SessionAttribute(value = "isLogin", required = false) Boolean isLogin,
-                                  @RequestParam(name="page", required = false) Integer page,
-                                  Model model, HttpSession session){
+                                  @RequestParam(name = "page", required = false) Integer page,
+                                  Model model, HttpSession session) {
 //        model.addAttribute("isLogin", (boolean) true);
 
         if (isLogin == null || !isLogin) {
@@ -42,22 +43,26 @@ public class AdminController {
         } else {
             model.addAttribute("isLogin", (boolean) true);
         }
-        if (page==null){
-            page=1;
+        if (page == null) {
+            page = 1;
         }
-        Page<Product> productsPage = productService.getAllProducts(page-1);
+        Page<Product> productsPage = productService.getAllProducts(page - 1);
         List<Product> products = productsPage.getContent();
-        model.addAttribute("products",products);
+        model.addAttribute("products", products);
         model.addAttribute("productsPage", productsPage);
-        model.addAttribute("success",session.getAttribute("success"));
-        model.addAttribute("error",session.getAttribute("error"));
+        model.addAttribute("success", session.getAttribute("success"));
+        model.addAttribute("error", session.getAttribute("error"));
         model.addAttribute("totalPages", productsPage.getTotalPages());
         model.addAttribute("currentPage", page);
+        model.addAttribute("brands", brandService.getAllBrands());
+        model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("totalProducts", productsPage.getTotalElements());
+        session.setAttribute("adminPage", "Products");
         session.removeAttribute("success");
         session.removeAttribute("error");
         return "admin/adminProducts";
     }
+
     @PostMapping("/updateProduct")
     public String updateProduct(@RequestParam(name = "product-id") Long productId,
                                 @RequestParam(name = "product-name") String productName,
@@ -69,10 +74,13 @@ public class AdminController {
                                 @RequestParam(name = "product-sold") Integer productSold,
                                 @RequestParam(name = "product-description") String productDescription,
                                 HttpSession session
-    ){
+    ) {
         Brand brand = brandService.getBrandByName(productBrand);
         Category category = categoryService.getCategoryByName(productCategory);
-        Product product = productService.getProductById(productId);
+        Product product = new Product();
+        if (productId <= productService.count()) {
+            product = productService.getProductById(productId);
+        }
         product.setName(productName);
         product.setPrice(productPrice);
         product.setBrand(brand);
@@ -81,29 +89,226 @@ public class AdminController {
         product.setStock(productStock);
         product.setSold(productSold);
         product.setDescription(productDescription);
-        try{
+        try {
             productService.saveProduct(product);
-            session.setAttribute("success","Succeed.");
-        }
-        catch (Exception e){
-            System.out.println("Error: "+ e.getMessage());
-            session.setAttribute("error","Failed.");
+            session.setAttribute("success", "Succeed.");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            session.setAttribute("error", "Failed.");
 
         }
 
         return "redirect:/admin/products";
     }
+
     @PostMapping("/deleteProduct")
-    public String deleteProduct(@RequestParam(name="id") Long id, HttpSession session){
-        try{
+    public String deleteProduct(@RequestParam(name = "id") Long id, HttpSession session) {
+        try {
             productService.deleteById(id);
-            session.setAttribute("success","Delete successfully");
-        }
-        catch (Exception e){
-            System.out.println("Error: "+ e.getMessage());
-            session.setAttribute("error","Failed to delete.");
+            session.setAttribute("success", "Delete successfully");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            session.setAttribute("error", "Failed to delete.");
 
         }
         return "redirect:/admin/products";
+    }
+
+    @GetMapping("/users")
+    public String getUserAdmin(@SessionAttribute(value = "isLogin", required = false) Boolean isLogin,
+                               @RequestParam(name = "page", required = false) Integer page,
+                               Model model, HttpSession session) {
+//        model.addAttribute("isLogin", (boolean) true);
+
+        if (isLogin == null || !isLogin) {
+            model.addAttribute("isLogin", (boolean) false);
+        } else {
+            model.addAttribute("isLogin", (boolean) true);
+        }
+        if (page == null) {
+            page = 1;
+        }
+        Page<Account> accountPage = accountService.getAllOrderById(page - 1);
+        model.addAttribute("accountPage", accountPage);
+        model.addAttribute("success", session.getAttribute("success"));
+        model.addAttribute("error", session.getAttribute("error"));
+        model.addAttribute("totalPages", accountPage.getTotalPages());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalProducts", accountPage.getTotalElements());
+        session.setAttribute("adminPage", "Users");
+        session.removeAttribute("success");
+        session.removeAttribute("error");
+        return "admin/adminUsers";
+    }
+
+    @PostMapping("/deleteUser")
+    public String deleteUser(@RequestParam(name = "id") Long id, HttpSession session) {
+        try {
+            accountService.delete(id);
+            session.setAttribute("success", "Delete successfully");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            session.setAttribute("error", "Failed to delete.");
+
+        }
+        return "redirect:/admin/users";
+    }
+
+    @PostMapping("/updateUser")
+    public String updateUser(@RequestParam(name = "item-id") Long itemId,
+                             @RequestParam(name = "item-fullname") String itemFullName,
+                             @RequestParam(name = "item-password") String itemPassword,
+                             @RequestParam(name = "item-email") String itemEmail,
+                             @RequestParam(name = "item-phone") String itemPhone,
+                             @RequestParam(name = "item-role") String itemRole,
+                             @RequestParam(name = "item-status") boolean itemStatus,
+                             HttpSession session
+    ) {
+        Account user = new Account();
+        if (itemId< accountService.count()) {
+            // Handle the case where the user with the given ID is not found
+           user = accountService.getAccount(itemId);
+        }
+
+        user.setFullname(itemFullName);
+        user.setPassword(itemPassword);
+        user.setEmail(itemEmail);
+        user.setPhone(itemPhone);
+        if(itemRole.equals("ROLE_ADMIN")){
+            user.setRole(Role.ROLE_ADMIN);
+        }
+        user.setStatus(itemStatus);
+
+        try {
+            accountService.register(user);
+            session.setAttribute("success", "Succeed.");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            session.setAttribute("error", "Failed.");
+        }
+
+        return "redirect:/admin/users";
+    }
+
+    @GetMapping("/brands")
+    public String getBrandAdmin(@SessionAttribute(value = "isLogin", required = false) Boolean isLogin,
+                                @RequestParam(name = "page", required = false) Integer page,
+                                Model model, HttpSession session) {
+//        model.addAttribute("isLogin", (boolean) true);
+
+        if (isLogin == null || !isLogin) {
+            model.addAttribute("isLogin", (boolean) false);
+        } else {
+            model.addAttribute("isLogin", (boolean) true);
+        }
+        if (page == null) {
+            page = 1;
+        }
+        Page<Brand> brandPage = brandService.getAllByPage(page - 1);
+        for (Brand brand : brandPage.getContent()) {
+            System.out.println(brand);
+        }
+        model.addAttribute("brandPage", brandPage);
+        model.addAttribute("success", session.getAttribute("success"));
+        model.addAttribute("error", session.getAttribute("error"));
+        model.addAttribute("currentPage", page);
+        session.setAttribute("adminPage", "Brands");
+        session.removeAttribute("success");
+        session.removeAttribute("error");
+        return "admin/adminBrands";
+    }
+    @PostMapping("/deleteBrand")
+    public String deleteBrand(@RequestParam(name = "id") Long id, HttpSession session) {
+        try {
+            brandService.delete(id);
+            session.setAttribute("success", "Delete successfully");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            session.setAttribute("error", "Failed to delete.");
+
+        }
+        return "redirect:/admin/brands";
+    }
+    @PostMapping("/updateBrand")
+    public String updateUser(@RequestParam(name = "brand-id") Integer id,
+                             @RequestParam(name = "brand-name") String name,
+                             HttpSession session
+    ) {
+        Brand brand = new Brand();
+        if (id< brandService.count()) {
+            // Handle the case where the user with the given ID is not found
+           brand = brandService.getById(id);
+        }
+
+        brand.setName(name);
+
+        try {
+            brandService.addBrand(brand);
+            session.setAttribute("success", "Succeed.");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            session.setAttribute("error", "Failed.");
+        }
+
+        return "redirect:/admin/brands";
+    }
+    @GetMapping("/categories")
+    public String getCategoryAdmin(@SessionAttribute(value = "isLogin", required = false) Boolean isLogin,
+                                   @RequestParam(name = "page", required = false) Integer page,
+                                   Model model, HttpSession session) {
+//        model.addAttribute("isLogin", (boolean) true);
+
+        if (isLogin == null || !isLogin) {
+            model.addAttribute("isLogin", (boolean) false);
+        } else {
+            model.addAttribute("isLogin", (boolean) true);
+        }
+        if (page == null) {
+            page = 1;
+        }
+        Page<Category> brandPage = categoryService.getAllByPage(page - 1);
+        model.addAttribute("brandPage", brandPage);
+        model.addAttribute("success", session.getAttribute("success"));
+        model.addAttribute("error", session.getAttribute("error"));
+        model.addAttribute("currentPage", page);
+        session.setAttribute("adminPage", "Categories");
+        session.removeAttribute("success");
+        session.removeAttribute("error");
+        return "admin/adminCategories";
+    }
+    @PostMapping("/deleteCategory")
+    public String deleteCategory(@RequestParam(name = "id") Long id, HttpSession session) {
+        try {
+            categoryService.delete(id);
+            session.setAttribute("success", "Delete successfully");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            session.setAttribute("error", "Failed to delete.");
+
+        }
+        return "redirect:/admin/categories";
+    }
+    @PostMapping("/updateCategory")
+    public String updateCategory(@RequestParam(name = "brand-id") Long id,
+                             @RequestParam(name = "brand-name") String name,
+                             HttpSession session
+    ) {
+        Category category = new Category();
+        if (id< categoryService.count()) {
+            // Handle the case where the user with the given ID is not found
+            category = categoryService.getById(id);
+        }
+
+        category.setName(name);
+
+        try {
+            categoryService.addCategory(category);
+            session.setAttribute("success", "Succeed.");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            session.setAttribute("error", "Failed.");
+        }
+
+        return "redirect:/admin/categories";
     }
 }

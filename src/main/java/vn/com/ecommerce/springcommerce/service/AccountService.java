@@ -1,9 +1,13 @@
 package vn.com.ecommerce.springcommerce.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vn.com.ecommerce.springcommerce.domain.Account;
+import vn.com.ecommerce.springcommerce.domain.Product;
 import vn.com.ecommerce.springcommerce.repository.AccountRepository;
 
 @Service
@@ -28,13 +32,16 @@ public class AccountService {
         return accountRepository.findById(id).orElse(null);
     }
 
-    public String register(Account account) {
-        if (accountRepository.findByEmail(account.getEmail()).iterator().hasNext()) {
-            return "Email already exists";
+    public Account register(Account account) {
+        try{
+            account.setPassword(passwordEncoder.encode(account.getPassword()));
+            return accountRepository.save(account);
         }
-        account.setPassword(passwordEncoder.encode(account.getPassword()));
-        accountRepository.save(account);
-        return null;
+        catch(Exception e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+
     }
 
     public boolean login(String email, String password) {
@@ -45,7 +52,9 @@ public class AccountService {
         }
         return false;
     }
-
+    public void delete(Long id){
+        accountRepository.deleteById(id);
+    }
     public boolean changePassword(String email, String oldPassword, String newPassword) {
         Iterable<Account> accounts = accountRepository.findByEmail(email);
         if (accounts.iterator().hasNext()) {
@@ -58,12 +67,18 @@ public class AccountService {
         }
         return false;
     }
-
     public void updateAddress(Long id, String address) {
         Account account = getAccount(id);
         if (account != null) {
             account.setAddress(address);
             accountRepository.save(account);
         }
+    }
+    public long count(){
+        return accountRepository.count();
+    }
+    public Page<Account> getAllOrderById(int page){
+        Pageable pageable = PageRequest.of(page, 15);
+        return accountRepository.findAllByOrderById(pageable);
     }
 }

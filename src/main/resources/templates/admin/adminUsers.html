@@ -48,7 +48,7 @@
         </div>
         <!-- row -->
         <div class="row">
-            <div>
+            <div class="container">
                 <div class="row d-flex justify-content-center align-items-center h-100">
                     <div class="col-12">
                         <div class="card" style="border-radius: 10px;">
@@ -56,47 +56,36 @@
                                 <thead>
                                 <tr>
                                     <th scope="col">ID</th>
-                                    <th scope="col">Image</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Price</th>
-									<th scope="col">Category</th>
-
-                                    <th scope="col">Color</th>
-                                    <th scope="col">Brand</th>
-                                    <th scope="col">Stock</th>
-                                    <th scope="col">Sold</th>
+                                    <th scope="col">Full name</th>
+                                    <th scope="col">Password</th>
+                                    <th scope="col">Email</th>
+									<th scope="col">Phone</th>
+                                    <th scope="col">Role</th>
+                                    <th scope="col">Status</th>
                                     <th scope="col">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody class="container-fluid">
                                 <!-- item -->
-                                <tr  th:each="item : ${products}" th:id="${item.id}" class="product-row"
+                                <tr  th:each="item : ${accountPage.getContent()}" th:id="${item.id}" class="product-row"
                                     data-product-id="${item.getIdBase64()}">
                                     <td th:id="'id'+${item.getId()}" th:text="${item.getId()}"></td>
-                                    <td th:id="'image'+${item.getId()}" class="col-1"
-                                        th:data-id="${item.getIdBase64()}">
-                                        <div>
-                                            <img th:src="@{${item.getThumbnailFormat()}}" style="max-width: 100%"
-                                                 alt="Phone">
-                                        </div>
-                                    </td>
-                                    <td th:id="'name'+${item.getId()}" th:text="${item.getName()}"></td>
-                                    <td th:id="'price'+${item.getId()}" th:text="${item.getPriceString()}"></td>
-                                    <td th:id="'category'+${item.getId()}" th:text="${item.category.getName()}"></td>
-                                    <td th:id="'color'+${item.getId()}" th:text="${item.color}"></td>
-									<td th:id="'brand'+${item.getId()}" th:text="${item.brand.getName()}"></td>
+                                    <td th:id="'fullname'+${item.getId()}" th:text="${item.getFullname()}"></td>
+                                    <td>****</td>
+                                    <td th:id="'password'+${item.getId()}" style="display: none" th:text="item.password" disabled ></td>
 
-                                    <td th:id="'stock'+${item.getId()}" th:text="${item.getStock()}"></td>
-                                    <td th:id="'sold'+${item.getId()}" th:text="${item.getSold()}"></td>
-									<td th:id="'description'+${item.getId()}" th:text="${item.getDescription()}" style="display: none"></td>
+                                    <td th:id="'email'+${item.getId()}" th:text="${item.getEmail()}"></td>
+									<td th:id="'phone'+${item.getId()}" th:text="${item.getPhone()}"></td>
+                                    <td th:id="'role'+${item.getId()}" th:text="${item.getRole()}"></td>
+                                    <td th:id="'status'+${item.getId()}" th:text="${item.status}"></td>
 
-									<td class="col-2">
+									<td class="">
                                         <button class="btn btn-outline-info edit-button btn-sm px-2 py-2"
                                                 data-toggle="modal" data-target="#editModal">Edit
                                         </button>
                                         |
                                         <button class="btn btn-outline-danger btn-sm px-2 py-2 delete-button"
-                                                th:data-name="${item.getName()}"
+                                                th:data-name="${item.getFullname()}"
                                                 th:data-id="${item.getId()}">Delete</button>                                    </td>
                                 </tr>
 
@@ -115,7 +104,7 @@
 </div>
 <div class="container store-filter clearfix">
     <span class="store-qty">
-        Showing <b class="text-muted" th:text="${currentPage * productsPage.getNumberOfElements() + 1} + '-' + ${(currentPage - 1) * productsPage.getNumberOfElements() + products.size()}"></b>
+        Showing <b class="text-muted" th:text="${currentPage * accountPage.getNumberOfElements() } + '-' + ${(currentPage) * accountPage.getNumberOfElements() + accountPage.getContent().size()-1}"></b>
         of <b class="text-muted" th:text="${totalProducts}"></b> products
     </span>
     <ul class="store-pagination" th:data-page="${currentPage}">
@@ -152,68 +141,51 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Update product</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Update item</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body container-fluid">
-                <form id="updateForm" action="/admin/updateProduct" method="post">
+                <form id="updateForm" action="/admin/updateUser" method="post">
                     <div class="form-group">
-                        <label for="product-id" class="col-form-label">Product ID:</label>
-                        <input type="text" class="form-control" name="product-id" id="product-id" readonly required>
+                        <label for="item-id" class="col-form-label">Item ID:</label>
+                        <input type="text" class="form-control" name="item-id" id="item-id" readonly required>
                     </div>
                     <div class="form-group">
-                        <label for="product-name" class="col-form-label">Product Name:</label>
-                        <input type="text" class="form-control" name="product-name" id="product-name" required>
+                        <label for="item-fullname" class="col-form-label">Full Name:</label>
+                        <input type="text" class="form-control" name="item-fullname" id="item-fullname" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-password" class="col-form-label">Password:</label>
+                        <input type="password" class="form-control" name="item-password" id="item-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-email" class="col-form-label">Email:</label>
+                        <input type="email" class="form-control" name="item-email" id="item-email" required>
                     </div>
                     <div class="row">
-                        <div class="col-4 form-group">
-                            <label for="product-price" class="col-form-label">Price:</label>
-                            <input type="text" class="form-control" name="product-price" id="product-price" required>
-                        </div>
-                        <div class="form-group col-4">
-                            <label for="product-category" class="col-form-label">Category:</label>
-                            <select class="form-control" name="product-category" id="product-category" required>
-                                <option value="Laptop">Laptop</option>
-                                <option value="Smartphone">Smartphone</option>
-                                <option value="Accessories">Accessories</option>
-                            </select>
-                        </div>
-                        <div class="col-4 form-group">
-                            <label for="product-brand" class="col-form-label">Brand:</label>
-                            <select class="form-control" name="product-brand" id="product-brand" style="width: 100%;" required>
-                                <option value="Apple">Apple</option>
-                                <option value="Asus">Asus</option>
-                                <option value="Dell">Dell</option>
-                                <option value="HP">HP</option>
-                                <option value="Lenovo">Lenovo</option>
-                                <option value="LG">LG</option>
-                                <option value="Samsung">Samsung</option>
-                                <option value="OPPO">OPPO</option>
-                                <option value="Xiaomi">Xiaomi</option>
-                                <option value="Baseus">Baseus</option>
-                            </select>
-                        </div>
+
+                    <div class="form-group col-4">
+                        <label for="item-phone" class="col-form-label">Phone:</label>
+                        <input type="text" class="form-control" name="item-phone" id="item-phone" required>
                     </div>
-                    <div class="row">
-                        <div class="col-4 form-group">
-                            <label for="product-color" class="col-form-label">Color:</label>
-                            <input type="text" name="product-color" class="form-control" id="product-color" required>
-                        </div>
-                        <div class="form-group col-4">
-                            <label for="product-stock" class="col-form-label">Stock:</label>
-                            <input type="text" name="product-stock" class="form-control" id="product-stock" required>
-                        </div>
-                        <div class="form-group col-4">
-                            <label for="product-sold" class="col-form-label">Sold:</label>
-                            <input type="text" name="product-sold" class="form-control" id="product-sold" required>
-                        </div>
+                    <div class="form-group col-4">
+                        <label for="item-role" class="col-form-label">Role:</label>
+                        <select class="form-control" name="item-role" id="item-role" required>
+                            <option value="ROLE_USER">User</option>
+                            <option value="ROLE_ADMIN">Admin</option>
+                        </select>
                     </div>
-                    <div class="form-group ">
-                        <label for="product-description" class="col-form-label">Description:</label>
-                        <textarea class="form-control" name="product-description" id="product-description" required></textarea>
+                    <div class="form-group col-4">
+                        <label for="item-status" class="col-form-label">Status:</label>
+                        <select class="form-control" name="item-status" id="item-status" required>
+                            <option value="true">Active</option>
+                            <option value="false">Inactive</option>
+                        </select>
                     </div>
+                    </div>
+
                     <!-- Add other form fields for other columns -->
                 </form>
             </div>
@@ -224,6 +196,7 @@
         </div>
     </div>
 </div>
+<div th:text="${accountPage.getTotalElements() + 1}" id="total-item" disabled style="display: none"></div>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>
@@ -252,28 +225,23 @@
         $('.edit-button').on('click', function () {
             // Get the data from the clicked row
             let row = $(this).closest('tr');
-            let productId = row.attr('id');
-            console.log(productId);
-            let productName = $("#name" + productId).text(); // Adjusted index based on the column order
-			let productPrice = $("#price" + productId).text().replace(/[$,]/g, '');
-			let productColor = $("#color" + productId).text();
-			let productBrand = $("#brand" + productId).text();
-			let productStock = $("#stock" + productId).text();
-			let productSold = $("#sold" + productId).text();
-            let productCategory = $("#category" + productId).text();
+            let itemId = row.attr('id');
+            console.log(itemId);
+            let fullname = $("#fullname" + itemId).text();
+            let password = $("#password" + itemId).text(); // Assuming the password is displayed as asterisks (****)
+            let email = $("#email" + itemId).text();
+            let phone = $("#phone" + itemId).text();
+            let role = $("#role" + itemId).text();
+            let status = $("#status" + itemId).text();
 
-			let productDescription = $("#description" + productId).text();
             // Populate the modal inputs with the data
-            $('#product-id').val(productId);
-
-			$('#product-name').val(productName);
-			$('#product-price').val(productPrice);
-			$('#product-color').val(productColor);
-			$('#product-brand').val(productBrand); // Trigger change to update Select2
-			$('#product-stock').val(productStock);
-			$('#product-sold').val(productSold);
-            $('#product-category').val(productCategory);
-			$('#product-description').val(productDescription);
+            $('#item-id').val(itemId);
+            $('#item-fullname').val(fullname);
+            $('#item-password').val(password);
+            $('#item-email').val(email);
+            $('#item-phone').val(phone);
+            $('#item-role').val(role);
+            $('#item-status').val(status);
 
             // Populate other input fields similarly
         });
@@ -284,17 +252,19 @@
 		});
 
         $('#add-button').on('click', function () {
-            $('#product-id').val($('#total-item').text());
+            var currentProductId = parseInt($('#total-item').text());
+            $('#item-id').val(currentProductId);
         });
         $('.delete-button').click(function() {
             var itemName = $(this).data('name');
             var itemId = $(this).data('id');
-
+            console.log(itemId)
+            console.log(itemName)
             var confirmation = confirm("Are you sure you want to delete " + itemName + "?");
             if (confirmation) {
                 var form = $('<form>').attr({
                     method: 'POST',
-                    action: '/admin/deleteProduct' // Replace with your actual delete endpoint
+                    action: '/admin/deleteUser' // Replace with your actual delete endpoint
                 });
 
                 var hiddenInput = $('<input>').attr({

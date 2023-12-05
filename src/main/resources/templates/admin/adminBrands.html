@@ -27,7 +27,7 @@
 
 
 <!-- SECTION -->
-<div class="section" id="cart">
+<div class="section" >
     <!-- cart header -->
     <div th:replace="fragments/mutual :: adminHeader"></div>
     <!-- /cart header -->
@@ -41,13 +41,13 @@
             </div>
             <div class="col-3">
                 <button class="btn btn-info w-100 h-100 " id="add-button" style="margin-left: auto; margin-right: 0; "
-                        data-toggle="modal" data-target="#editModal" >+ Add product</button>
+                        data-toggle="modal" data-target="#editModal" >+ Add brand</button>
             </div>
 
         </div>
         <!-- row -->
         <div class="row">
-            <div>
+            <div class="container">
                 <div class="row d-flex justify-content-center align-items-center h-100">
                     <div class="col-12">
                         <div class="card" style="border-radius: 10px;">
@@ -55,41 +55,17 @@
                                 <thead>
                                 <tr>
                                     <th scope="col">ID</th>
-                                    <th scope="col">Image</th>
                                     <th scope="col">Name</th>
-                                    <th scope="col">Price</th>
-									<th scope="col">Category</th>
-
-                                    <th scope="col">Color</th>
-                                    <th scope="col">Brand</th>
-                                    <th scope="col">Stock</th>
-                                    <th scope="col">Sold</th>
                                     <th scope="col">Action</th>
                                 </tr>
                                 </thead>
-                                <tbody class="container-fluid">
+                                <tbody class="">
                                 <!-- item -->
-                                <tr  th:each="item : ${products}" th:id="${item.id}" class="product-row"
-                                    data-product-id="${item.getIdBase64()}">
+                                <tr  th:each="item : ${brandPage.getContent()}" th:id="${item.id}" class="product-row"
+                                    data-brand-id="${item.getIdBase64()}">
                                     <td th:id="'id'+${item.getId()}" th:text="${item.getId()}"></td>
-                                    <td th:id="'image'+${item.getId()}" class="col-1"
-                                        th:data-id="${item.getIdBase64()}">
-                                        <div>
-                                            <img th:src="@{${item.getThumbnailFormat()}}" style="max-width: 100%"
-                                                 alt="Phone">
-                                        </div>
-                                    </td>
                                     <td th:id="'name'+${item.getId()}" th:text="${item.getName()}"></td>
-                                    <td th:id="'price'+${item.getId()}" th:text="${item.getPriceString()}"></td>
-                                    <td th:id="'category'+${item.getId()}" th:text="${item.category.getName()}"></td>
-                                    <td th:id="'color'+${item.getId()}" th:text="${item.color}"></td>
-									<td th:id="'brand'+${item.getId()}" th:text="${item.brand.getName()}"></td>
-
-                                    <td th:id="'stock'+${item.getId()}" th:text="${item.getStock()}"></td>
-                                    <td th:id="'sold'+${item.getId()}" th:text="${item.getSold()}"></td>
-									<td th:id="'description'+${item.getId()}" th:text="${item.getDescription()}" style="display: none"></td>
-
-									<td class="col-2">
+									<td>
                                         <button class="btn btn-outline-info edit-button btn-sm px-2 py-2"
                                                 data-toggle="modal" data-target="#editModal">Edit
                                         </button>
@@ -114,8 +90,8 @@
 </div>
 <div class="container store-filter clearfix">
     <span class="store-qty">
-        Showing <b class="text-muted" th:text="${(currentPage - 1) * productsPage.getSize() + 1} + '-' + ${(currentPage - 1) * productsPage.getSize() + productsPage.getNumberOfElements()}"></b>
-        of <b id="total-item" class="text-muted" th:text="${totalProducts}"></b> products
+        Showing <b class="text-muted" th:text="${(currentPage - 1)  * brandPage.getSize() + 1} + '-' + ${(currentPage - 1) * brandPage.getSize() + brandPage.getNumberOfElements()}"></b>
+        of <b id="total-item" class="text-muted" th:text="${brandPage.getTotalElements()}"></b> items
     </span>
     <ul class="store-pagination" th:data-page="${currentPage}">
         <li th:if="${currentPage > 1}">
@@ -129,17 +105,17 @@
             </a>
         </li>
         <!-- Generate page numbers -->
-        <th:block th:each="page : ${#numbers.sequence(1, totalPages)}">
+        <th:block th:each="page : ${#numbers.sequence(1, brandPage.getTotalPages())}">
             <li th:if="${page >= currentPage - 1 and page <= currentPage + 1}" th:class="${page == currentPage} ? 'active' : ''">
                 <a th:text="${page}" class="page-link" th:href="@{'?page=' + ${page}}"></a>
             </li>
         </th:block>
 
-        <li th:if="${currentPage < totalPages}">
+        <li th:if="${currentPage < brandPage.getTotalPages()}">
             <a class="page-link" th:href="@{'?page=' + ${currentPage + 1}}"><i class="fa fa-angle-right"></i></a>
         </li>
-        <li th:if="${currentPage < totalPages}">
-            <a class="page-link" th:href="@{'?page=' + ${totalPages}}" th:data-page="${currentPage - 1}">
+        <li th:if="${currentPage < brandPage.getTotalPages()}">
+            <a class="page-link" th:href="@{'?page=' + ${currentPage - 1}}" th:data-page="${currentPage - 1}">
                 <i class="fa fa-angle-double-right"></i>
             </a>
         </li>
@@ -151,60 +127,21 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Update product</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Update brand</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body container-fluid">
-                <form id="updateForm" action="/admin/updateProduct" method="post">
+                <form id="updateForm" action="/admin/updateBrand" method="post">
                     <div class="form-group">
-                        <label for="product-id" class="col-form-label">Product ID:</label>
-                        <input type="text" class="form-control" name="product-id" id="product-id" readonly required>
+                        <label for="brand-id" class="col-form-label">Product ID:</label>
+                        <input type="text" class="form-control" name="brand-id" id="brand-id" readonly required>
                     </div>
                     <div class="form-group">
-                        <label for="product-name" class="col-form-label">Product Name:</label>
-                        <input type="text" class="form-control" name="product-name" id="product-name" required>
+                        <label for="brand-name" class="col-form-label">Product Name:</label>
+                        <input type="text" class="form-control" name="brand-name" id="brand-name" required>
                     </div>
-                    <div class="row">
-                        <div class="col-4 form-group">
-                            <label for="product-price" class="col-form-label">Price:</label>
-                            <input type="text" class="form-control" name="product-price" id="product-price" required>
-                        </div>
-                        <div class="form-group col-4">
-                            <label for="product-category" class="col-form-label">Category:</label>
-                            <select class="form-control" name="product-category" id="product-category" required>
-                                <option th:each="category: ${categories}" th:value="${category.getName()}" th:text="${category.getName()}"></option>
-
-                            </select>
-                        </div>
-                        <div class="col-4 form-group">
-                            <label for="product-brand" class="col-form-label">Brand:</label>
-                            <select class="form-control" name="product-brand" id="product-brand" style="width: 100%;" required>
-                                <option th:each="brand: ${brands}" th:value="${brand.getName()}" th:text="${brand.getName()}"></option>
-
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4 form-group">
-                            <label for="product-color" class="col-form-label">Color:</label>
-                            <input type="text" name="product-color" class="form-control" id="product-color" required>
-                        </div>
-                        <div class="form-group col-4">
-                            <label for="product-stock" class="col-form-label">Stock:</label>
-                            <input type="text" name="product-stock" class="form-control" id="product-stock" required>
-                        </div>
-                        <div class="form-group col-4">
-                            <label for="product-sold" class="col-form-label">Sold:</label>
-                            <input type="text" name="product-sold" class="form-control" id="product-sold" required>
-                        </div>
-                    </div>
-                    <div class="form-group ">
-                        <label for="product-description" class="col-form-label">Description:</label>
-                        <textarea class="form-control" name="product-description" id="product-description" required></textarea>
-                    </div>
-                    <!-- Add other form fields for other columns -->
                 </form>
             </div>
             <div class="modal-footer">
@@ -214,6 +151,7 @@
         </div>
     </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>
@@ -242,28 +180,11 @@
         $('.edit-button').on('click', function () {
             // Get the data from the clicked row
             let row = $(this).closest('tr');
-            let productId = row.attr('id');
-            console.log(productId);
-            let productName = $("#name" + productId).text(); // Adjusted index based on the column order
-			let productPrice = $("#price" + productId).text().replace(/[$,]/g, '');
-			let productColor = $("#color" + productId).text();
-			let productBrand = $("#brand" + productId).text();
-			let productStock = $("#stock" + productId).text();
-			let productSold = $("#sold" + productId).text();
-            let productCategory = $("#category" + productId).text();
-
-			let productDescription = $("#description" + productId).text();
-            // Populate the modal inputs with the data
-            $('#product-id').val(productId);
-
-			$('#product-name').val(productName);
-			$('#product-price').val(productPrice);
-			$('#product-color').val(productColor);
-			$('#product-brand').val(productBrand); // Trigger change to update Select2
-			$('#product-stock').val(productStock);
-			$('#product-sold').val(productSold);
-            $('#product-category').val(productCategory);
-			$('#product-description').val(productDescription);
+            let brandId = row.attr('id');
+            console.log(brandId);
+            let brandName = $("#name" + brandId).text(); // Adjusted index based on the column order
+            $('#brand-id').val(brandId);
+            $('#brand-name').val(brandName);
 
             // Populate other input fields similarly
         });
@@ -275,7 +196,8 @@
 
         $('#add-button').on('click', function () {
             var currentProductId = parseInt($('#total-item').text());
-            $('#product-id').val(currentProductId + 1);
+            $('#brand-id').val(currentProductId + 1);
+
         });
         $('.delete-button').click(function() {
             var itemName = $(this).data('name');
@@ -285,7 +207,7 @@
             if (confirmation) {
                 var form = $('<form>').attr({
                     method: 'POST',
-                    action: '/admin/deleteProduct' // Replace with your actual delete endpoint
+                    action: '/admin/deleteBrand' // Replace with your actual delete endpoint
                 });
 
                 var hiddenInput = $('<input>').attr({
