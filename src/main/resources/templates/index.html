@@ -44,9 +44,9 @@
 
 		<div th:replace="fragments/mutual :: header"></div>
 
-
-
-
+		<h3 class="text-center w-100 bold">
+			<a class="m-5 " th:if="${user?.getRole()?.name() == 'ROLE_ADMIN'}" href="/admin/products"><i class="fas fa-arrow-right"></i> Go to Admin Pages</a>
+		</h3>
 
 		<!-- SECTION -->
 		<div class="section">

@@ -25,4 +25,5 @@ public interface AccountRepository extends CrudRepository<Account, Long> {
     Optional<Account> findAccountByEmail(String email);
     Page<Account> findAllByOrderById(Pageable page);
     void deleteById(Long id);
+    Page<Account> findAllByEmailContainingIgnoreCase(String email, Pageable pageable);
 }

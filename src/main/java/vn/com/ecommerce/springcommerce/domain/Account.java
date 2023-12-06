@@ -36,7 +36,7 @@ public class Account extends AbstractPersistable<Long> implements UserDetails {
     @OneToMany(mappedBy = "account")
     private List<Order> orders;
     @Nullable
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
     private List<Cart> carts;
     @ManyToMany
     @JoinTable(name = "account_wishlist",

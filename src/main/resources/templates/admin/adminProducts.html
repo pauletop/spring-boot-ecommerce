@@ -32,18 +32,30 @@
     <div th:replace="fragments/mutual :: adminHeader"></div>
     <!-- /cart header -->
     <!-- container -->
-    <div class="container">
-        <div class="row mb-4    " style="height: 3.4em">
-            <div class="col-9 h-100">
-                <div th:if="${success}" th:text="${success}" class="h-100 alert alert-primary" role="alert">
-                </div>
-                <div th:if="${error}" th:text="${error}" class="h-100 alert alert-danger" role="alert"></div>
+    <div class="container-fluid">
+        <div class="row mb-4" style="height: 3.4em">
+            <div class="col-6">
+                <form class="h-100 form-inline container ml-3" action="/admin/products/search" method="get">
+                    <button class="btn btn-outline-success my-2 my-sm-0 col-3" type="submit">Search</button>
+                    <input name="name" class="form-control  col-8 ml-2" type="search" placeholder="Search" aria-label="Search">
+                </form>
             </div>
-            <div class="col-3">
-                <button class="btn btn-info w-100 h-100 " id="add-button" style="margin-left: auto; margin-right: 0; "
+            <div class="col-4">
+
+            </div>
+            <div class="col-2 mt-1">
+                <button class="btn btn-info " id="add-button" style="margin-left: auto; margin-right: 0; "
                         data-toggle="modal" data-target="#editModal" >+ Add product</button>
             </div>
 
+        </div>
+    </div>
+    <div class="container">
+
+        <div class="row">
+            <div th:if="${success}" th:text="${success}" class="h-100 col-12 alert alert-primary" role="alert">
+            </div>
+            <div th:if="${error}" th:text="${error}" class="h-100 col-12 alert alert-danger" role="alert"></div>
         </div>
         <!-- row -->
         <div class="row">
@@ -112,7 +124,42 @@
     <!-- /container -->
 
 </div>
-<div class="container store-filter clearfix">
+
+<div th:if="${name}" class="container store-filter clearfix">
+    <span class="store-qty">
+        Showing <b class="text-muted"
+                   th:text="${(currentPage - 1) * productsPage.getSize() + 1} + '-' + ${(currentPage - 1) * productsPage.getSize() + productsPage.getNumberOfElements()}"></b>
+        of <b id="total-item" class="text-muted" th:text="${totalProducts}"></b> products
+    </span>
+    <ul class="store-pagination" th:data-page="${currentPage}">
+        <li th:if="${currentPage > 1}">
+            <a class="page-link" th:href="@{'?page=1&name=' + ${name}}" th:data-page="1">
+                <i class="fa fa-angle-double-left"></i>
+            </a>
+        </li>
+        <li th:if="${currentPage > 1}">
+            <a class="page-link" th:href="@{'?page=' + ${currentPage - 1} + '&name=' + ${name}}" th:data-page="${currentPage - 1}">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        </li>
+        <!-- Generate page numbers -->
+        <th:block th:each="page : ${#numbers.sequence(1, totalPages)}">
+            <li th:if="${page >= currentPage - 1 and page <= currentPage + 1}" th:class="${page == currentPage} ? 'active' : ''">
+                <a th:text="${page}" class="page-link" th:href="@{'?page=' + ${page} + '&name=' + ${name}}"></a>
+            </li>
+        </th:block>
+
+        <li th:if="${currentPage < totalPages}">
+            <a class="page-link" th:href="@{'?page=' + ${currentPage + 1} + '&name=' + ${name}}"><i class="fa fa-angle-right"></i></a>
+        </li>
+        <li th:if="${currentPage < totalPages}">
+            <a class="page-link" th:href="@{'?page=' + ${totalPages} + '&name=' + ${name}}" th:data-page="${currentPage - 1}">
+                <i class="fa fa-angle-double-right"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+<div th:unless="${name}" class="container store-filter clearfix">
     <span class="store-qty">
         Showing <b class="text-muted" th:text="${(currentPage - 1) * productsPage.getSize() + 1} + '-' + ${(currentPage - 1) * productsPage.getSize() + productsPage.getNumberOfElements()}"></b>
         of <b id="total-item" class="text-muted" th:text="${totalProducts}"></b> products
@@ -145,8 +192,6 @@
         </li>
     </ul>
 </div>
-
-
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

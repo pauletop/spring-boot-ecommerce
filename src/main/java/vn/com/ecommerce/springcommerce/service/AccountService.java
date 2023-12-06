@@ -1,6 +1,7 @@
 package vn.com.ecommerce.springcommerce.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,10 +15,13 @@ import vn.com.ecommerce.springcommerce.repository.AccountRepository;
 public class AccountService {
     private AccountRepository accountRepository;
     private PasswordEncoder passwordEncoder;
+
+    private final EmailService emailService;
     @Autowired
-    public AccountService(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
+    public AccountService(AccountRepository accountRepository, PasswordEncoder passwordEncoder, EmailService emailService) {
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
     }
 
     public Account getAccount(String email) {
@@ -33,14 +37,10 @@ public class AccountService {
     }
 
     public Account register(Account account) {
-        try{
-            account.setPassword(passwordEncoder.encode(account.getPassword()));
-            return accountRepository.save(account);
-        }
-        catch(Exception e){
-            System.out.println(e.getMessage());
-            return null;
-        }
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
+        emailService.sendEmail(account.getEmail(), "Register Successfully!", "Welcome to our shop :) !");
+        return accountRepository.save(account);
+
 
     }
 
@@ -51,6 +51,9 @@ public class AccountService {
             return passwordEncoder.matches(password, account.getPassword());
         }
         return false;
+    }
+    public Page<Account> searchAdmin(String name, int page){
+        return accountRepository.findAllByEmailContainingIgnoreCase(name,PageRequest.of(page, 15));
     }
     public void delete(Long id){
         accountRepository.deleteById(id);

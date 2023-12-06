@@ -12,7 +12,9 @@ import vn.com.ecommerce.springcommerce.repository.BrandRepository;
 public class BrandService {
     @Autowired
     BrandRepository brandRepository;
-
+    public Page<Brand> searchAdmin(String name, int page){
+        return brandRepository.findAllByNameContainingIgnoreCase(name,PageRequest.of(page, 15));
+    }
     public Brand getBrandByName(String name) {
         return brandRepository.findByName(name).orElse(null);
     }

@@ -15,9 +15,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
-import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
+import org.springframework.security.config.annotation.web.configurers.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -52,28 +50,43 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(userDetailsService());
-        return provider;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
-    }
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, HttpSession session) throws Exception {
         http
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-//                                .requestMatchers("/account", "/order/**", "/cart/**").authenticated()
-//                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/account", "/order/**", "/cart/**").authenticated()
+                                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().permitAll()
                 )
-                .authenticationProvider(authenticationProvider())
+                .formLogin(customizer -> customizer
+                        .loginPage("/account/login").permitAll()
+                        .usernameParameter("email")
+                        .passwordParameter("pass")
+                        .successHandler(((request, response, authentication) -> {
+                            Account account = (Account) authentication.getPrincipal();
+                            Cart cart = account.getCart();
+                            if (cart == null) {
+                                cart = new Cart();
+                                cart.setAccount(account);
+                                account.setCart(cart);
+                            }
+                            session.setAttribute("isLogin", true);
+                            session.setAttribute("accEmail", account.getEmail());
+                            session.setAttribute("sCart", cart);
+                            if (account.getAuthorities().contains(new SimpleGrantedAuthority(Role.ROLE_ADMIN.name()))) {
+                                response.sendRedirect("/admin/products");
+                            } else {
+                                response.sendRedirect("/");
+                            }
+                        })))
+                .rememberMe(rememberMeConfigurer -> rememberMeConfigurer
+                        .rememberMeParameter("remember-me")
+                        .key("remember-me")
+                        .userDetailsService(userDetailsService())
+                        .tokenValiditySeconds(60 * 60 * 24 * 30))
+                .logout(customizer -> customizer
+                        .logoutUrl("/account/logout")
+                        .deleteCookies("JSESSIONID"))
                 .httpBasic(HttpBasicConfigurer::disable);
         return http.build();
     }
