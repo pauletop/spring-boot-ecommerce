@@ -1,9 +1,11 @@
 package vn.com.ecommerce.springcommerce.controller;
 
+import jakarta.annotation.Nullable;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,12 +13,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
+import vn.com.ecommerce.springcommerce.DTO.ResponseMessage;
 import vn.com.ecommerce.springcommerce.domain.Account;
 import vn.com.ecommerce.springcommerce.domain.Cart;
+import vn.com.ecommerce.springcommerce.domain.Product;
 import vn.com.ecommerce.springcommerce.service.AccountService;
 import vn.com.ecommerce.springcommerce.service.CartService;
+import vn.com.ecommerce.springcommerce.service.ProductService;
 
+import java.util.Base64;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/account")
@@ -25,6 +34,8 @@ public class AccountController {
     private AccountService accountService;
     @Autowired
     private CartService cartService;
+    @Autowired
+    private ProductService productService;
 
     @GetMapping({"/", ""})
     String index(@SessionAttribute(value = "accEmail", required = false) String email,
@@ -45,6 +56,48 @@ public class AccountController {
         model.addAttribute("sCart", cart);
         model.addAttribute("navActive", "account");
         return "account";
+    }
+
+    @GetMapping("/wishlist")
+    String wishlist(Model model, @RequestParam(value = "page", defaultValue = "1") int page,
+                    @RequestParam(value = "sort", required = false) String sort,
+                    @Nullable @SessionAttribute(value = "sCart", required = false) Cart cart,
+                    @SessionAttribute(value = "accEmail", required = false) String email,
+                    @Nullable @SessionAttribute(value = "isLogin", required = false) Boolean isLogin,
+                    HttpServletRequest request){
+        if (isLogin == null || !isLogin) {
+            return "redirect:/account/login";
+        } else {
+            model.addAttribute("isLogin", (boolean) true);
+        }
+        Account account = accountService.getAccount(email);
+        Set<Product> wishList = account.getWishList();
+        if (sort != null) {
+            if (sort.equals("asc")) {
+                wishList = wishList.stream().sorted((p1, p2) -> p1.getPrice().compareTo(p2.getPrice())).collect(Collectors.toSet());
+            } else if (sort.equals("desc")) {
+                wishList = wishList.stream().sorted((p1, p2) -> p2.getPrice().compareTo(p1.getPrice())).collect(Collectors.toSet());
+            }
+        }
+        // 1 page = 12 products
+        int totalPage = (int) Math.ceil((double) wishList.size() / 12);
+        List<Product> products = wishList.stream()
+                                            .skip((long) (page - 1) * 12)
+                                            .limit(12).toList();
+        model.addAttribute("products", products);
+        model.addAttribute("sort", sort);
+        model.addAttribute("totalPages", totalPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalProducts", wishList.size());
+        model.addAttribute("numberPerPage", 12);
+        if (request.getQueryString() != null) {
+            model.addAttribute("queryStr", Base64.getEncoder().encodeToString(request.getQueryString().replace("&page=" + page, "").getBytes()));
+        } else {
+            model.addAttribute("queryStr", "");
+        }
+        model.addAttribute("sCart", cart);
+        model.addAttribute("navActive", "wishlist");
+        return "wishlist";
     }
 
 
@@ -190,6 +243,56 @@ public class AccountController {
         session.removeAttribute("sCart");
         session.removeAttribute("isLogin");
         return ResponseEntity.ok("Change password successfully!");
+    }
+
+    @PostMapping("/addWishList")
+    ResponseEntity<ResponseMessage<String>> addWishList(@RequestBody Map<String, String> body, @SessionAttribute(value = "accEmail", required = false) String email) {
+        if (email == null) {
+            ResponseMessage<String> responseMessage = new ResponseMessage<>(Response.SC_UNAUTHORIZED, "You must login to add this product to your wish list");
+            return ResponseEntity.status(Response.SC_UNAUTHORIZED).body(responseMessage);
+        }
+        String productId = body.get("pdId");
+        System.out.println("Product ID: " + productId);
+        try {
+            Long id = Long.parseLong(new String(Base64.getDecoder().decode(productId)));
+            Product product = productService.getProductById(id);
+            if (product == null) {
+                return ResponseEntity.status(Response.SC_BAD_REQUEST).body(new ResponseMessage<>(Response.SC_BAD_REQUEST, "Product not found"));
+            }
+            boolean isAdded = accountService.addWishList(email, product);
+            if (!isAdded) {
+                return ResponseEntity.status(Response.SC_OK).body(new ResponseMessage<>(Response.SC_BAD_REQUEST, "Product already exists in your wish list"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(Response.SC_BAD_REQUEST).body(new ResponseMessage<>(Response.SC_BAD_REQUEST, "Something went wrong, please try again!"));
+        }
+        ResponseMessage<String> responseMessage = new ResponseMessage<>(Response.SC_OK, "Product added to your wish list successfully");
+        return ResponseEntity.ok(responseMessage);
+    }
+
+    @PostMapping("/rmWishList")
+    ResponseEntity<ResponseMessage<String>> rmWishList(@RequestBody Map<String, String> body, @SessionAttribute(value = "accEmail", required = false) String email) {
+        if (email == null) {
+            ResponseMessage<String> responseMessage = new ResponseMessage<>(Response.SC_UNAUTHORIZED, "You must login to remove this product from your wish list");
+            return ResponseEntity.status(Response.SC_UNAUTHORIZED).body(responseMessage);
+        }
+        String productId = body.get("pdId");
+        System.out.println("Product ID: " + productId);
+        try {
+            Long id = Long.parseLong(new String(Base64.getDecoder().decode(productId)));
+            Product product = productService.getProductById(id);
+            if (product == null) {
+                return ResponseEntity.status(Response.SC_BAD_REQUEST).body(new ResponseMessage<>(Response.SC_BAD_REQUEST, "Product not found"));
+            }
+            boolean isRemoved = accountService.removeWishList(email, product);
+            if (!isRemoved) {
+                return ResponseEntity.status(Response.SC_BAD_REQUEST).body(new ResponseMessage<>(Response.SC_BAD_REQUEST, "Something went wrong, please try again!"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(Response.SC_BAD_REQUEST).body(new ResponseMessage<>(Response.SC_BAD_REQUEST, "Something went wrong, please try again!"));
+        }
+        ResponseMessage<String> responseMessage = new ResponseMessage<>(Response.SC_OK, "Product removed from your wish list successfully");
+        return ResponseEntity.ok(responseMessage);
     }
     /*---------------------------------*\
     |          UTILITY FUNCTIONS        |

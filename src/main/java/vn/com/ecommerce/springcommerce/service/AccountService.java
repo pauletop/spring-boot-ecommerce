@@ -82,4 +82,24 @@ public class AccountService {
         Pageable pageable = PageRequest.of(page, 15);
         return accountRepository.findAllByOrderById(pageable);
     }
+
+    public boolean addWishList(String email, Product product) {
+        Account account = getAccount(email);
+        if (account.getWishList().contains(product)) {
+            return false;
+        }
+        account.addWishList(product);
+        accountRepository.save(account);
+        return true;
+    }
+
+    public boolean removeWishList(String email, Product product) {
+        Account account = getAccount(email);
+        if (account != null) {
+            account.removeWishList(product);
+            accountRepository.save(account);
+            return true;
+        }
+        return false;
+    }
 }

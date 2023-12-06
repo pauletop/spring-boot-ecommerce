@@ -173,29 +173,27 @@ $(document).ready(function() {
 	/************************************************************\
 	 					ONCLICK FUNCTIONS
 	\************************************************************/
-	$(".add-to-wishlist").click((e)=>{
-		e.preventDefault();
-		let product = $(e.target).closest(".product"),
-			id = product.attr("data-id");
-	});
 	$("#responsive-nav .main-nav li, .search-btn").click((e)=>{
 		$("#loading").show();
 	});
-	$(".view-product").click((e)=>{
+	$(".view-product").click(async (e)=>{
 		// if target inside .add-to-cart area, do nothing
-		if ($(e.target).closest(".add-to-cart").length) {
-			addToCart(e, 1);
+		let $tar = $(e.target);
+		let check = await $tar.closest(".product-btns").length || $tar.closest(".new.close").length || $tar.closest(".rm-from-wishlist").length;
+		if (check) {
 			return;
 		}
-		if ($(e.target).closest(".product-btns").length && !$(e.target).closest(".quick-view").length)
-			return;
-		$("#loading").show();
-		let product = $(e.target).closest(".view-product"),
-			id = product.attr("data-id"),
-			info = atob(product.attr("data-info"));
-		let loc = window.location;
-		if (id) {
-			window.location.href = "/product" + info + "-" + id;
+		else if ($tar.closest(".add-to-cart").length) {
+			addToCart(e, 1);
+		} else {
+			$("#loading").show();
+			let product = $tar.closest(".view-product"),
+				id = product.attr("data-id"),
+				info = atob(product.attr("data-info"));
+			let loc = window.location;
+			if (id) {
+				window.location.href = "/product" + info + "-" + id;
+			}
 		}
 	});
 	function addToCart(e, qty) {
@@ -240,6 +238,45 @@ $(document).ready(function() {
 			});
 		}
 	}
+	$(".add-to-wishlist").click((e)=>{
+		e.preventDefault();
+		let product = $(e.target).closest(".view-product"),
+			id = product.attr("data-id");
+		let $dia = $('#message-dialog');
+		$.ajax({
+			url: "/account/addWishList",
+			type: "POST",
+			contentType: "application/json",
+			dataType: "json",
+			data: JSON.stringify({
+				pdId: id
+			}),
+			success: (res)=>{
+				$dia.find("#goWishlist").hide();
+				$dia.find(".modal-body").text(res.message);
+				$dia.find("#goWishlist").show();
+				$dia.modal('show');
+				$dia.on('hidden.bs.modal',  (e) => {
+					$dia.find("#goWishlist").hide();
+				});
+			},
+			error: (res)=>{
+				if (res.status === 401) {
+					$dia.find(".modal-body").text(res.responseJSON.message);
+					$dia.modal('show');
+					// wating for close modal and redirect to login page
+					$("#loginA").show();
+					$dia.on('hidden.bs.modal',  (e) => {
+						$("#loginA").hide();
+					});
+				}
+				else {
+					$dia.find(".modal-body").text(res.responseJSON.message);
+					$dia.modal('show');
+				}
+			}
+		});
+	});
 	$(".page-link").click((e)=>{
 		let target = $(e.target);
 		if (target.parent().hasClass("active"))

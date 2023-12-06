@@ -8,9 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Base64;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -40,6 +38,11 @@ public class Account extends AbstractPersistable<Long> implements UserDetails {
     @Nullable
     @OneToMany(mappedBy = "account")
     private List<Cart> carts;
+    @ManyToMany
+    @JoinTable(name = "account_wishlist",
+            joinColumns = @JoinColumn(name = "account_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    private Set<Product> wishList = new HashSet<>();
 
     public Cart getCart() {
         if (this.carts.isEmpty()) {
@@ -62,6 +65,14 @@ public class Account extends AbstractPersistable<Long> implements UserDetails {
 
     public String getIdBase64() {
         return Base64.getEncoder().encodeToString(String.valueOf(this.getId()).getBytes());
+    }
+
+    public void addWishList(Product product) {
+        this.wishList.add(product);
+    }
+
+    public void removeWishList(Product product) {
+        this.wishList.remove(product);
     }
 
     @Override

@@ -44,6 +44,8 @@ public class Product extends AbstractPersistable<Long> {
     private Date createdAt = new Date();
     @OneToMany(mappedBy = "product")
     private List<CustomerReview> customerReviews;
+    @ManyToMany(mappedBy = "wishList", fetch = FetchType.LAZY)
+    private Set<Account> interestedAccounts = new HashSet<>();
 
     public Product(String name, Double price) {
         this.name = name;

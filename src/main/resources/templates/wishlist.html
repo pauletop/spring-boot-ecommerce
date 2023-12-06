@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
@@ -56,6 +56,17 @@
 			.rm-from-wishlist:hover {
 				color: #333!important;
 			}
+			.bg-empty {
+				background: url('/images/wish.gif') no-repeat center;
+				background-size: contain;
+				min-height: 50vh;
+				flex: 2;
+			}
+			@media (max-width: 425px) {
+				#empty-wl {
+					flex-direction: column;
+				}
+			}
 		</style>
 
     </head>
@@ -85,7 +96,7 @@
 				<div class="row">
 
 					<!-- STORE -->
-					<div id="store" class="col-md-10 col-md-offset-1">
+					<div id="store" class="col-md-10 col-md-offset-1" th:if="${totalPages > 0}">
 						<!-- store top filter -->
 						<div class="store-filter clearfix">
 							<div class="store-sort">
@@ -93,11 +104,9 @@
 								<label>
 									Sort By:
 									<select class="input-select" id="sortBy">
-										<option value="">Choose an option</option>
-										<option value="hot" th:selected="${sort == 'hot'}">Hot</option>
+										<option value="">Default</option>
 										<option value="asc" th:selected="${sort == 'asc'}">Price: Low to High</option>
 										<option value="desc" th:selected="${sort == 'desc'}">Price: High to Low</option>
-										<option value="rating" th:selected="${sort == 'rating'}">Avg. Customer Review</option>
 									</select>
 								</label>
 							</div>
@@ -130,13 +139,8 @@
 													<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
 												</div>
 											</div>
-											<div class="add-to-cart" th:if="${#ctx.session.accountId != null}">
-												<form class="form-add-to-cart" th:action="'/cart/add?productId=' + ${product.id}" method="post">
-													<button type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-												</form>
-											</div>
-											<div class="add-to-cart" th:if="${#ctx.session.accountId == null}">
-												<a href="/account/login" type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</a>
+											<div class="add-to-cart">
+												<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
 											</div>
 										</div>
 									</div>
@@ -161,6 +165,16 @@
 						<!-- /store bottom filter -->
 					</div>
 					<!-- /STORE -->
+					<div class="col-md-10 col-md-offset-1" th:if="${totalPages == 0}">
+						<div id="empty-wl" class="d-flex align-items-center justify-content-center">
+							<div class="text-center" style="flex: 3;">
+								<h3 class="text-center">Your wishlist is empty</h3>
+								<a href="/store" class="pt-5"><i class="fas fa-store"></i> &nbsp;Go to store</a>
+							</div>
+							<div class="bg-empty w-100">
+							</div>
+						</div>
+					</div>
 				</div>
 				<!-- /row -->
 			</div>
@@ -180,7 +194,6 @@
 						</div>
 
 						<div class="modal-footer">
-							<a id="loginA" href="/account/login" class="btn my-dark-btn" style="display: none;">Login</a>
 							<a id="goCart" href="/cart" class="btn my-dark-btn" style="display: none;">Go to cart</a>
 							<button type="button" class="btn my-primary-btn" data-dismiss="modal">Close</button>
 						</div>
@@ -202,6 +215,6 @@
 		<script src="/js/nouislider.min.js"></script>
 		<script src="/js/jquery.zoom.min.js"></script>
 		<script src="/js/main.js"></script>
-		<script src="/js/store.js"></script>
+		<script src="/js/wishlist.js"></script>
 	</body>
 </html>
