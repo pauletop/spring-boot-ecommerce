@@ -51,6 +51,11 @@
         </div>
     </div>
     <div class="container">
+        <div class="row">
+            <div th:if="${success}" th:text="${success}" class="h-100 col-12 alert alert-primary" role="alert">
+            </div>
+            <div th:if="${error}" th:text="${error}" class="h-100 col-12 alert alert-danger" role="alert"></div>
+        </div>
         <!-- row -->
         <div class="row">
             <div class="container">
