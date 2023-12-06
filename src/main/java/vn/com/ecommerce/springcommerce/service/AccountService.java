@@ -13,8 +13,8 @@ import vn.com.ecommerce.springcommerce.repository.AccountRepository;
 
 @Service
 public class AccountService {
-    private AccountRepository accountRepository;
-    private PasswordEncoder passwordEncoder;
+    private final AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
 
     private final EmailService emailService;
     @Autowired
@@ -40,8 +40,6 @@ public class AccountService {
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         emailService.sendEmail(account.getEmail(), "Register Successfully!", "Welcome to our shop :) !");
         return accountRepository.save(account);
-
-
     }
 
     public boolean login(String email, String password) {

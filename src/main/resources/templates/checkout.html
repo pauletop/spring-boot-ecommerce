@@ -174,7 +174,7 @@
 							<div class="order-products">
 								<div class="order-col" th:each="item : ${cart.getItems()}">
 									<div><span th:text="${item.getQuantity()}">1</span>x <span th:text="${item.getProduct().getName()}"></span></div>
-									<div th:text="${item.getTotalPrice()}">$980.00</div>
+									<div th:text="${item.getPriceString()}">$980.00</div>
 								</div>
 							</div>
 							<div class="order-col">

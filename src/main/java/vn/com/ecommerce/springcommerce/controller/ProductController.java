@@ -8,18 +8,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import vn.com.ecommerce.springcommerce.DTO.ResponseMessage;
-import vn.com.ecommerce.springcommerce.domain.Account;
 import vn.com.ecommerce.springcommerce.domain.Cart;
 import vn.com.ecommerce.springcommerce.domain.CustomerReview;
 import vn.com.ecommerce.springcommerce.domain.Product;
-import vn.com.ecommerce.springcommerce.service.AccountService;
 import vn.com.ecommerce.springcommerce.service.CustomerReviewService;
 import vn.com.ecommerce.springcommerce.service.ProductService;
 
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/product")
@@ -55,10 +52,6 @@ public class ProductController {
                               HttpServletRequest request) {
         // Xử lý logic của bạn với brand và productId
         long id = Long.parseLong(new String(Base64.getDecoder().decode(productId)));
-        System.out.println("Category: " + category);
-        System.out.println("Brand: " + brand);
-        System.out.println("Product ID: " + id);
-        System.out.println("Brand name: " + getBrandName(brand));
         Product product = productService.getProductById(id);
         // lấy số lượng đánh giá theo từng sao
         List<CustomerReview> reviews = product.getCustomerReviews();
@@ -70,9 +63,9 @@ public class ProductController {
         Boolean isLogin = (Boolean) request.getSession().getAttribute("isLogin");
         model.addAttribute("sCart", sCart);
         if (isLogin == null || !isLogin) {
-            model.addAttribute("isLogin", (boolean ) false);
+            model.addAttribute("isLogin", false);
         } else {
-            model.addAttribute("isLogin", (boolean) true);
+            model.addAttribute("isLogin", true);
         }
         List<Product> relatedProducts = (List<Product>) productService.getTop4RelatedProducts(product);
         model.addAttribute("relatedProducts", relatedProducts);
@@ -93,9 +86,6 @@ public class ProductController {
         String rating = body.get("rating");
         String comment = body.get("comment");
         String displayName = body.get("dName");
-        System.out.println("Product ID: " + productId);
-        System.out.println("Rating: " + rating);
-        System.out.println("Comment: " + comment);
         CustomerReview customerReview;
         try {
             Long id = Long.parseLong(new String(Base64.getDecoder().decode(productId)));

@@ -7,9 +7,6 @@ import vn.com.ecommerce.springcommerce.domain.Cart;
 import vn.com.ecommerce.springcommerce.domain.Product;
 import vn.com.ecommerce.springcommerce.domain.SelectedItem;
 import vn.com.ecommerce.springcommerce.repository.CartRepository;
-import vn.com.ecommerce.springcommerce.repository.SelectedItemRepository;
-
-import java.util.List;
 
 @Service
 public class CartService {
@@ -35,10 +32,6 @@ public class CartService {
             cartRepository.save(cart);
         }
         return cart;
-    }
-
-    public Cart getCart(Long id) {
-        return cartRepository.findById(id).orElse(null);
     }
 
     public Cart addProductToCart(Account account, Product product, int quantity) {
@@ -79,9 +72,9 @@ public class CartService {
 
     /**
      * Change quantity of product in cart
-     * @param account
-     * @param productId
-     * @param quantity
+     * @param account is owner of cart
+     * @param productId is id of product
+     * @param quantity is new quantity of product
      * @return delta of total price
      */
     public double changeQuantity(Account account, Long productId, int quantity) {
@@ -92,21 +85,5 @@ public class CartService {
         double delta = cart.changeQuantity(productId, quantity);
         cartRepository.save(cart);
         return delta;
-    }
-    public double changeQuantity(String accEmail, Long productId, int addQty){
-        Account account = accountService.getAccount(accEmail);
-        return changeQuantity(account,productId,addQty);
-    }
-
-    public SelectedItem getItemFromCart(Long cartId, Long productId) {
-        Cart cart = cartRepository.findById(cartId).orElse(null);
-        if (cart == null) {
-            return null;
-        }
-        return cart.getFromCart(productId);
-    }
-
-    public void deleteById(Long id) {
-        cartRepository.deleteById(id);
     }
 }

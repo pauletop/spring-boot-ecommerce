@@ -21,11 +21,7 @@ import vn.com.ecommerce.springcommerce.service.AccountService;
 import vn.com.ecommerce.springcommerce.service.CartService;
 import vn.com.ecommerce.springcommerce.service.ProductService;
 
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Controller
 @RequestMapping("/account")
@@ -71,16 +67,21 @@ public class AccountController {
         }
         Account account = accountService.getAccount(email);
         Set<Product> wishList = account.getWishList();
+        List<Product> sortedWishList = null;
         if (sort != null) {
             if (sort.equals("asc")) {
-                wishList = wishList.stream().sorted((p1, p2) -> p1.getPrice().compareTo(p2.getPrice())).collect(Collectors.toSet());
+                sortedWishList = wishList.stream().sorted(Comparator.comparingDouble(Product::getPrice)).toList();
             } else if (sort.equals("desc")) {
-                wishList = wishList.stream().sorted((p1, p2) -> p2.getPrice().compareTo(p1.getPrice())).collect(Collectors.toSet());
+                sortedWishList = wishList.stream().sorted(Comparator.comparingDouble(Product::getPrice).reversed()).toList();
             }
+        }
+        // if sort is null or invalid, return default sort
+        if (sortedWishList == null) {
+            sortedWishList = wishList.stream().toList();
         }
         // 1 page = 12 products
         int totalPage = (int) Math.ceil((double) wishList.size() / 12);
-        List<Product> products = wishList.stream()
+        List<Product> products = sortedWishList.stream()
                                             .skip((long) (page - 1) * 12)
                                             .limit(12).toList();
         model.addAttribute("products", products);
@@ -251,7 +252,6 @@ public class AccountController {
             return ResponseEntity.status(Response.SC_UNAUTHORIZED).body(responseMessage);
         }
         String productId = body.get("pdId");
-        System.out.println("Product ID: " + productId);
         try {
             Long id = Long.parseLong(new String(Base64.getDecoder().decode(productId)));
             Product product = productService.getProductById(id);
@@ -276,7 +276,6 @@ public class AccountController {
             return ResponseEntity.status(Response.SC_UNAUTHORIZED).body(responseMessage);
         }
         String productId = body.get("pdId");
-        System.out.println("Product ID: " + productId);
         try {
             Long id = Long.parseLong(new String(Base64.getDecoder().decode(productId)));
             Product product = productService.getProductById(id);

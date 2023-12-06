@@ -38,9 +38,9 @@ public class HomeController {
         List<Product> topAcces = (List<Product>) productService.getTop5BestSellingProductsByCategory(3);
         List<Product> newAcces = (List<Product>) productService.getTop5NewestByCategory(3);
         if (isLogin == null || !isLogin) {
-            model.addAttribute("isLogin", (boolean ) false);
+            model.addAttribute("isLogin", false);
         } else {
-            model.addAttribute("isLogin", (boolean) true);
+            model.addAttribute("isLogin", true);
         }
         if (email!=null){
             Account account = accountService.getAccount(email);

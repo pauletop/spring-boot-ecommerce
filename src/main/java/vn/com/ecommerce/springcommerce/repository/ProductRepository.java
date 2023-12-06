@@ -60,4 +60,5 @@ public interface ProductRepository extends CrudRepository<Product, Long>, Paging
 
     void deleteById(Long id);
     Page<Product> findAllByNameContainingIgnoreCase(String name, Pageable pageable);
+
 }

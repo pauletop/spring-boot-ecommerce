@@ -9,12 +9,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import vn.com.ecommerce.springcommerce.DTO.ResponseMessage;
-import vn.com.ecommerce.springcommerce.domain.Account;
-import vn.com.ecommerce.springcommerce.domain.Cart;
-import vn.com.ecommerce.springcommerce.domain.Order;
+import vn.com.ecommerce.springcommerce.domain.*;
 import vn.com.ecommerce.springcommerce.service.AccountService;
 import vn.com.ecommerce.springcommerce.service.CartService;
 import vn.com.ecommerce.springcommerce.service.OrderService;
+import vn.com.ecommerce.springcommerce.service.ProductService;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -25,12 +24,14 @@ public class OrderController {
     final CartService cartService;
     final AccountService accountService;
     final OrderService orderService;
+    final ProductService productService;
     final String[] paymentMethods = {"COD", "Bank transfer"};
     @Autowired
-    public OrderController(CartService cartService, AccountService accountService, OrderService orderService) {
+    public OrderController(CartService cartService, AccountService accountService, OrderService orderService, ProductService productService) {
         this.cartService = cartService;
         this.accountService = accountService;
         this.orderService = orderService;
+        this.productService = productService;
     }
     @GetMapping("/success")
     String success(@Nullable @SessionAttribute(value = "accEmail", required = false) String email,
@@ -48,9 +49,9 @@ public class OrderController {
 //            request.getSession().removeAttribute("order");
         }
         if (isLogin == null || !isLogin) {
-            model.addAttribute("isLogin", (boolean) false);
+            model.addAttribute("isLogin", false);
         } else {
-            model.addAttribute("isLogin", (boolean) true);
+            model.addAttribute("isLogin", true);
         }
         model.addAttribute("user", account);
         model.addAttribute("order", requestOrder);
@@ -66,20 +67,38 @@ public class OrderController {
         if (email == null) {
             return ResponseEntity.ok((new ResponseMessage<>(Response.SC_UNAUTHORIZED, "Please reload and try again")));
         }
-        Account account = accountService.getAccount(email);
         Cart cart = sCart;
         Order order = cart.moveCartToOrder();
         String name = (String) body.get("name");
         String phone = (String) body.get("phone");
-        String address = (String) body.get("address") + ", " + ((String) body.get("city") == null ? "" : (String) body.get("city")) + ", " + ((String) body.get("country") == null ? "" : (String) body.get("country"));
+        String address = body.get("address") + ", " + (body.get("city") == null ? "" : (String) body.get("city")) + ", " + ((String) body.get("country") == null ? "" : (String) body.get("country"));
         String note = body.get("note") == null ? "" : (String) body.get("note");
         if (name == null || phone == null || address.length() < 10) {
             return ResponseEntity.ok((new ResponseMessage<>(Response.SC_BAD_REQUEST, "Please fill in all required fields")));
+        }
+        if (cart.getItems().isEmpty()) {
+            return ResponseEntity.ok((new ResponseMessage<>(Response.SC_BAD_REQUEST, "Your cart is empty, please try again")));
+        }
+        // check if quantity is enough with stock
+        for (SelectedItem item : cart.getItems()) {
+            if (item.getQuantity() > item.getProduct().getStock()) {
+                return ResponseEntity.ok((new ResponseMessage<>(Response.SC_BAD_REQUEST, "Sorry, " + item.getProduct().getName() + " is not enough in stock, please try again")));
+            }
+        }
+        /* ----------------- ORDER SUCCESS PROCESS ----------------- */
+        // update product quantity
+        for (SelectedItem item : cart.getItems()) {
+            Product product = item.getProduct();
+            int qty = item.getQuantity();
+            product.setStock(product.getStock() - qty);
+            product.setSold(product.getSold() + qty);
+            productService.saveProduct(product);
         }
         accountService.updateAddress(email, address);
         String paymentMethod = paymentMethods[Integer.parseInt(body.get("paymentMethod").toString())-1];
         order.setData(name, phone, address, note, paymentMethod, "pending");
         Order newOrder = orderService.saveOrder(order);
+
         // set with new items list
         newOrder.setItems(new ArrayList<>(cart.getItems()));
         cart.getItems().forEach(item -> item.setSelectedList(newOrder));

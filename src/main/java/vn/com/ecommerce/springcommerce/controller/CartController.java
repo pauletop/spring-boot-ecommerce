@@ -8,41 +8,24 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 import vn.com.ecommerce.springcommerce.DTO.ResponseMessage;
 import vn.com.ecommerce.springcommerce.domain.Account;
 import vn.com.ecommerce.springcommerce.domain.Cart;
-import vn.com.ecommerce.springcommerce.domain.Order;
-import vn.com.ecommerce.springcommerce.domain.SelectedItem;
 import vn.com.ecommerce.springcommerce.service.AccountService;
 import vn.com.ecommerce.springcommerce.service.CartService;
-import vn.com.ecommerce.springcommerce.service.OrderService;
 
 import java.util.Base64;
 import java.util.Map;
-import java.util.List;
 import java.util.Optional;
 
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.view.RedirectView;
-import vn.com.ecommerce.springcommerce.domain.Account;
-import vn.com.ecommerce.springcommerce.service.AccountService;
-import vn.com.ecommerce.springcommerce.service.CartService;
 
 @Controller
 @RequestMapping("/cart")
@@ -63,9 +46,9 @@ public class CartController {
             return "redirect:/account/login";
         }
         if (isLogin == null || !isLogin) {
-            model.addAttribute("isLogin", (boolean) false);
+            model.addAttribute("isLogin", false);
         } else {
-            model.addAttribute("isLogin", (boolean) true);
+            model.addAttribute("isLogin", true);
         }
         sCart = cartService.getCart(email);
         request.getSession().setAttribute("sCart", sCart);
@@ -82,9 +65,9 @@ public class CartController {
             return "redirect:/account/login";
         }
         if (isLogin == null || !isLogin) {
-            model.addAttribute("isLogin", (boolean ) false);
+            model.addAttribute("isLogin", false);
         } else {
-            model.addAttribute("isLogin", (boolean) true);
+            model.addAttribute("isLogin", true);
         }
         Account account = accountService.getAccount(email);
         Cart cart = account.getCart();
@@ -113,7 +96,6 @@ public class CartController {
     ResponseEntity<ResponseMessage<String>> remove(@RequestBody Map<String, Object> body,
                                                           @SessionAttribute(value = "accEmail", required = false) String email,
                                                    HttpServletRequest request){
-        System.out.println(body);
         long productId = decodeBase64ToLong((String) body.get("pdId"));
         request.getSession().setAttribute("sCart", cartService.removeProductFromCart(email, productId));
         ResponseMessage<String> responseMessage = new ResponseMessage<>(Response.SC_OK, "Remove product from cart successfully");
@@ -138,21 +120,5 @@ public class CartController {
     private Long decodeBase64ToLong(String encodedString) {
         byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
         return Long.parseLong(new String(decodedBytes));
-    }
-    String index(@Nullable @CookieValue(value = "email", required = false) String email,
-                 Model model) {
-        return "cart";
-    }
-
-    private void setSessionAttribute(String email,
-                                     Model model, HttpServletResponse response) {
-        if (email != null) {
-            Account account = accountService.getAccount(email);
-            if (account != null) {
-                Cookie emailCookie = new Cookie("email", email);
-                emailCookie.setMaxAge(60 * 60 * 24 * 7); // 7 days
-            }
-
-        }
     }
 }

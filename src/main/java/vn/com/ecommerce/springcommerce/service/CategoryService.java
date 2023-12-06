@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vn.com.ecommerce.springcommerce.domain.Category;
-import vn.com.ecommerce.springcommerce.domain.Product;
 import vn.com.ecommerce.springcommerce.repository.CategoryRepository;
 
 @Service

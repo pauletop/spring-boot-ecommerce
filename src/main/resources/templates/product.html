@@ -124,16 +124,16 @@
 								<button class="add-to-cart-btn" th:data-id="${product.getIdBase64()}"><i class="fa fa-shopping-cart"></i> add to cart</button>
 							</div>
 
-							<ul class="product-btns">
-								<li><a href="#"><i class="fa fa-heart-o"></i> add to wishlist</a></li>
+							<ul class="product-btns view-product" th:data-id="${product.getIdBase64()}">
+								<li class="add-to-wishlist"><a href="#"><i class="fa fa-heart-o"></i> add to wishlist</a></li>
 							</ul>
 
 							<ul class="product-links">
 								<li>Category:</li>
-								<li><a th:href="@{/__${product.category.name.toLowerCase()}__}" th:text="${product.category.name}"></a></li>
+								<li><a th:href="@{/store/__${product.category.name.toLowerCase()}__}" th:text="${product.category.name}"></a></li>
 							</ul>
 
-							<ul class="product-links">
+							<ul class="product-links hide">
 								<li>Share:</li>
 								<li><a href="#"><i class="fa fa-facebook"></i></a></li>
 								<li><a href="#"><i class="fa fa-twitter"></i></a></li>
@@ -392,6 +392,7 @@
 						<div class="modal-footer">
 							<a id="loginA" href="/account/login" class="btn my-dark-btn" style="display: none;">Login</a>
 							<a id="goCart" href="/cart" class="btn my-dark-btn" style="display: none;">Go to cart</a>
+							<a id="goWishlist" href="/account/wishlist" class="btn my-dark-btn" style="display: none;">See wishlist</a>
 							<button type="button" class="btn my-primary-btn" data-dismiss="modal">Close</button>
 						</div>
 					</div>

@@ -29,7 +29,7 @@ public class CustomerReviewService {
             return null;
         }
         customerReview.setData(account, displayName, product, rating, review);
-        product.addRating((int) rating);
+        product.addRating(rating);
         productService.saveProduct(product);
         return customerReviewRepository.save(customerReview);
     }
@@ -51,7 +51,7 @@ public class CustomerReviewService {
      * 2 stars: 0 review,
      * 1 star: 0 review,
      * and store them in an integer list with 5 elements
-     * @param productId
+     * @param productId id of product
      * @return list contains 5 elements
      */
     public List<Integer> getNumberOfReviewsByEachRating(Long productId) {

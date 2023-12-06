@@ -1,12 +1,8 @@
 package vn.com.ecommerce.springcommerce.controller;
 
-import jakarta.annotation.Nullable;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.apache.catalina.User;
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +10,6 @@ import vn.com.ecommerce.springcommerce.domain.*;
 import vn.com.ecommerce.springcommerce.service.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -124,7 +118,6 @@ public class AdminController {
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             session.setAttribute("error", "Failed.");
-
         }
 
         return "redirect:/admin/products";

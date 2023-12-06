@@ -189,7 +189,11 @@ $(document).ready(function() {
 			$("#loading").show();
 			let product = $tar.closest(".view-product"),
 				id = product.attr("data-id"),
-				info = atob(product.attr("data-info"));
+				dInfo = product.attr("data-info");
+			if (!dInfo)
+				return;
+			let info = atob(dInfo);
+
 			let loc = window.location;
 			if (id) {
 				window.location.href = "/product" + info + "-" + id;
@@ -197,7 +201,7 @@ $(document).ready(function() {
 		}
 	});
 	function addToCart(e, qty) {
-		let product = $(e.target).closest(".product"),
+		let product = $(e.target).closest(".view-product"),
 			id = product.attr("data-id");
 		if (id) {
 			$.ajax({
@@ -234,6 +238,22 @@ $(document).ready(function() {
 						dia.modal('show');
 					}
 
+				},
+				error: (res) => {
+					if (res.status === 401 || res.status === 200) {
+						let dia = $('#message-dialog');
+						dia.find(".modal-body").text("Please login to add product to cart");
+						dia.modal('show');
+						// wating for close modal and redirect to login page
+						$("#loginA").show();
+						dia.on('hidden.bs.modal',  (e) => {
+							$("#loginA").hide();
+						});
+					} else {
+						let dia = $('#message-dialog');
+						dia.find(".modal-body").text("Something went wrong, please try again later");
+						dia.modal('show');
+					}
 				}
 			});
 		}

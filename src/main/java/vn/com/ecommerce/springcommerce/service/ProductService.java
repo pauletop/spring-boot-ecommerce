@@ -3,7 +3,6 @@ package vn.com.ecommerce.springcommerce.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import vn.com.ecommerce.springcommerce.domain.Brand;
@@ -60,14 +59,19 @@ public class ProductService {
 
     private Sort getSortOption(String sortOrder) {
         if (sortOrder != null) {
-            if (sortOrder.equals("asc")) {
-                return Sort.by("price").ascending();
-            } else if (sortOrder.equals("desc")) {
-                return Sort.by("price").descending();
-            } else if (sortOrder.equals("hot")) {
-                return Sort.by("sold").descending();
-            } else if (sortOrder.equals("rating")) {
-                return Sort.by("rating").descending();
+            switch (sortOrder) {
+                case "asc" -> {
+                    return Sort.by("price").ascending();
+                }
+                case "desc" -> {
+                    return Sort.by("price").descending();
+                }
+                case "hot" -> {
+                    return Sort.by("sold").descending();
+                }
+                case "rating" -> {
+                    return Sort.by("rating").descending();
+                }
             }
         }
         return Sort.unsorted();

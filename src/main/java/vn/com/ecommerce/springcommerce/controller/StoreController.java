@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import vn.com.ecommerce.springcommerce.domain.Brand;
 import vn.com.ecommerce.springcommerce.domain.Cart;
 
-import vn.com.ecommerce.springcommerce.domain.Brand;
-import vn.com.ecommerce.springcommerce.domain.Category;
 import vn.com.ecommerce.springcommerce.domain.Product;
 import vn.com.ecommerce.springcommerce.service.BrandService;
 import vn.com.ecommerce.springcommerce.service.CategoryService;
@@ -51,9 +49,9 @@ public class StoreController {
 
 
         if (isLogin == null || !isLogin) {
-            model.addAttribute("isLogin", (boolean ) false);
+            model.addAttribute("isLogin", false);
         } else {
-            model.addAttribute("isLogin", (boolean) true);
+            model.addAttribute("isLogin", true);
         }
         model.addAttribute("sCart", cart);
 
@@ -90,19 +88,10 @@ public class StoreController {
         if (keyword == null) {
             keyword = "";
         }
-
-        System.out.println("keyword: " + keyword);
-        System.out.println("categoryId: " + categoryId);
-        System.out.println("categoryIds: " + categoryIds);
-        System.out.println("brandIds: " + brandIds);
-        System.out.println("minPrice: " + minPrice);
-        System.out.println("maxPrice: " + maxPrice);
-        System.out.println("isAdv: " + isAdv);
         Page<Product> products;
         if (isAdv) {
             products = productService.searchByOptions(keyword.toLowerCase(), brandIds, categoryIds, minPrice, maxPrice, page - 1, sort);
         } else {
-            System.out.println("page: " + page);
             products = productService.searchByKeyword(keyword.toLowerCase(), categoryId, page - 1, sort);
         }
         if (request.getQueryString() != null) {
@@ -113,9 +102,9 @@ public class StoreController {
 
 
         if (isLogin == null || !isLogin) {
-            model.addAttribute("isLogin", (boolean ) false);
+            model.addAttribute("isLogin", false);
         } else {
-            model.addAttribute("isLogin", (boolean) true);
+            model.addAttribute("isLogin", true);
         }
         model.addAttribute("sCart", cart);
 
@@ -143,9 +132,9 @@ public class StoreController {
                          @Nullable @SessionAttribute(value = "isLogin", required = false) Boolean isLogin) {
         Iterable<Brand> brands = brandService.getAllBrands();
         if (isLogin == null || !isLogin) {
-            model.addAttribute("isLogin", (boolean ) false);
+            model.addAttribute("isLogin", false);
         } else {
-            model.addAttribute("isLogin", (boolean) true);
+            model.addAttribute("isLogin", true);
         }
         model.addAttribute("brands", brands);
         model.addAttribute("sCart", sCart);
@@ -166,9 +155,9 @@ public class StoreController {
         }
 
         if (isLogin == null || !isLogin) {
-            model.addAttribute("isLogin", (boolean ) false);
+            model.addAttribute("isLogin", false);
         } else {
-            model.addAttribute("isLogin", (boolean) true);
+            model.addAttribute("isLogin", true);
         }
         model.addAttribute("sCart", cart);
 
@@ -201,9 +190,9 @@ public class StoreController {
         }
 
         if (isLogin == null || !isLogin) {
-            model.addAttribute("isLogin", (boolean ) false);
+            model.addAttribute("isLogin", false);
         } else {
-            model.addAttribute("isLogin", (boolean) true);
+            model.addAttribute("isLogin", true);
         }
         model.addAttribute("sCart", cart);
 
@@ -236,9 +225,9 @@ public class StoreController {
         }
 
         if (isLogin == null || !isLogin) {
-            model.addAttribute("isLogin", (boolean ) false);
+            model.addAttribute("isLogin", false);
         } else {
-            model.addAttribute("isLogin", (boolean) true);
+            model.addAttribute("isLogin", true);
         }
         model.addAttribute("sCart", cart);
 
@@ -263,7 +252,6 @@ public class StoreController {
                               @Nullable @SessionAttribute(value = "sCart", required = false) Cart cart,
                               @Nullable @SessionAttribute(value = "isLogin", required = false) Boolean isLogin) {
         brand = StringUtils.capitalize(brand);
-        System.out.println(brand);
         Page<Product> products = productService.getProductsByBrandName(brand, page - 1);
         // add query string to model, and remove page parameter if exists
         if (request.getQueryString() != null) {
@@ -273,9 +261,9 @@ public class StoreController {
         }
 
         if (isLogin == null || !isLogin) {
-            model.addAttribute("isLogin", (boolean) false);
+            model.addAttribute("isLogin", false);
         } else {
-            model.addAttribute("isLogin", (boolean) true);
+            model.addAttribute("isLogin", true);
         }
         model.addAttribute("sCart", cart);
 
