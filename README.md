@@ -36,9 +36,9 @@
 
 ## II. Giải thích code ngắn gọn
 Web Java Spring Boot thương mại điện tử, bán các sản phẩm liên quan đến công nghệ như điện thoại, laptop, phụ kiện...
-
+<!-- 
 Sơ đồ UML:
-![UML](./snapshots/diagram.png)
+![UML](./snapshots/diagram.png) -->
 
 Project chia làm các thư mục chính:
 ### Repository
