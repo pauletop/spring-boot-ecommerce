@@ -71,25 +71,23 @@ Chứa file Setup security, phân riêng các rold cho người chưa đăng nh�
 
 
 ## Các bước để chạy dự án trên Localhost
-1. Tạo database: (Yêu cầu có sẵn phần mềm docker)
-    - Mở cmd trong thư mục của dự án, gõ docker-compose up -d để khởi tạo database bằng docker.
-    - Như vậy là xong phần database. Data sẽ tự được thêm bằng code khi khởi chạy project.
-2. Setup file application.properties.
-   - Sử dụng luôn code đã tạo, hoặc có thể thay đổi 3 dòng code sau đây trong file application.properties với dữ liệu phù hợp trong localhost:
-      - spring.datasource.url=jdbc:mysql://localhost:5432/springcommerce
-        spring.datasource.username=<username để vào được database>
-        spring.datasource.password=<password>
+1. Install Docker, Docker-compose
+   
+2. To start the application, run:
+```bash
+docker compose up -d
+```
+    
 
-3. Chạy project trong intellij.
-4. Truy cập http://localhost:8080/ để vào web (hoặc đổi 8081 thành cổng mà bạn đặt trong application.properties).
+3. Truy cập http://localhost:8080/ để vào web (hoặc đổi 8081 thành cổng mà bạn đặt trong application.properties).
     1. Khi chưa đăng nhập, người dùng có thể:
         1. Vào trang chủ.
         2. Đăng nhập - Đăng kí
-        2. Vào Shop để xem sản phẩm.
-        3. Search sản phẩm.
-        4. Filter sản phẩm bằng thanh filter bên trái màn hình: thể loại, mức giá, màu sắc, kích cỡ. Có thể áp dụng nhiều thuộc tính filter cùng lúc.
-        5. Click vào sản phẩm bất kì để xem chi tiết sản phẩm.
-        6. Nếu người dùng click "thêm vào giỏ hàng", hoặc cố ý nhập vào đường link /cart hoặc /order thì chuyển đến trang đăng nhập.
+        3. Vào Shop để xem sản phẩm.
+        4. Search sản phẩm.
+        5. Filter sản phẩm bằng thanh filter bên trái màn hình: thể loại, mức giá, màu sắc, kích cỡ. Có thể áp dụng nhiều thuộc tính filter cùng lúc.
+        6. Click vào sản phẩm bất kì để xem chi tiết sản phẩm.
+        7. Nếu người dùng click "thêm vào giỏ hàng", hoặc cố ý nhập vào đường link /cart hoặc /order thì chuyển đến trang đăng nhập.
     2. Khi đã đăng nhập:
         1. Thêm sản phẩm vào giỏ hàng.
         2. Thay đổi giỏ hàng: đổi số lượng, xoá bớt sản phẩm trong giỏ.
@@ -104,3 +102,7 @@ Chứa file Setup security, phân riêng các rold cho người chưa đăng nh�
         2. Admin có thể thay đổi data của Product, User, Category và Brand. 
         3. Có thể tìm kiếm Product, Category và Brand bằng tên để tiện cho việc thay đổi; có thể tìm kiếm người dùng bằng email.
         4. Khi quay về trang giao diện shop, với riêng các tài khoản admin sẽ có thêm link đến thẳng trang admin. Điều này để thuận tiện cho việc admin vừa có thể thay đổi data, vừa có thể xem kết quả thay đổi trên các trang thông thường.
+   
+
+
+
