@@ -1,7 +1,11 @@
-FROM openjdk:21
+FROM maven:3.9.4-jdk-21
 
-ADD target/springcommerce-0.0.1-SNAPSHOT.jar app.jar
+WORKDIR /app
+
+COPY . .
+
+RUN mvn clean install
 
 EXPOSE 8080
 
-CMD [ "java", "-jar", "app.jar"]
+CMD [ "mvn", "spring-boot:run" ]

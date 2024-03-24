@@ -10,16 +10,30 @@ services:
       - '5432:5432'
     volumes:
         - 'postgres:/var/lib/postgresql/data'
+    networks:
+      - springcommerce-network
 
 
   app:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
     container_name: SpringCommerceApp
     ports:
       - '8080:8080'
     depends_on:
       - db
+    restart: always
+    networks:
+      - springcommerce-network
+    environment:
+      - 'SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/springcommerce'
+      - 'SPRING_DATASOURCE_USERNAME=root'
+      - 'SPRING_DATASOURCE_PASSWORD=abc123'
     
     
 volumes:
   postgres:
+
+networks:
+  springcommerce-network:
